@@ -4,9 +4,11 @@
 </h1>
 
 <p align="center">
-  <img src=![img.png](img.png)>
+  <img src="Imagens/img.png" alt="descrição">
 </p>
 
 <p align="center">
-  <img src=/home/gustavo/dev/java/Projetos/financeApi/Imagens/1.png>
+  <img src=![1.png](Imagens/1.png) alt="descrição da imagem">
 </p>
+
+---
