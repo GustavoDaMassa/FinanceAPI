@@ -18,7 +18,7 @@ CREATE TABLE financial_integrations(
 
 CREATE TABLE accounts(
     id BIGSERIAL PRIMARY KEY,
-    user_id BIGINT 3NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     integration_id BIGINT REFERENCES financial_integrations(id) ON DELETE SET NULL,
     institution VARCHAR(100),
     type VARCHAR(50),
