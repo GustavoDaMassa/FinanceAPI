@@ -1,14 +1,14 @@
 
 CREATE TABLE users(
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE financial_integrations(
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT  NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     aggregator VARCHAR(50) NOT NULL,
     link_id VARCHAR(255) UNIQUE NOT NULL,
     status VARCHAR(50),
@@ -17,9 +17,9 @@ CREATE TABLE financial_integrations(
 );
 
 CREATE TABLE accounts(
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    integration_id INTEGER REFERENCES financial_integrations(id) ON DELETE SET NULL
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT 3NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    integration_id BIGINT REFERENCES financial_integrations(id) ON DELETE SET NULL,
     institution VARCHAR(100),
     type VARCHAR(50),
     account_number VARCHAR(100),
@@ -27,8 +27,8 @@ CREATE TABLE accounts(
 );
 
 CREATE TABLE transactions(
-    id SERIAL PRIMARY KEY,
-    account_id INTEGER NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
+    id BIGSERIAL PRIMARY KEY,
+    account_id BIGINT NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
     amount NUMERIC(15,2) NOT NULL,
     type VARCHAR(20) NOT NULL,
     description TEXT,
