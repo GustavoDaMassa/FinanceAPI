@@ -1,0 +1,63 @@
+enum TransactionType {
+    INFLOW
+    OUTFLOW
+}
+
+input TransactionInput {
+    amount: String!
+    type: TransactionType!
+    description: String
+    source: String
+    destination: String
+    transactionDate: String!
+    accountId: ID!
+    categoryId: ID
+    subcategoryId: ID
+}
+
+input TransactionFilterInput {
+    categoryIds: [ID!]
+    subcategoryIds: [ID!]
+}
+
+input DateRangeInput {
+    startDate: String!
+    endDate: String!
+}
+
+
+type TransactionDTO {
+    id: ID!
+    amount: String!
+    type: TransactionType!
+    description: String
+    source: String
+    destination: String
+    transactionDate: String!
+    accountId: ID!
+    categoryId: ID
+    subcategoryId: ID
+}
+
+type TransactionListWithBalanceDTO {
+    transactions: [TransactionDTO!]!
+    balance: String!
+}
+
+type Query {
+
+    listUserTransactions(userId: ID!): TransactionListWithBalanceDTO!
+    listAccountTransactions(accountId: ID!): TransactionListWithBalanceDTO!
+    listTransactionsByPeriod(accountId: ID!, range: DateRangeInput!): TransactionListWithBalanceDTO!
+    listTransactionsByType(accountId: ID!, type: TransactionType!): TransactionListWithBalanceDTO!
+    listTransactionsByFilter(accountId: ID!, filter: TransactionFilterInput!): TransactionListWithBalanceDTO!
+    listUncategorizedTransactions(accountId: ID!): [TransactionDTO!]!
+}
+
+type Mutation {
+
+    createTransaction(input: TransactionInput!): TransactionDTO
+    updateTransaction(id: ID!, input: TransactionInput!): TransactionDTO
+    categorizeTransaction(id: ID!, categoryId: ID, subcategoryId: ID): TransactionDTO
+    deleteTransaction(id: ID!): TransactionDTO
+}
