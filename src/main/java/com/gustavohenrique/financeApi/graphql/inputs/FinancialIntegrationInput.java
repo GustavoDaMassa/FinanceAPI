@@ -1,20 +1,19 @@
 package com.gustavohenrique.financeApi.graphql.inputs;
 
+import com.gustavohenrique.financeApi.domain.enums.AggregatorType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class AccountInput {
+public class FinancialIntegrationInput {
+
+    @NotNull
+    private AggregatorType aggregator;
 
     @NotBlank
-    private String accountName;
-    private String institution;
-    private String type;
-    private String balance;
+    private String linkId;
 
     @NotNull
     private Long userId;
-    private Long integrationId;
-
 }

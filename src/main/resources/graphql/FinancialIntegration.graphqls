@@ -1,0 +1,31 @@
+enum AggregatorType {
+    BELVO
+    PLUGGY
+}
+
+type FinancialIntegrationDTO {
+    id: ID!
+    aggregator: AggregatorType!
+    linkId: String!
+    status: String!
+    createdAt: String!
+    expiresAt: String!
+    userId: ID!
+}
+
+input FinancialIntegrationInput {
+    aggregator: AggregatorType!
+    linkId: String!
+    userId: ID!
+}
+
+type Mutation {
+    createFinancialIntegration(input: FinancialIntegrationInput!): FinancialIntegrationDTO
+    updateFinancialIntegration(id: ID!, input: FinancialIntegrationInput!): FinancialIntegrationDTO
+    deleteFinancialIntegration(id: ID!): FinancialIntegrationDTO
+}
+
+type Query {
+    findFinancialIntegrationById(id: ID!): FinancialIntegrationDTO
+    listFinancialIntegrationsByUser(userId: ID!): [FinancialIntegrationDTO!]!
+}
