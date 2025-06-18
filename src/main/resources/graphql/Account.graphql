@@ -1,0 +1,29 @@
+type AccountDTO {
+    id: ID!
+    accountName: String!
+    institution: String!
+    type: String!
+    balance: String!
+    userId: ID!
+    integrationId: ID
+}
+
+input AccountInput {
+    accountName: String!
+    institution: String!
+    type: String!
+    balance: String!
+    userId: ID!
+    integrationId: ID
+}
+
+type Mutation {
+    createAccount(input: AccountInput!): AccountDTO
+    updateAccount(id: ID!, input: AccountInput!): AccountDTO
+    deleteAccount(id: ID!): AccountDTO
+}
+
+type Query {
+    findAccountById(id: ID!): AccountDTO
+    listAccountsByUser(userId: ID!): [AccountDTO!]!
+}

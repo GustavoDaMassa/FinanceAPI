@@ -3,9 +3,11 @@ package com.gustavohenrique.financeApi.application.services;
 import com.gustavohenrique.financeApi.application.interfaces.UserService;
 import com.gustavohenrique.financeApi.domain.models.User;
 import com.gustavohenrique.financeApi.graphql.inputs.UserInput;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class UserServiceImpl implements UserService {
     @Override
     public List<User> listUsers() {

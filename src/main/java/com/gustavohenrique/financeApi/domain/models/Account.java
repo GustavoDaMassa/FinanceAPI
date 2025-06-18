@@ -18,9 +18,9 @@ public class Account {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String accountName;
     private String institution;
     private String type;
-    private String accountNumber;
     private BigDecimal balance;
 
     @ManyToOne

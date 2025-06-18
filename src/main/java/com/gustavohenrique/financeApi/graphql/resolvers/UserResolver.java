@@ -1,5 +1,6 @@
 package com.gustavohenrique.financeApi.graphql.resolvers;
 
+import com.gustavohenrique.financeApi.application.interfaces.UserService;
 import com.gustavohenrique.financeApi.application.services.UserServiceImpl;
 import com.gustavohenrique.financeApi.domain.models.User;
 import com.gustavohenrique.financeApi.graphql.dtos.UserDTO;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserResolver {
 
-    private final UserServiceImpl userService;
+    private final UserService userService;
     private final ModelMapper modelMapper;
 
     @QueryMapping

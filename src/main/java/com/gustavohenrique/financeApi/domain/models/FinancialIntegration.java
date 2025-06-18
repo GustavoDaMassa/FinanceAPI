@@ -33,4 +33,5 @@ public class FinancialIntegration {
 
     @OneToMany(mappedBy = "integration")
     private List<Account> accounts;
+
 }
