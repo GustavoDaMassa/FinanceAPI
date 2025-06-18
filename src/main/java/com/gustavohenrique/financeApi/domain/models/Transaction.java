@@ -26,14 +26,19 @@ public class Transaction {
     private TransactionType type;
 
     private String description;
-
     private String source;
     private String destination;
 
     private LocalDate transactionDate;
 
-    private String classification;
-    private String specification;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "subcategory_id")
+    private Category subcategory;
+
 
     @ManyToOne
     @JoinColumn(name = "account_id")
