@@ -1,4 +1,4 @@
-package com.gustavohenrique.financeApi.enums;
+package com.gustavohenrique.financeApi.domain.enums;
 
 public enum AggregatorType {
     BELVO,

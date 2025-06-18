@@ -1,10 +1,9 @@
-package com.gustavohenrique.financeApi.models;
+package com.gustavohenrique.financeApi.domain.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.kafka.common.protocol.types.Field;
 
 import java.util.List;
 

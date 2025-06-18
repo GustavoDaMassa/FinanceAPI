@@ -1,11 +1,10 @@
-package com.gustavohenrique.financeApi.models;
+package com.gustavohenrique.financeApi.domain.models;
 
-import com.gustavohenrique.financeApi.enums.AggregatorType;
+import com.gustavohenrique.financeApi.domain.enums.AggregatorType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.kafka.common.protocol.types.Field;
 
 import java.time.LocalDateTime;
 import java.util.List;

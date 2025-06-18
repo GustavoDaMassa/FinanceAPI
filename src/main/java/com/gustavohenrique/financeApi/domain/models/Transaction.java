@@ -1,6 +1,6 @@
-package com.gustavohenrique.financeApi.models;
+package com.gustavohenrique.financeApi.domain.models;
 
-import com.gustavohenrique.financeApi.enums.TransactionType;
+import com.gustavohenrique.financeApi.domain.enums.TransactionType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "transactions")

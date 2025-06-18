@@ -1,4 +1,4 @@
-package com.gustavohenrique.financeApi.models;
+package com.gustavohenrique.financeApi.domain.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

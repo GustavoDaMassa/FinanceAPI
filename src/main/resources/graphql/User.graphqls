@@ -1,0 +1,22 @@
+type UserDTO {
+    id: ID!
+    name: String!
+    email: String!
+}
+
+input UserInput {
+    name: String!
+    email: String!
+    password: String!
+}
+
+type Mutation {
+    createUser(input: UserInput!): UserDTO
+    updateUser(id: ID!, input: UserInput!): UserDTO
+    deleteUser(id: ID!): UserDTO
+}
+
+type Query {
+    findUserByEmail(email: String!): UserDTO
+    listUsers: [UserDTO!]!
+}
