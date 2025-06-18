@@ -1,0 +1,25 @@
+type CategoryDTO {
+    id: ID!
+    name: String!
+    userId: ID!
+    parentId: ID
+    subcategories: [CategoryDTO!]!
+}
+
+input CategoryInput {
+    name: String!
+    userId: ID!
+    parentId: ID
+}
+
+type Query {
+    findCategoryById(id: ID!): CategoryDTO
+    listCategoriesByUser(userId: ID!): [CategoryDTO!]!
+}
+
+type Mutation {
+
+    createCategory(input: CategoryInput!): CategoryDTO
+    updateCategory(id: ID!, input: CategoryInput!): CategoryDTO
+    deleteCategory(id: ID!): CategoryDTO
+}
