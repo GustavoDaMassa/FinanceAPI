@@ -1,9 +1,9 @@
 package com.gustavohenrique.financeApi.graphql.resolvers;
 
+import com.gustavohenrique.financeApi.application.services.UserServiceImpl;
+import com.gustavohenrique.financeApi.domain.models.User;
 import com.gustavohenrique.financeApi.graphql.dtos.UserDTO;
 import com.gustavohenrique.financeApi.graphql.inputs.UserInput;
-import com.gustavohenrique.financeApi.models.User;
-import com.gustavohenrique.financeApi.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserResolver {
 
-    private final UserService userService;
+    private final UserServiceImpl userService;
     private final ModelMapper modelMapper;
 
     @QueryMapping
@@ -40,7 +40,6 @@ public class UserResolver {
         User createdUser = userService.createUser(input);
         return modelMapper.map(createdUser, UserDTO.class);
     }
-
     @MutationMapping
     public UserDTO updateUser(@Argument Long id, @Argument UserInput input) {
         User updatedUser = userService.updateUser(id, input);
