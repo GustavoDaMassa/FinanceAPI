@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.modelmapper.internal.bytebuddy.implementation.bind.MethodDelegationBinder;
 
 import java.util.List;
 
@@ -18,6 +19,8 @@ public class User {
     private Long id;
 
     private String name;
+
+    @Column(unique = true)
     private String email;
     private String password;
 
