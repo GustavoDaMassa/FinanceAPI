@@ -1,6 +1,8 @@
 package com.gustavohenrique.financeApi.graphql.resolvers;
 
 import com.gustavohenrique.financeApi.application.interfaces.AccountService;
+import com.gustavohenrique.financeApi.application.interfaces.UserService;
+import com.gustavohenrique.financeApi.application.repositories.UserRepository;
 import com.gustavohenrique.financeApi.domain.models.Account;
 import com.gustavohenrique.financeApi.domain.models.FinancialIntegration;
 import com.gustavohenrique.financeApi.domain.models.User;
@@ -21,9 +23,9 @@ import java.util.stream.Collectors;
 public class AccountResolver {
 
     private final AccountService accountService;
+    private final UserService userService;
     private final AccountMapper accountMapper;
 
-    // ===== Queries =====
 
     @QueryMapping
     public AccountDTO findAccountById(@Argument Long id) {
@@ -39,11 +41,10 @@ public class AccountResolver {
                 .collect(Collectors.toList());
     }
 
-    // ===== Mutations =====
 
     @MutationMapping
     public AccountDTO createAccount(@Argument AccountInput input) {
-        User user = accountService.findUserById(input.getUserId());
+        User user = userService.findById(input.getUserId());
         FinancialIntegration integration = input.getIntegrationId() != null
                 ? accountService.findIntegrationById(input.getIntegrationId())
                 : null;
@@ -54,7 +55,7 @@ public class AccountResolver {
 
     @MutationMapping
     public AccountDTO updateAccount(@Argument Long id, @Argument AccountInput input) {
-        User user = accountService.findUserById(input.getUserId());
+        User user = userService.findById(input.getUserId());
         FinancialIntegration integration = input.getIntegrationId() != null
                 ? accountService.findIntegrationById(input.getIntegrationId())
                 : null;

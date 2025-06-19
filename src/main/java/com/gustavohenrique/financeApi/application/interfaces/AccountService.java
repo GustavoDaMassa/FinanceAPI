@@ -14,8 +14,6 @@ public interface AccountService {
 
     List<Account> findByUserId(Long userId);
 
-    User findUserById(@NotBlank Long userId);
-
     FinancialIntegration findIntegrationById(Long integrationId);
 
     Account create(Account account);
