@@ -40,8 +40,8 @@ type TransactionDTO {
 }
 
 type TransactionListWithBalanceDTO {
-    transactions: [TransactionDTO!]!
     balance: String!
+    transactions: [TransactionDTO!]!
 }
 
 type Query {

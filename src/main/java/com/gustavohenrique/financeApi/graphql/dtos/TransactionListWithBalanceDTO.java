@@ -6,6 +6,6 @@ import java.util.List;
 
 @Data
 public class TransactionListWithBalanceDTO {
-    private List<TransactionDTO> transactions;
     private String balance;
+    private List<TransactionDTO> transactions;
 }
