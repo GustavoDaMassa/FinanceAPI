@@ -11,8 +11,6 @@ public interface CategoryService {
 
     List<Category> findAllByUserId(Long userId);
 
-    User findUserById(@NotNull Long userId);
-
     Category create(Category category);
 
     Category update(Long id, Category category);

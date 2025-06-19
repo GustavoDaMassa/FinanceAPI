@@ -1,6 +1,7 @@
 package com.gustavohenrique.financeApi.graphql.resolvers;
 
 import com.gustavohenrique.financeApi.application.interfaces.CategoryService;
+import com.gustavohenrique.financeApi.application.interfaces.UserService;
 import com.gustavohenrique.financeApi.domain.models.Category;
 import com.gustavohenrique.financeApi.domain.models.User;
 import com.gustavohenrique.financeApi.graphql.dtos.CategoryDTO;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 public class CategoryResolver {
 
     private final CategoryService categoryService;
+    private final UserService userService;
     private final CategoryMapper categoryMapper;
 
     // ===== Queries =====
@@ -42,7 +44,7 @@ public class CategoryResolver {
 
     @MutationMapping
     public CategoryDTO createCategory(@Argument CategoryInput input) {
-        User user = categoryService.findUserById(input.getUserId());
+        User user = userService.findById(input.getUserId());
         Category parent = input.getParentId() != null ? categoryService.findById(input.getParentId()) : null;
 
         Category created = categoryService.create(categoryMapper.fromInput(input, user, parent));
@@ -51,7 +53,7 @@ public class CategoryResolver {
 
     @MutationMapping
     public CategoryDTO updateCategory(@Argument Long id, @Argument CategoryInput input) {
-        User user = categoryService.findUserById(input.getUserId());
+        User user = userService.findById(input.getUserId());
         Category parent = input.getParentId() != null ? categoryService.findById(input.getParentId()) : null;
 
         Category updated = categoryService.update(id, categoryMapper.fromInput(input, user, parent));

@@ -1,6 +1,7 @@
 package com.gustavohenrique.financeApi.graphql.resolvers;
 
 import com.gustavohenrique.financeApi.application.interfaces.FinancialIntegrationService;
+import com.gustavohenrique.financeApi.application.interfaces.UserService;
 import com.gustavohenrique.financeApi.domain.models.FinancialIntegration;
 import com.gustavohenrique.financeApi.domain.models.User;
 import com.gustavohenrique.financeApi.graphql.dtos.FinancialIntegrationDTO;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 public class FinancialIntegrationResolver {
 
     private final FinancialIntegrationService integrationService;
+    private final UserService userService;
     private final FinancialIntegrationMapper mapper;
 
     // ===== Queries =====
@@ -42,14 +44,14 @@ public class FinancialIntegrationResolver {
 
     @MutationMapping
     public FinancialIntegrationDTO createFinancialIntegration(@Argument FinancialIntegrationInput input) {
-        User user = integrationService.findUserById(input.getUserId());
+        User user = userService.findById(input.getUserId());
         FinancialIntegration created = integrationService.create(mapper.fromInput(input, user));
         return mapper.toDto(created);
     }
 
     @MutationMapping
     public FinancialIntegrationDTO updateFinancialIntegration(@Argument Long id, @Argument FinancialIntegrationInput input) {
-        User user = integrationService.findUserById(input.getUserId());
+        User user = userService.findById(input.getUserId());
         FinancialIntegration updated = integrationService.update(id, mapper.fromInput(input, user));
         return mapper.toDto(updated);
     }
