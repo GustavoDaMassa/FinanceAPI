@@ -5,7 +5,7 @@ import com.gustavohenrique.financeApi.application.interfaces.CategoryService;
 import com.gustavohenrique.financeApi.application.interfaces.TransactionService;
 import com.gustavohenrique.financeApi.application.repositories.AccountRepository;
 import com.gustavohenrique.financeApi.application.repositories.TransactionRepository;
-import com.gustavohenrique.financeApi.application.results.TransactionQueryResult;
+import com.gustavohenrique.financeApi.application.wrappers.TransactionQueryResult;
 import com.gustavohenrique.financeApi.domain.enums.TransactionType;
 import com.gustavohenrique.financeApi.domain.models.Account;
 import com.gustavohenrique.financeApi.domain.models.Category;

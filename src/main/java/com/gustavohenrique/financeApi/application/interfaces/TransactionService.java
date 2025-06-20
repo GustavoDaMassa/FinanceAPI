@@ -1,6 +1,6 @@
 package com.gustavohenrique.financeApi.application.interfaces;
 
-import com.gustavohenrique.financeApi.application.results.TransactionQueryResult;
+import com.gustavohenrique.financeApi.application.wrappers.TransactionQueryResult;
 import com.gustavohenrique.financeApi.domain.models.Transaction;
 import jakarta.validation.constraints.NotBlank;
 

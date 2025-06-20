@@ -1,7 +1,7 @@
 package com.gustavohenrique.financeApi.graphql.resolvers;
 
 import com.gustavohenrique.financeApi.application.interfaces.TransactionService;
-import com.gustavohenrique.financeApi.application.results.TransactionQueryResult;
+import com.gustavohenrique.financeApi.application.wrappers.TransactionQueryResult;
 import com.gustavohenrique.financeApi.domain.models.Transaction;
 import com.gustavohenrique.financeApi.graphql.dtos.TransactionDTO;
 import com.gustavohenrique.financeApi.graphql.dtos.TransactionListWithBalanceDTO;

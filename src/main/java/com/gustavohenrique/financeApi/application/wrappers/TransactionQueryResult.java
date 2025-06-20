@@ -1,4 +1,4 @@
-package com.gustavohenrique.financeApi.application.results;
+package com.gustavohenrique.financeApi.application.wrappers;
 
 import com.gustavohenrique.financeApi.domain.models.Transaction;
 import lombok.AllArgsConstructor;
