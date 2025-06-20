@@ -44,7 +44,7 @@ type TransactionListWithBalanceDTO {
     transactions: [TransactionDTO!]!
 }
 
-type Query {
+extend type Query {
 
     listUserTransactions(userId: ID!): TransactionListWithBalanceDTO!
     listAccountTransactions(accountId: ID!): TransactionListWithBalanceDTO!
@@ -54,7 +54,7 @@ type Query {
     listUncategorizedTransactions(accountId: ID!): [TransactionDTO!]!
 }
 
-type Mutation {
+extend type Mutation {
 
     createTransaction(input: TransactionInput!): TransactionDTO
     updateTransaction(id: ID!, input: TransactionInput!): TransactionDTO

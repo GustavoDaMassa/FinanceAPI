@@ -12,12 +12,12 @@ input CategoryInput {
     parentId: ID
 }
 
-type Query {
+extend type Query {
     findCategoryById(id: ID!): CategoryDTO
     listCategoriesByUser(userId: ID!): [CategoryDTO!]!
 }
 
-type Mutation {
+extend type Mutation {
 
     createCategory(input: CategoryInput!): CategoryDTO
     updateCategory(id: ID!, input: CategoryInput!): CategoryDTO

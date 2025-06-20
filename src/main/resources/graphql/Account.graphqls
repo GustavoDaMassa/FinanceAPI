@@ -17,13 +17,13 @@ input AccountInput {
     integrationId: ID
 }
 
-type Mutation {
+extend type Mutation {
     createAccount(input: AccountInput!): AccountDTO
     updateAccount(id: ID!, input: AccountInput!): AccountDTO
     deleteAccount(id: ID!): AccountDTO
 }
 
-type Query {
+extend type Query {
     findAccountById(id: ID!): AccountDTO
     listAccountsByUser(userId: ID!): [AccountDTO!]!
 }

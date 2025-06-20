@@ -24,7 +24,6 @@ public class TransactionResolver {
     private final TransactionService transactionService;
     private final TransactionMapper transactionMapper;
 
-    // ========== Queries ==========
 
     @QueryMapping
     public TransactionListWithBalanceDTO listUserTransactions(@Argument Long userId) {
@@ -64,7 +63,7 @@ public class TransactionResolver {
                 .toList();
     }
 
-    // ========== Mutations ==========
+//----------------------------------------------------------------------------------------
 
     @MutationMapping
     public TransactionDTO createTransaction(@Argument TransactionInput input) {
