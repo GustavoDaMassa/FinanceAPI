@@ -3,9 +3,11 @@ package com.gustavohenrique.financeApi.application.services;
 import com.gustavohenrique.financeApi.application.interfaces.BalanceCalculatorService;
 import com.gustavohenrique.financeApi.application.interfaces.CategoryService;
 import com.gustavohenrique.financeApi.application.interfaces.TransactionService;
+import com.gustavohenrique.financeApi.application.repositories.AccountRepository;
 import com.gustavohenrique.financeApi.application.repositories.TransactionRepository;
 import com.gustavohenrique.financeApi.application.results.TransactionQueryResult;
 import com.gustavohenrique.financeApi.domain.enums.TransactionType;
+import com.gustavohenrique.financeApi.domain.models.Account;
 import com.gustavohenrique.financeApi.domain.models.Category;
 import com.gustavohenrique.financeApi.domain.models.Transaction;
 import jakarta.persistence.EntityNotFoundException;
@@ -21,6 +23,7 @@ import java.util.List;
 public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionRepository transactionRepository;
+    private final AccountRepository accountRepository;
     private final BalanceCalculatorService balanceCalculatorService;
     private final CategoryService categoryService;
 
@@ -71,7 +74,10 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Transaction create(Transaction transaction) {
-        return transactionRepository.save(transaction);
+
+        transactionRepository.save(transaction);
+        updateAccountBalance(transaction.getAccount().getId());
+        return transaction;
     }
 
     @Override
@@ -89,7 +95,9 @@ public class TransactionServiceImpl implements TransactionService {
         existing.setCategory(transaction.getCategory());
         existing.setSubcategory(transaction.getSubcategory());
 
-        return transactionRepository.save(existing);
+        transactionRepository.save(existing);
+        updateAccountBalance(existing.getAccount().getId());
+        return existing;
     }
 
     @Override
@@ -111,6 +119,19 @@ public class TransactionServiceImpl implements TransactionService {
         Transaction transaction = transactionRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Transaction not found"));
         transactionRepository.delete(transaction);
+        updateAccountBalance(transaction.getAccount().getId());
         return transaction;
     }
+
+    private void updateAccountBalance(Long accountId) {
+        List<Transaction> transactions = transactionRepository.findByAccount_Id(accountId);
+        BigDecimal newBalance = balanceCalculatorService.calculate(transactions);
+
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new EntityNotFoundException("Account not found"));
+
+        account.setBalance(newBalance);
+        accountRepository.save(account);
+    }
+
 }
