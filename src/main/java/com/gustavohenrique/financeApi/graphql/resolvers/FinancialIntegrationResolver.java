@@ -24,7 +24,7 @@ public class FinancialIntegrationResolver {
     private final UserService userService;
     private final FinancialIntegrationMapper mapper;
 
-    // ===== Queries =====
+
 
     @QueryMapping
     public FinancialIntegrationDTO findFinancialIntegrationById(@Argument Long id) {
@@ -40,7 +40,7 @@ public class FinancialIntegrationResolver {
                 .collect(Collectors.toList());
     }
 
-    // ===== Mutations =====
+
 
     @MutationMapping
     public FinancialIntegrationDTO createFinancialIntegration(@Argument FinancialIntegrationInput input) {
