@@ -42,6 +42,7 @@ public class UserServiceImpl implements UserService {
     public User updateUser(Long id, UserInput input) {
 
             var user = userRepository.findById(id).orElseThrow();
+            if(userRepository.existsByEmail(input.getEmail())) throw new RuntimeException();
             user.setEmail(input.getEmail());
             user.setName(input.getName());
             user.setPassword(input.getPassword());

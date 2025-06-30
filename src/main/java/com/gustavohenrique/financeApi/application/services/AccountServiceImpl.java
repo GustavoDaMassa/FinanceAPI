@@ -59,7 +59,6 @@ public class AccountServiceImpl implements AccountService {
         existing.setAccountName(updatedAccount.getAccountName());
         existing.setInstitution(updatedAccount.getInstitution());
         existing.setType(updatedAccount.getType());
-        existing.setBalance(updatedAccount.getBalance());
         existing.setUser(updatedAccount.getUser());
         existing.setIntegration(updatedAccount.getIntegration());
         return accountRepository.save(existing);

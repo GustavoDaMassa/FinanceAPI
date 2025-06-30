@@ -12,7 +12,6 @@ input AccountInput {
     accountName: String!
     institution: String!
     type: String!
-    balance: String!
     userId: ID!
     integrationId: ID
 }

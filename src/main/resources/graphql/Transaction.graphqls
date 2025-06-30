@@ -9,7 +9,7 @@ input TransactionInput {
     description: String
     source: String
     destination: String
-    transactionDate: String!
+    transactionDate: String
     accountId: ID!
     categoryId: ID
     subcategoryId: ID

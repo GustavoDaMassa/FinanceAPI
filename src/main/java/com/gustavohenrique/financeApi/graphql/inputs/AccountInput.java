@@ -11,7 +11,6 @@ public class AccountInput {
     private String accountName;
     private String institution;
     private String type;
-    private String balance;
 
     @NotNull
     private Long userId;

@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @Component
 public class AccountMapper {
@@ -25,7 +26,12 @@ public class AccountMapper {
         if (account.getIntegration() != null) {
             dto.setIntegrationId(account.getIntegration().getId());
         }
-        dto.setBalance(account.getBalance().toPlainString());
+        dto.setBalance(
+                Optional.ofNullable(account.getBalance())
+                        .orElse(BigDecimal.ZERO)
+                        .toPlainString()
+        );
+
         return dto;
     }
 
@@ -34,7 +40,6 @@ public class AccountMapper {
         account.setAccountName(input.getAccountName());
         account.setInstitution(input.getInstitution());
         account.setType(input.getType());
-        account.setBalance(new BigDecimal(input.getBalance()));
         account.setUser(user);
         account.setIntegration(integration);
         return account;

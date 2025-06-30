@@ -7,9 +7,9 @@ type FinancialIntegrationDTO {
     id: ID!
     aggregator: AggregatorType!
     linkId: String!
-    status: String!
+    status: String
     createdAt: String!
-    expiresAt: String!
+    expiresAt: String
     userId: ID!
 }
 
