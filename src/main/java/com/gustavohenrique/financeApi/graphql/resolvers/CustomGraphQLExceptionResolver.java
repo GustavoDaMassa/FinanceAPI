@@ -1,10 +1,12 @@
-package com.gustavohenrique.financeApi.exception;
+package com.gustavohenrique.financeApi.graphql.resolvers;
 
+import com.gustavohenrique.financeApi.exception.EmailAlreadyExistException;
+import com.gustavohenrique.financeApi.exception.InvalidTransactionTypeException;
+import com.gustavohenrique.financeApi.exception.NotFoundException;
 import graphql.GraphQLError;
 import graphql.GraphqlErrorBuilder;
 import graphql.schema.DataFetchingEnvironment;
 import jakarta.validation.ConstraintViolationException;
-import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.springframework.graphql.execution.DataFetcherExceptionResolverAdapter;
 import org.springframework.graphql.execution.ErrorType;
 import org.springframework.messaging.handler.annotation.support.MethodArgumentNotValidException;
@@ -14,39 +16,33 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.util.Objects;
 
 @Component
-public class CustomGraphQLException extends DataFetcherExceptionResolverAdapter {
+public class CustomGraphQLExceptionResolver extends DataFetcherExceptionResolverAdapter {
 
     @Override
     protected GraphQLError resolveToSingleError(Throwable e, DataFetchingEnvironment env) {
-        if (e instanceof NotFoundException) {
-            return GraphqlErrorBuilder.newError(env)
+        return switch (e) {
+            case NotFoundException notFoundException -> GraphqlErrorBuilder.newError(env)
                     .message(e.getMessage())
                     .errorType(ErrorType.NOT_FOUND)
                     .build();
-        }
-        if (e instanceof EmailAlreadyExistException) {
-            return GraphqlErrorBuilder.newError(env)
+            case EmailAlreadyExistException emailAlreadyExistException -> GraphqlErrorBuilder.newError(env)
                     .message(e.getMessage())
                     .errorType(ErrorType.BAD_REQUEST)
                     .build();
-        }
-        if (e instanceof InvalidTransactionTypeException) {
-            return GraphqlErrorBuilder.newError(env)
+            case InvalidTransactionTypeException invalidTransactionTypeException -> GraphqlErrorBuilder.newError(env)
                     .message(e.getMessage())
                     .errorType(ErrorType.BAD_REQUEST)
                     .build();
-        }
-        if (e instanceof ConstraintViolationException) {
-            return GraphqlErrorBuilder.newError(env)
+            case ConstraintViolationException constraintViolationException -> GraphqlErrorBuilder.newError(env)
                     .message(e.getMessage())
                     .errorType(ErrorType.BAD_REQUEST)
                     .build();
-        }
+            default -> GraphqlErrorBuilder.newError(env)
+                    .message("Internal Server Error")
+                    .errorType(ErrorType.INTERNAL_ERROR)
+                    .build();
+        };
 
-        return GraphqlErrorBuilder.newError(env)
-                .message("Internal Server Error")
-                .errorType(ErrorType.INTERNAL_ERROR)
-                .build();
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
