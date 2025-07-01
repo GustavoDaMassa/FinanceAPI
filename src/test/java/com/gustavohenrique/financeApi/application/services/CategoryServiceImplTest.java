@@ -37,7 +37,7 @@ class CategoryServiceImplTest {
     @BeforeEach
     void setUp() {
         user = new User(1L, "Gustavo", "gustavo@test.com", "123456", null, null);
-        category = new Category(1L, "Alimentação", user, null, null);
+        category = new Category(1L, "Alimentação", user, null, List.of());
     }
 
     @Test
@@ -68,7 +68,7 @@ class CategoryServiceImplTest {
         List<Category> result = categoryService.findAllByUserId(1L);
 
         assertEquals(1, result.size());
-        assertEquals("Alimentação", result.get(0).getName());
+        assertEquals("Alimentação", result.getFirst().getName());
     }
 
     @Test

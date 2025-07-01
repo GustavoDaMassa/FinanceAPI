@@ -59,12 +59,10 @@ class AccountResolverTest {
                 accountName: "Savings"
                 institution: "Bank"
                 type: "Checking"
-                balance: "1000.00"
                 userId: %d
               }) {
                 id
                 accountName
-                balance
               }
             }
         """.formatted(userId))
@@ -100,7 +98,6 @@ class AccountResolverTest {
                 accountName: "ToFind"
                 institution: "Bank"
                 type: "Checking"
-                balance: "500.00"
                 userId: %d
               }) {
                 id
@@ -134,7 +131,6 @@ class AccountResolverTest {
                 accountName: "OldName"
                 institution: "Bank"
                 type: "Checking"
-                balance: "800.00"
                 userId: %d
               }) {
                 id
@@ -152,7 +148,6 @@ class AccountResolverTest {
                 accountName: "UpdatedName"
                 institution: "UpdatedBank"
                 type: "Savings"
-                balance: "2000.00"
                 userId: %d
               }) {
                 accountName
@@ -174,7 +169,6 @@ class AccountResolverTest {
                 accountName: "ToDelete"
                 institution: "Bank"
                 type: "Checking"
-                balance: "100.00"
                 userId: %d
               }) {
                 id

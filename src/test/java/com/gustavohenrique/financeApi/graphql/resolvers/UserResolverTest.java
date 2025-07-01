@@ -152,17 +152,33 @@ class UserResolverTest {
     @Test
     @DisplayName("Should delete user by ID")
     void deleteUser() {
+        Long userId = graphQlTester.document("""
+        mutation {
+          createUser(input: {
+            name: "Usuário para Deletar"
+            email: "delete@test.com"
+            password: "123456"
+          }) {
+            id
+          }
+        }
+    """)
+                .execute()
+                .path("createUser.id")
+                .entity(Long.class)
+                .get();
         graphQlTester.document("""
-            mutation {
-              deleteUser(id: 1) {
-                id
-                email
-              }
-            }
-        """)
+        mutation($id: ID!) {
+          deleteUser(id: $id) {
+            id
+            email
+          }
+        }
+    """)
+                .variable("id", userId)
                 .execute()
                 .path("deleteUser.id")
                 .entity(Long.class)
-                .isEqualTo(1L);
+                .isEqualTo(userId);
     }
 }

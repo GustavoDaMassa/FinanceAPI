@@ -131,7 +131,7 @@ class AccountServiceImplTest {
         updated.setIntegration(integration);
 
         when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
-        when(accountRepository.save(any())).thenReturn(account);
+        when(accountRepository.save(any())).thenReturn(updated);
 
         Account result = accountService.update(1L, updated);
 

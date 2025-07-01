@@ -56,7 +56,6 @@ class TransactionResolverTest {
                 accountName: "Main"
                 institution: "Bank"
                 type: "Checking"
-                balance: "1000.00"
                 userId: %d
               }) {
                 id
