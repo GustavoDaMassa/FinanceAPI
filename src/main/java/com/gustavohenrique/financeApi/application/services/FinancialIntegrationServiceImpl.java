@@ -5,6 +5,9 @@ import com.gustavohenrique.financeApi.application.repositories.FinancialIntegrat
 import com.gustavohenrique.financeApi.application.repositories.UserRepository;
 import com.gustavohenrique.financeApi.domain.models.FinancialIntegration;
 import com.gustavohenrique.financeApi.domain.models.User;
+import com.gustavohenrique.financeApi.exception.IntegrationNotFoundException;
+import com.gustavohenrique.financeApi.exception.UserIDNotFoundException;
+import com.gustavohenrique.financeApi.exception.UserNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,20 +25,22 @@ public class FinancialIntegrationServiceImpl implements FinancialIntegrationServ
     @Override
     public FinancialIntegration findById(Long id) {
         return integrationRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Integration not found with ID: " + id));
+                .orElseThrow(() -> new IntegrationNotFoundException(id));
     }
 
     @Override
     public List<FinancialIntegration> findByUserId(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + userId));
+                .orElseThrow(() -> new UserIDNotFoundException(userId));
         return integrationRepository.findByUser(user);
     }
 
     @Override
     public FinancialIntegration create(FinancialIntegration financialIntegration) {
+        if(!userRepository.existsById(financialIntegration.getUser().getId()))
+            throw new UserIDNotFoundException(financialIntegration.getUser().getId());
         financialIntegration.setCreatedAt(LocalDateTime.now());
-        financialIntegration.setExpiresAt(LocalDateTime.now().plusMonths(6));
+        financialIntegration.setExpiresAt(LocalDateTime.now().plusMonths(12));
         return integrationRepository.save(financialIntegration);
     }
 

@@ -5,6 +5,8 @@ import com.gustavohenrique.financeApi.application.repositories.CategoryRepositor
 import com.gustavohenrique.financeApi.application.repositories.UserRepository;
 import com.gustavohenrique.financeApi.domain.models.Category;
 import com.gustavohenrique.financeApi.domain.models.User;
+import com.gustavohenrique.financeApi.exception.CategoryNotFoundException;
+import com.gustavohenrique.financeApi.exception.UserIDNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,13 +24,13 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category findById(Long id) {
         return categoryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Category not found with ID: " + id));
+                .orElseThrow(() -> new CategoryNotFoundException(id));
     }
 
     @Override
     public List<Category> findAllByUserId(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + userId));
+                .orElseThrow(() -> new UserIDNotFoundException(userId));
         return categoryRepository.findAllByUser(user);
     }
 

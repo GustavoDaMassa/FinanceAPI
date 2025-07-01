@@ -7,6 +7,9 @@ import com.gustavohenrique.financeApi.application.repositories.UserRepository;
 import com.gustavohenrique.financeApi.domain.models.Account;
 import com.gustavohenrique.financeApi.domain.models.FinancialIntegration;
 import com.gustavohenrique.financeApi.domain.models.User;
+import com.gustavohenrique.financeApi.exception.AccountNotFoundException;
+import com.gustavohenrique.financeApi.exception.IntegrationNotFoundException;
+import com.gustavohenrique.financeApi.exception.UserIDNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,20 +35,20 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account findById(Long id) {
         return accountRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Account not found with ID: " + id));
+                .orElseThrow(() -> new AccountNotFoundException(id));
     }
 
     @Override
     public List<Account> findByUserId(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + userId));
+                .orElseThrow(() -> new UserIDNotFoundException(userId));
         return accountRepository.findByUser(user);
     }
 
     @Override
     public FinancialIntegration findIntegrationById(Long integrationId) {
         return integrationRepository.findById(integrationId)
-                .orElseThrow(() -> new EntityNotFoundException("Integration not found with ID: " + integrationId));
+                .orElseThrow(() -> new IntegrationNotFoundException(integrationId));
     }
 
     @Override
