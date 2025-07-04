@@ -11,6 +11,7 @@ type FinancialIntegrationDTO {
     createdAt: String!
     expiresAt: String
     userId: ID!
+    accounts: [AccountDTO!]
 }
 
 input FinancialIntegrationInput {
@@ -20,7 +21,7 @@ input FinancialIntegrationInput {
 }
 
 extend type Mutation {
-    createFinancialIntegration(input: FinancialIntegrationInput!): FinancialIntegrationDTO
+    createFinancialIntegration(input: FinancialIntegrationInput!, accountId: ID!): FinancialIntegrationDTO
     updateFinancialIntegration(id: ID!, input: FinancialIntegrationInput!): FinancialIntegrationDTO
     deleteFinancialIntegration(id: ID!): FinancialIntegrationDTO
 }
@@ -28,4 +29,5 @@ extend type Mutation {
 extend type Query {
     findFinancialIntegrationById(id: ID!): FinancialIntegrationDTO
     listFinancialIntegrationsByUser(userId: ID!): [FinancialIntegrationDTO!]!
+    listAccountsByIntegration(id: ID!): [AccountDTO!]!
 }

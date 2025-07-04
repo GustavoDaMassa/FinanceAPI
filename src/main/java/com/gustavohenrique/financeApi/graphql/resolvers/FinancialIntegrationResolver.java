@@ -1,11 +1,15 @@
 package com.gustavohenrique.financeApi.graphql.resolvers;
 
+import com.gustavohenrique.financeApi.application.interfaces.AccountService;
 import com.gustavohenrique.financeApi.application.interfaces.FinancialIntegrationService;
 import com.gustavohenrique.financeApi.application.interfaces.UserService;
+import com.gustavohenrique.financeApi.domain.models.Account;
 import com.gustavohenrique.financeApi.domain.models.FinancialIntegration;
 import com.gustavohenrique.financeApi.domain.models.User;
+import com.gustavohenrique.financeApi.graphql.dtos.AccountDTO;
 import com.gustavohenrique.financeApi.graphql.dtos.FinancialIntegrationDTO;
 import com.gustavohenrique.financeApi.graphql.inputs.FinancialIntegrationInput;
+import com.gustavohenrique.financeApi.graphql.mappers.AccountMapper;
 import com.gustavohenrique.financeApi.graphql.mappers.FinancialIntegrationMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -22,7 +26,9 @@ public class FinancialIntegrationResolver {
 
     private final FinancialIntegrationService integrationService;
     private final UserService userService;
+    private final AccountService accountService;
     private final FinancialIntegrationMapper mapper;
+    private final AccountMapper accountMapper;
 
 
 
@@ -40,12 +46,21 @@ public class FinancialIntegrationResolver {
                 .collect(Collectors.toList());
     }
 
+    @QueryMapping
+    public List<AccountDTO> listAccountsByIntegration(@Argument Long id){
+        return integrationService.listIntegrationAccounts(id).stream()
+                .map(accountMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
 
 
     @MutationMapping
-    public FinancialIntegrationDTO createFinancialIntegration(@Argument FinancialIntegrationInput input) {
+    public FinancialIntegrationDTO createFinancialIntegration(@Argument FinancialIntegrationInput input, @Argument Long accountId) {
         User user = userService.findById(input.getUserId());
-        FinancialIntegration created = integrationService.create(mapper.fromInput(input, user));
+        Account account = accountService.findById(accountId);
+        System.out.println("dentro da resolver financialIntegration");
+        FinancialIntegration created = integrationService.create(mapper.fromInput(input, user), account);
         return mapper.toDto(created);
     }
 
