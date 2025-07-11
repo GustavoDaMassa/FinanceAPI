@@ -5,7 +5,7 @@
 
 
 <p align="center">
-  <img src="Imagens/img_1.png" alt="descrição">
+  <img src="Imagens/logo.png" alt="descrição">
 </p>
 
 # API GraphQL de Integração Bancária, Análise e Classificação de Transações
@@ -238,8 +238,7 @@ Responde: 200-OK.
 
 ## Modelo de Dados
 
-![img.png](img.png)
-
+![img_9.png](Imagens/img_9.png)
 
 - Todas as relações apresentadas tem cardinalidade 1:N
   - Usuário possui N --> Contas;
