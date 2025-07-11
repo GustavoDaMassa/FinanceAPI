@@ -33,7 +33,7 @@ Entenda um pouco mais sobra a **[Pluggy](#pluggy)** e sobre o **[Ngrok](#ngrok)*
 
 ---
 
-![img_7.png](img_7.png)
+![img_7.png](Imagens/img_7.png)
 
 ---
 
@@ -68,9 +68,8 @@ Entenda um pouco mais sobra a **[Pluggy](#pluggy)** e sobre o **[Ngrok](#ngrok)*
 
 ## Fluxo Webhook
 
-<p align="center">
-  <img src="Imagens/Fluxograma.png" alt="descrição">
-</p>
+![img_8.png](Imagens/img_8.png)
+
 
 - Através da plataforma do agregador Pluggy o cliente inicia uma aplicação e recebe as credencias de acesso que devem ser fornecidas à FinanceAPI em um requisição POST;
 
@@ -90,7 +89,7 @@ Entenda um pouco mais sobra a **[Pluggy](#pluggy)** e sobre o **[Ngrok](#ngrok)*
 
 Exemplo: createUser(input: UserInput!): UserDTO
 
-![img_5.png](img_5.png)
+![img_5.png](Imagens/img_5.png)
 
 outras funcionalidades: 
 
@@ -115,7 +114,7 @@ type Query {
 
 Exemplo: createAccount(input: AccountInput!): AccountDTO
 
-![img_1.png](img_1.png)
+![img_1.png](Imagens/img_1.png)
 
 Outras funcionalidades: 
 
@@ -140,7 +139,7 @@ extend type Query {
 
 Exemplo: createFinancialIntegration(input: FinancialIntegrationInput!, accountId: ID!): FinancialIntegrationDTO
 
-![img_2.png](img_2.png)
+![img_2.png](Imagens/img_2.png)
 
 Outras Funcionalidades:
 
@@ -167,7 +166,7 @@ extend type Query {
 
 Exemplo: createCategory(input: CategoryInput!): CategoryDTO
 
-![img_3.png](img_3.png)
+![img_3.png](Imagens/img_3.png)
 
 Outras funcionalidades:
 
@@ -194,7 +193,7 @@ extend type Mutation {
 
 Exemplo: categorizeTransaction(id: ID!, categoryId: ID, subcategoryId: ID): TransactionDTO
 
-![img_4.png](img_4.png)
+![img_4.png](Imagens/img_4.png)
 
 Outras funcionalidades:
 
@@ -239,9 +238,8 @@ Responde: 200-OK.
 
 ## Modelo de Dados
 
-<p align="center">
-  <img src="Imagens/MER.png" alt="descrição">
-</p>
+![img.png](img.png)
+
 
 - Todas as relações apresentadas tem cardinalidade 1:N
   - Usuário possui N --> Contas;
