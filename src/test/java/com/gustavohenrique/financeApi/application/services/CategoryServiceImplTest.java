@@ -4,6 +4,8 @@ import com.gustavohenrique.financeApi.application.repositories.CategoryRepositor
 import com.gustavohenrique.financeApi.application.repositories.UserRepository;
 import com.gustavohenrique.financeApi.domain.models.Category;
 import com.gustavohenrique.financeApi.domain.models.User;
+import com.gustavohenrique.financeApi.exception.CategoryNotFoundException;
+import com.gustavohenrique.financeApi.exception.UserIDNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -56,7 +58,7 @@ class CategoryServiceImplTest {
     void findById_notFound_shouldThrow() {
         when(categoryRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> categoryService.findById(1L));
+        assertThrows(CategoryNotFoundException.class, () -> categoryService.findById(1L));
     }
 
     @Test
@@ -76,7 +78,7 @@ class CategoryServiceImplTest {
     void findAllByUserId_notFound_shouldThrow() {
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> categoryService.findAllByUserId(1L));
+        assertThrows(UserIDNotFoundException.class, () -> categoryService.findAllByUserId(1L));
     }
 
     @Test
@@ -110,7 +112,7 @@ class CategoryServiceImplTest {
     void update_notFound_shouldThrow() {
         when(categoryRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> categoryService.update(1L, category));
+        assertThrows(CategoryNotFoundException.class, () -> categoryService.update(1L, category));
     }
 
     @Test
@@ -129,6 +131,6 @@ class CategoryServiceImplTest {
     void delete_notFound_shouldThrow() {
         when(categoryRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> categoryService.delete(1L));
+        assertThrows(CategoryNotFoundException.class, () -> categoryService.delete(1L));
     }
 }

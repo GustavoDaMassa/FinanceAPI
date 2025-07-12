@@ -6,6 +6,9 @@ import com.gustavohenrique.financeApi.application.repositories.UserRepository;
 import com.gustavohenrique.financeApi.domain.models.Account;
 import com.gustavohenrique.financeApi.domain.models.FinancialIntegration;
 import com.gustavohenrique.financeApi.domain.models.User;
+import com.gustavohenrique.financeApi.exception.AccountNotFoundException;
+import com.gustavohenrique.financeApi.exception.IntegrationNotFoundException;
+import com.gustavohenrique.financeApi.exception.UserIDNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -65,7 +68,7 @@ class AccountServiceImplTest {
     void findById_notFound_shouldThrow() {
         when(accountRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> accountService.findById(1L));
+        assertThrows(AccountNotFoundException.class, () -> accountService.findById(1L));
     }
 
     @Test
@@ -85,7 +88,7 @@ class AccountServiceImplTest {
     void findByUserId_notFound_shouldThrow() {
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> accountService.findByUserId(1L));
+        assertThrows(UserIDNotFoundException.class, () -> accountService.findByUserId(1L));
     }
 
     @Test
@@ -104,7 +107,7 @@ class AccountServiceImplTest {
     void findIntegrationById_notFound_shouldThrow() {
         when(integrationRepository.findById(10L)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> accountService.findIntegrationById(10L));
+        assertThrows(IntegrationNotFoundException.class, () -> accountService.findIntegrationById(10L));
     }
 
     @Test
@@ -147,7 +150,7 @@ class AccountServiceImplTest {
         when(accountRepository.findById(1L)).thenReturn(Optional.empty());
 
         Account updated = new Account();
-        assertThrows(EntityNotFoundException.class, () -> accountService.update(1L, updated));
+        assertThrows(AccountNotFoundException.class, () -> accountService.update(1L, updated));
     }
 
     @Test
@@ -166,6 +169,6 @@ class AccountServiceImplTest {
     void delete_notFound_shouldThrow() {
         when(accountRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> accountService.delete(1L));
+        assertThrows(AccountNotFoundException.class, () -> accountService.delete(1L));
     }
 }

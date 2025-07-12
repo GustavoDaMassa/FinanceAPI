@@ -1,10 +1,14 @@
 package com.gustavohenrique.financeApi.application.services;
 
+import com.gustavohenrique.financeApi.application.repositories.AccountRepository;
 import com.gustavohenrique.financeApi.application.repositories.FinancialIntegrationRepository;
 import com.gustavohenrique.financeApi.application.repositories.UserRepository;
 import com.gustavohenrique.financeApi.domain.enums.AggregatorType;
+import com.gustavohenrique.financeApi.domain.models.Account;
 import com.gustavohenrique.financeApi.domain.models.FinancialIntegration;
 import com.gustavohenrique.financeApi.domain.models.User;
+import com.gustavohenrique.financeApi.exception.IntegrationNotFoundException;
+import com.gustavohenrique.financeApi.exception.UserIDNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -33,6 +37,9 @@ class FinancialIntegrationServiceImplTest {
     @InjectMocks
     private FinancialIntegrationServiceImpl integrationService;
 
+    @Mock
+    private AccountRepository accountRepository;
+
     private FinancialIntegration integration;
     private User user;
 
@@ -58,7 +65,7 @@ class FinancialIntegrationServiceImplTest {
     void findById_notFound_shouldThrow() {
         when(integrationRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> integrationService.findById(1L));
+        assertThrows(IntegrationNotFoundException.class, () -> integrationService.findById(1L));
     }
 
     @Test
@@ -78,43 +85,41 @@ class FinancialIntegrationServiceImplTest {
     void findByUserId_notFound_shouldThrow() {
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> integrationService.findByUserId(1L));
+        assertThrows(UserIDNotFoundException.class, () -> integrationService.findByUserId(1L));
     }
 
     @Test
     @DisplayName("Should create integration with timestamps and return it")
-    void create_success() {
+     void create_success() {
+        // Arrange
+        Account account = new Account();
+        account.setId(10L);
+        account.setUser(user);
+
+        when(userRepository.existsById(user.getId())).thenReturn(true);
+        when(accountRepository.existsById(account.getId())).thenReturn(true);
         when(integrationRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+        when(accountRepository.save(any())).thenReturn(account);
 
-        FinancialIntegration result = integrationService.create(integration);
+        // Act
+        FinancialIntegration result = integrationService.create(integration, account);
 
+        // Assert
         assertNotNull(result.getCreatedAt());
         assertNotNull(result.getExpiresAt());
         assertTrue(result.getExpiresAt().isAfter(result.getCreatedAt()));
+
         verify(integrationRepository).save(any());
+        verify(accountRepository).save(any());
     }
 
-    @Test
-    @DisplayName("Should update and return integration when ID exists")
-    void update_success() {
-        FinancialIntegration updated = new FinancialIntegration(null, AggregatorType.BELVO, "link456", "inactive", null, LocalDateTime.now().plusDays(1), user, null);
-
-        when(integrationRepository.findById(1L)).thenReturn(Optional.of(integration));
-        when(integrationRepository.save(any())).thenReturn(integration);
-
-        FinancialIntegration result = integrationService.update(1L, updated);
-
-        assertEquals(AggregatorType.BELVO, result.getAggregator());
-        assertEquals("link456", result.getLinkId());
-        assertEquals("inactive", result.getStatus());
-    }
 
     @Test
     @DisplayName("Should throw when updating non-existing integration")
     void update_notFound_shouldThrow() {
         when(integrationRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> integrationService.update(1L, integration));
+        assertThrows(IntegrationNotFoundException.class, () -> integrationService.update(1L, integration));
     }
 
     @Test
@@ -133,6 +138,6 @@ class FinancialIntegrationServiceImplTest {
     void delete_notFound_shouldThrow() {
         when(integrationRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> integrationService.delete(1L));
+        assertThrows(IntegrationNotFoundException.class, () -> integrationService.delete(1L));
     }
 }

@@ -4,6 +4,7 @@ import com.gustavohenrique.financeApi.application.interfaces.BalanceCalculatorSe
 import com.gustavohenrique.financeApi.application.interfaces.CategoryService;
 import com.gustavohenrique.financeApi.application.repositories.AccountRepository;
 import com.gustavohenrique.financeApi.application.repositories.TransactionRepository;
+import com.gustavohenrique.financeApi.application.repositories.UserRepository;
 import com.gustavohenrique.financeApi.application.wrappers.TransactionQueryResult;
 import com.gustavohenrique.financeApi.domain.enums.TransactionType;
 import com.gustavohenrique.financeApi.domain.models.*;
@@ -29,6 +30,7 @@ class TransactionServiceImplTest {
 
     @Mock private TransactionRepository transactionRepository;
     @Mock private AccountRepository accountRepository;
+    @Mock private UserRepository userRepository;
     @Mock private BalanceCalculatorService balanceCalculatorService;
     @Mock private CategoryService categoryService;
 
@@ -47,6 +49,7 @@ class TransactionServiceImplTest {
     @Test
     @DisplayName("Should return transactions and balance by user ID")
     void listByUserId() {
+        when(userRepository.existsById(1L)).thenReturn(true);
         when(transactionRepository.findByAccount_User_Id(1L)).thenReturn(List.of(transaction));
         when(balanceCalculatorService.calculate(List.of(transaction))).thenReturn(new BigDecimal("100.00"));
 
@@ -59,6 +62,7 @@ class TransactionServiceImplTest {
     @Test
     @DisplayName("Should return transactions and balance by account ID")
     void listByAccount() {
+        when(accountRepository.existsById(1L)).thenReturn(true);
         when(transactionRepository.findByAccount_Id(1L)).thenReturn(List.of(transaction));
         when(balanceCalculatorService.calculate(List.of(transaction))).thenReturn(new BigDecimal("100.00"));
 
@@ -70,6 +74,7 @@ class TransactionServiceImplTest {
     @Test
     @DisplayName("Should return transactions and balance by date period")
     void listByPeriod() {
+        when(accountRepository.existsById(1L)).thenReturn(true);
         when(transactionRepository.findByAccountIdAndTransactionDateBetween(eq(1L), any(), any())).thenReturn(List.of(transaction));
         when(balanceCalculatorService.calculate(List.of(transaction))).thenReturn(new BigDecimal("100.00"));
 
@@ -81,6 +86,7 @@ class TransactionServiceImplTest {
     @Test
     @DisplayName("Should return transactions and balance by type")
     void listByType() {
+        when(accountRepository.existsById(1L)).thenReturn(true);
         when(transactionRepository.findByAccountIdAndType(1L, TransactionType.INFLOW)).thenReturn(List.of(transaction));
         when(balanceCalculatorService.calculate(List.of(transaction))).thenReturn(new BigDecimal("100.00"));
 
@@ -92,6 +98,7 @@ class TransactionServiceImplTest {
     @Test
     @DisplayName("Should return transactions and balance by custom filters")
     void listByFilter() {
+        when(accountRepository.existsById(1L)).thenReturn(true);
         when(transactionRepository.findByFilter(1L, List.of(1L), List.of())).thenReturn(List.of(transaction));
         when(balanceCalculatorService.calculate(List.of(transaction))).thenReturn(new BigDecimal("100.00"));
 
@@ -103,6 +110,7 @@ class TransactionServiceImplTest {
     @Test
     @DisplayName("Should return uncategorized transactions")
     void listUncategorized() {
+        when(accountRepository.existsById(1L)).thenReturn(true);
         when(transactionRepository.findByAccountIdAndCategoryIsNull(1L)).thenReturn(List.of(transaction));
 
         List<Transaction> result = transactionService.listUncategorized(1L);
@@ -113,6 +121,7 @@ class TransactionServiceImplTest {
     @Test
     @DisplayName("Should create transaction and update account balance")
     void create() {
+        when(accountRepository.existsById(1L)).thenReturn(true);
         when(transactionRepository.save(transaction)).thenReturn(transaction);
         when(transactionRepository.findByAccount_Id(1L)).thenReturn(List.of(transaction));
         when(balanceCalculatorService.calculate(List.of(transaction))).thenReturn(new BigDecimal("100.00"));

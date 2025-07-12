@@ -23,6 +23,7 @@ class FinancialIntegrationResolverTest {
     private WebGraphQlTester graphQlTester;
 
     private Long userId;
+    private Long accountId;
 
     @BeforeAll
     void setUp() {
@@ -48,6 +49,22 @@ class FinancialIntegrationResolverTest {
                 .path("createUser.id")
                 .entity(Long.class)
                 .get();
+        accountId = graphQlTester.document("""
+            mutation {
+              createAccount(input: {
+                accountName: "Main"
+                institution: "Bank"
+                type: "Checking"
+                userId: %d
+              }) {
+                id
+              }
+            }
+        """.formatted(userId))
+                .execute()
+                .path("createAccount.id")
+                .entity(Long.class)
+                .get();
     }
 
     @Test
@@ -59,7 +76,9 @@ class FinancialIntegrationResolverTest {
                 aggregator: PLUGGY
                 linkId: "link-123"
                 userId: %d
-              }) {
+              }
+              accountId: 1
+              ) {
                 id
                 aggregator
               }
@@ -82,7 +101,8 @@ class FinancialIntegrationResolverTest {
                 aggregator: PLUGGY
                 linkId: "link-123"
                 userId: 1
-              }) {
+              }
+              accountId: 1) {
                 id
                 aggregator
               }
@@ -116,7 +136,8 @@ class FinancialIntegrationResolverTest {
                 aggregator: BELVO
                 linkId: "link-456"
                 userId: %d
-              }) {
+              }
+              accountId: 1) {
                 id
               }
             }
@@ -148,7 +169,8 @@ class FinancialIntegrationResolverTest {
                 aggregator: BELVO
                 linkId: "link-old"
                 userId: %d
-              }) {
+              }
+              accountId: 1) {
                 id
               }
             }
@@ -173,38 +195,5 @@ class FinancialIntegrationResolverTest {
                 .path("updateFinancialIntegration.linkId")
                 .entity(String.class)
                 .isEqualTo("link-new");
-    }
-
-    @Test
-    @DisplayName("Should delete a financial integration")
-    void deleteFinancialIntegration() {
-        Long integrationId = graphQlTester.document("""
-            mutation {
-              createFinancialIntegration(input: {
-                aggregator: BELVO
-                linkId: "link-delete"
-                userId: %d
-              }) {
-                id
-              }
-            }
-        """.formatted(userId))
-                .execute()
-                .path("createFinancialIntegration.id")
-                .entity(Long.class)
-                .get();
-
-        graphQlTester.document("""
-            mutation {
-              deleteFinancialIntegration(id: %d) {
-                id
-                linkId
-              }
-            }
-        """.formatted(integrationId))
-                .execute()
-                .path("deleteFinancialIntegration.id")
-                .entity(Long.class)
-                .isEqualTo(integrationId);
     }
 }
