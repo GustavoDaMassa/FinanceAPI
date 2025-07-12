@@ -1,8 +1,7 @@
-package com.gustavohenrique.financeApi.webhook.consumer;
+package com.gustavohenrique.financeApi.webhook.service;
 
 import com.gustavohenrique.financeApi.webhook.dataTransfer.ClientCredencials;
 import com.gustavohenrique.financeApi.webhook.dataTransfer.ListTransactionsResponse;
-import com.gustavohenrique.financeApi.webhook.producer.CredentialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;

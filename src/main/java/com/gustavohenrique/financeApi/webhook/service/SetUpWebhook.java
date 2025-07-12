@@ -1,4 +1,4 @@
-package com.gustavohenrique.financeApi.webhook.consumer;
+package com.gustavohenrique.financeApi.webhook.service;
 
 import com.gustavohenrique.financeApi.domain.models.Account;
 import com.gustavohenrique.financeApi.domain.models.User;

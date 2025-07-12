@@ -1,7 +1,8 @@
-package com.gustavohenrique.financeApi.webhook.producer;
+package com.gustavohenrique.financeApi.webhook.controllers;
 
 
 import com.gustavohenrique.financeApi.webhook.dataTransfer.ClientCredencials;
+import com.gustavohenrique.financeApi.webhook.service.CredentialService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

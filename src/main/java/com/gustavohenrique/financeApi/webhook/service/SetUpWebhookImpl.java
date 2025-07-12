@@ -1,4 +1,4 @@
-package com.gustavohenrique.financeApi.webhook.consumer;
+package com.gustavohenrique.financeApi.webhook.service;
 
 import com.gustavohenrique.financeApi.application.repositories.AccountRepository;
 import com.gustavohenrique.financeApi.application.repositories.UserRepository;
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SetUpWebhookImpl implements SetUpWebhook{
+public class SetUpWebhookImpl implements SetUpWebhook {
 
     private final UserRepository userRepository;
     private final AccountRepository accountRepository;

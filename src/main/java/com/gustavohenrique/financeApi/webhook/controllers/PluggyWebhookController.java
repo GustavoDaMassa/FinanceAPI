@@ -1,7 +1,8 @@
-package com.gustavohenrique.financeApi.webhook.producer;
+package com.gustavohenrique.financeApi.webhook.controllers;
 
 
 import com.gustavohenrique.financeApi.webhook.dataTransfer.KafkaMessage;
+import com.gustavohenrique.financeApi.webhook.producer.WebhookEventProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;

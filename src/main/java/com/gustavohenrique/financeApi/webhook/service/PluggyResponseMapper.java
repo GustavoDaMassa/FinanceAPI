@@ -1,7 +1,6 @@
-package com.gustavohenrique.financeApi.webhook.consumer;
+package com.gustavohenrique.financeApi.webhook.service;
 
 import com.gustavohenrique.financeApi.domain.enums.TransactionType;
-import com.gustavohenrique.financeApi.domain.models.Account;
 import com.gustavohenrique.financeApi.domain.models.Transaction;
 import com.gustavohenrique.financeApi.webhook.dataTransfer.TransactionResponse;
 import org.springframework.stereotype.Component;

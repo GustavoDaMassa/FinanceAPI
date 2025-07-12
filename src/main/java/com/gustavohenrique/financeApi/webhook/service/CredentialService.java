@@ -1,4 +1,4 @@
-package com.gustavohenrique.financeApi.webhook.producer;
+package com.gustavohenrique.financeApi.webhook.service;
 
 import com.gustavohenrique.financeApi.webhook.dataTransfer.ClientCredencials;
 import org.springframework.stereotype.Service;
