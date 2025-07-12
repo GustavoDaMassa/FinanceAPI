@@ -1,35 +1,47 @@
-package com.gustavohenrique.financeApi.webhook.kafka;
+package com.gustavohenrique.financeApi.webhook.consumer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gustavohenrique.financeApi.application.interfaces.FinancialIntegrationService;
+import com.gustavohenrique.financeApi.application.interfaces.TransactionService;
 import com.gustavohenrique.financeApi.domain.enums.AggregatorType;
-import com.gustavohenrique.financeApi.domain.models.FinancialIntegration;
+import com.gustavohenrique.financeApi.domain.models.Account;
 import com.gustavohenrique.financeApi.domain.models.Transaction;
-import com.gustavohenrique.financeApi.application.repositories.AccountRepository;
 import com.gustavohenrique.financeApi.application.repositories.TransactionRepository;
-import com.gustavohenrique.financeApi.application.repositories.UserRepository;
-import com.gustavohenrique.financeApi.webhook.services.PluggyClient;
-import com.gustavohenrique.financeApi.webhook.models.KafkaMessage;
-import lombok.RequiredArgsConstructor;
+import com.gustavohenrique.financeApi.domain.models.User;
+import com.gustavohenrique.financeApi.webhook.dataTransfer.KafkaMessage;
+import com.gustavohenrique.financeApi.webhook.dataTransfer.ListTransactionsResponse;
+import com.gustavohenrique.financeApi.webhook.dataTransfer.TransactionResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class WebhookEventConsumer {
 
     private final ObjectMapper objectMapper;
-    private final PluggyClient pluggyClient;
-    private final AccountRepository accountRepository;
+    private final RequestService pluggyClient;
     private final FinancialIntegrationService financialIntegrationService;
+    private final TransactionService transactionService;
     private final TransactionRepository transactionRepository;
-    private final UserRepository userRepository;
+    private final SetUpWebhook setUpWebhook;
+    private final PluggyResponseMapper pluggyResponseMapper;
 
-    private static final Long DEFAULT_USER_ID = 5L;
-    private static final Long DEFAULT_ACCOUNT_ID = 11L;
+    @Autowired
+    public WebhookEventConsumer(ObjectMapper objectMapper, RequestService pluggyClient, FinancialIntegrationService financialIntegrationService, TransactionService transactionService, TransactionRepository transactionRepository, SetUpWebhook setUpWebhook, PluggyResponseMapper pluggyResponseMapper) {
+        this.objectMapper = objectMapper;
+        this.pluggyClient = pluggyClient;
+        this.financialIntegrationService = financialIntegrationService;
+        this.transactionService = transactionService;
+        this.transactionRepository = transactionRepository;
+        this.setUpWebhook = setUpWebhook;
+        this.pluggyResponseMapper = pluggyResponseMapper;
+    }
+
 
     @KafkaListener(topics = "webhook-transactions", groupId = "finance-consumer")
     public void consume(ConsumerRecord<String, String> record) {
@@ -38,15 +50,25 @@ public class WebhookEventConsumer {
 
             log.info("📥 Mensagem recebida: {}", event);
 
-            FinancialIntegration integration = financialIntegrationService
-                    .resolveIntegrationByLinkId(event.getItemId(), DEFAULT_USER_ID,DEFAULT_ACCOUNT_ID, AggregatorType.PLUGGY);
+            User user = new User(null,"Webhook User","webhookUser@email.com", "password",
+                    null,null);
+            Long userWebhookID = setUpWebhook.UserWebhookID(user);
 
+            Account account = new Account(null,"Webhook Account","Open Finance","teste"
+                    ,new BigDecimal("1000.00"),user,null,null);
+            Account accountWebhook = setUpWebhook.AccountWebhookId(account);
 
-            Transaction transaction = pluggyClient.fetchTransaction(event.getEventId(), DEFAULT_ACCOUNT_ID);
+            financialIntegrationService
+                    .resolveIntegrationByLinkId(event.getItemId(),userWebhookID ,accountWebhook.getId(), AggregatorType.PLUGGY);
 
-            transactionRepository.save(transaction);
+            ListTransactionsResponse transactionsResponse = pluggyClient.fetchTransaction(event.getLinkTransactions());
 
-            log.info("💾 Transação persistida com sucesso: {}", transaction);
+            for (TransactionResponse result : transactionsResponse.getResults()){
+                    Transaction transaction = pluggyResponseMapper.mapPluggyToTransaction(result);
+                    transaction.setAccount(accountWebhook);
+                    transactionService.create(transaction);
+                    log.info("💾 Transação persistida com sucesso");
+            }
         } catch (Exception e) {
             log.error("❌ Erro ao processar evento do Kafka", e);
         }
