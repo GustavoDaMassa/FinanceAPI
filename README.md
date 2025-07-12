@@ -418,8 +418,8 @@ docker compose down
 ### Opção 2
 **caso deseje rodar com mais facilidade sem a necessidade de clonar o repositório**
 
-- Baixe o arquivo  [docker compose](./Compose%20docker%20/docker-compose.yaml)
-- esse arquivo cria uma instância da aplicação de acordo com a versão mais recente presente no repositório [docker hub](https://hub.docker.com/r/gustavodamassa/medias-api/tags);
+- Baixe o arquivo  [docker compose](./Docker%20Compose%20/docker-compose.yaml)
+- esse arquivo cria uma instância da aplicação de acordo com a versão mais recente presente no repositório [docker hub](https://hub.docker.com/r/gustavodamassa/finance-api/tags);
 - **mantenha o nome do arquivo.**
 - execute o seguinte comando na pasta em que o arquivo foi baixado
 ```
