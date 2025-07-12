@@ -1,4 +1,4 @@
-package com.gustavohenrique.financeApi.webhook.services;
+package com.gustavohenrique.financeApi.webhook.consumer;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -14,16 +14,17 @@ public class PluggyAuthClient {
 
     public String getAccessToken(String clientId, String clientSecret) {
         var response = webClient.post()
-                .uri("/auth/token")
+                .uri("/auth")
                 .bodyValue(new AuthRequest(clientId, clientSecret))
                 .retrieve()
                 .bodyToMono(AuthResponse.class)
                 .block();
 
-        log.info("🔑 Token de acesso obtido com sucesso");
-        return response != null ? response.accessToken() : null;
+        log.info("🔑 api key obtida com sucesso");
+        if(response != null)System.out.println(response.apiKey());
+        return response != null ? response.apiKey() : null;
     }
 
     public record AuthRequest(String clientId, String clientSecret) {}
-    public record AuthResponse(String accessToken, String expiresIn, String tokenType) {}
+    public record AuthResponse(String apiKey) {}
 }
