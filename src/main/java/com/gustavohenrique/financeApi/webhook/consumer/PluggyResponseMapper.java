@@ -1,9 +1,9 @@
-package com.gustavohenrique.financeApi.webhook.mapper;
+package com.gustavohenrique.financeApi.webhook.consumer;
 
 import com.gustavohenrique.financeApi.domain.enums.TransactionType;
 import com.gustavohenrique.financeApi.domain.models.Account;
 import com.gustavohenrique.financeApi.domain.models.Transaction;
-import com.gustavohenrique.financeApi.webhook.models.TransactionResponse;
+import com.gustavohenrique.financeApi.webhook.dataTransfer.TransactionResponse;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -12,21 +12,24 @@ import java.time.LocalDate;
 @Component
 public class PluggyResponseMapper {
 
-    public Transaction mapPluggyToTransaction(TransactionResponse response, Account account){
-     return new Transaction(
-                null,
-                        new BigDecimal(response.amount()),
-    mapType(response.type()),
-            response.description(),
-            response.description(),
-            response.description(),
-            LocalDate.parse(response.date()),
-            null, null,
-    account
+    public Transaction mapPluggyToTransaction(TransactionResponse response){
+     return new Transaction(null,
+             new BigDecimal(String.valueOf(response.getAmount())).abs(),
+             mapType(response.getType()),
+             response.getDescription(),
+             "here",
+             "there",
+             LocalDate.now(),
+            null,
+             null,
+             null
         );
 }
-
-private TransactionType mapType(String pluggyType) {
-    return pluggyType.equalsIgnoreCase("INFLOW") ? TransactionType.INFLOW : TransactionType.OUTFLOW;
-}
+    private TransactionType mapType(String pluggyType) {
+        return switch (pluggyType.toUpperCase()) {
+            case "CREDIT" -> TransactionType.INFLOW;
+            case "DEBIT" -> TransactionType.OUTFLOW;
+            default -> throw new IllegalArgumentException("Tipo de transação inválido: " + pluggyType);
+        };
+    }
 }

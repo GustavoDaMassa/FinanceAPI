@@ -1,41 +1,29 @@
 package com.gustavohenrique.financeApi.webhook.consumer;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.gustavohenrique.financeApi.application.repositories.AccountRepository;
-import com.gustavohenrique.financeApi.domain.enums.TransactionType;
-import com.gustavohenrique.financeApi.domain.models.Account;
-import com.gustavohenrique.financeApi.domain.models.Transaction;
+import com.gustavohenrique.financeApi.webhook.dataTransfer.ClientCredencials;
 import com.gustavohenrique.financeApi.webhook.dataTransfer.ListTransactionsResponse;
-import com.gustavohenrique.financeApi.webhook.dataTransfer.TransactionResponse;
-import lombok.RequiredArgsConstructor;
-import org.apache.kafka.common.protocol.types.Field;
+import com.gustavohenrique.financeApi.webhook.producer.CredentialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
 
 @Component
-public class PluggyClient {
+public class RequestService {
 
     private final PluggyAuthClient authClient;
-    private final AccountRepository accountRepository;
-    private final PluggyResponseMapper responseMapper;
-    private final PluggyConfig config;
+    private final CredentialService credentialService;
 
     @Autowired
-    public PluggyClient(PluggyAuthClient authClient,AccountRepository accountRepository,PluggyResponseMapper responseMapper
-    ,PluggyConfig config){
+    public RequestService(PluggyAuthClient authClient, CredentialService credentialService){
         this.authClient = authClient;
-        this.accountRepository = accountRepository;
-        this.responseMapper = responseMapper;
-        this.config = config;
+        this.credentialService = credentialService;
     }
 
-    public ListTransactionsResponse fetchTransaction(String transactionId, Long accountId, String linkTransactions) {
-        String token = authClient.getAccessToken(config.getClientId(), config.getClientSecret());
+    public ListTransactionsResponse fetchTransaction(String linkTransactions) throws IOException {
+        ClientCredencials clientCredencials = credentialService.readCredentials();
+        String token = authClient.getAccessToken(clientCredencials.getClientId(), clientCredencials.getClientSecret());
         WebClient client = WebClient.builder()
                 .defaultHeader("X-API-KEY", token)
                 .defaultHeader("accept", "application/json")
