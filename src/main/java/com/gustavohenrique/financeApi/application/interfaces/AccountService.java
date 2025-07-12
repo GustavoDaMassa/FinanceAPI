@@ -2,8 +2,6 @@ package com.gustavohenrique.financeApi.application.interfaces;
 
 import com.gustavohenrique.financeApi.domain.models.Account;
 import com.gustavohenrique.financeApi.domain.models.FinancialIntegration;
-import com.gustavohenrique.financeApi.domain.models.User;
-import jakarta.validation.constraints.NotBlank;
 
 import java.util.List;
 

@@ -59,7 +59,7 @@ public class FinancialIntegrationResolver {
     public FinancialIntegrationDTO createFinancialIntegration(@Argument FinancialIntegrationInput input, @Argument Long accountId) {
         User user = userService.findById(input.getUserId());
         Account account = accountService.findById(accountId);
-        System.out.println("dentro da resolver financialIntegration");
+
         FinancialIntegration created = integrationService.create(mapper.fromInput(input, user), account);
         return mapper.toDto(created);
     }
