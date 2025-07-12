@@ -1,4 +1,4 @@
-package com.gustavohenrique.financeApi.webhook.models;
+package com.gustavohenrique.financeApi.webhook.dataTransfer;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class KafkaMessage {
     private String itemId;
-    private String eventId;
+    private String linkTransactions;
 }

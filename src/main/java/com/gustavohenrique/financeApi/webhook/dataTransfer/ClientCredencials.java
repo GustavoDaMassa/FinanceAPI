@@ -1,4 +1,4 @@
-package com.gustavohenrique.financeApi.webhook.consumer;
+package com.gustavohenrique.financeApi.webhook.dataTransfer;
 
 import lombok.Data;
 import org.springframework.stereotype.Component;
