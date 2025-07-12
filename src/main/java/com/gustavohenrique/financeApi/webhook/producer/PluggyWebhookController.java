@@ -1,8 +1,7 @@
-package com.gustavohenrique.financeApi.webhook;
+package com.gustavohenrique.financeApi.webhook.producer;
 
 
-import com.gustavohenrique.financeApi.webhook.kafka.WebhookEventProducer;
-import com.gustavohenrique.financeApi.webhook.models.KafkaMessage;
+import com.gustavohenrique.financeApi.webhook.dataTransfer.KafkaMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -22,10 +21,10 @@ public class PluggyWebhookController {
         log.info("🔔 Webhook recebido: {}", payload);
 
         String itemId = (String) payload.get("itemId");
-        String eventId = (String) payload.get("eventId");
+        String linkTransactions = (String) payload.get("createdTransactionsLink");
 
-        if (itemId != null && eventId != null) {
-            KafkaMessage message = new KafkaMessage(itemId, eventId);
+        if (itemId != null) {
+            KafkaMessage message = new KafkaMessage(itemId, linkTransactions);
             webhookEventProducer.send(message);
         } else {
             log.warn("⚠️ Campos itemId ou eventId ausentes no payload: {}", payload);

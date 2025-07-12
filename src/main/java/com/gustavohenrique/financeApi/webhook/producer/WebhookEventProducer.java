@@ -1,9 +1,9 @@
-package com.gustavohenrique.financeApi.webhook.kafka;
+package com.gustavohenrique.financeApi.webhook.producer;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gustavohenrique.financeApi.webhook.models.KafkaMessage;
+import com.gustavohenrique.financeApi.webhook.dataTransfer.KafkaMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
