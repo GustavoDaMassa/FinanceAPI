@@ -10,6 +10,7 @@
 
 # API GraphQL de Integração Bancária, Análise e Classificação de Transações
 
+A api foi construida com Java mas há também a versão Rest dela em [c#/.Net com o NestJS](https://github.com/GustavoDaMassa/dotNetFinaAPI)
 ## Apresentação
 
 Está aplicação foi desenvolvida com a intenção de proporcionar o controle e gestão de ganhos e gastos. Nela, os usuários podem registrar suas transações e visualizá-las de acordo com suas caracteríscas. Com fim, de permitir uma análise detalhada e personalizada sobre as finanças.
