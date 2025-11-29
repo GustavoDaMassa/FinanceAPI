@@ -25,6 +25,11 @@ input DateRangeInput {
     endDate: String!
 }
 
+input PaginationInput {
+    page: Int
+    size: Int
+}
+
 
 type TransactionDTO {
     id: ID!
@@ -44,6 +49,21 @@ type TransactionListWithBalanceDTO {
     transactions: [TransactionDTO!]!
 }
 
+type PageInfo {
+    currentPage: Int!
+    pageSize: Int!
+    totalElements: Int!
+    totalPages: Int!
+    hasNext: Boolean!
+    hasPrevious: Boolean!
+}
+
+type TransactionPageDTO {
+    transactions: [TransactionDTO!]!
+    pageInfo: PageInfo!
+    balance: String!
+}
+
 extend type Query {
 
     listUserTransactions(userId: ID!): TransactionListWithBalanceDTO!
@@ -52,6 +72,11 @@ extend type Query {
     listTransactionsByType(accountId: ID!, type: TransactionType!): TransactionListWithBalanceDTO!
     listTransactionsByFilter(accountId: ID!, filter: TransactionFilterInput!): TransactionListWithBalanceDTO!
     listUncategorizedTransactions(accountId: ID!): [TransactionDTO!]!
+
+    # Paginated queries
+    listAccountTransactionsPaginated(accountId: ID!, pagination: PaginationInput): TransactionPageDTO!
+    listTransactionsByPeriodPaginated(accountId: ID!, range: DateRangeInput!, pagination: PaginationInput): TransactionPageDTO!
+    listTransactionsByTypePaginated(accountId: ID!, type: TransactionType!, pagination: PaginationInput): TransactionPageDTO!
 }
 
 extend type Mutation {
