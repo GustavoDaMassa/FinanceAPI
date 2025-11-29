@@ -53,8 +53,10 @@ public class WebhookEventConsumer {
 
             log.info("📥 Mensagem recebida: {}", event);
 
-            User user = new User(null,"Webhook User","webhookUser@email.com", "password",
-                    null,null);
+            User user = new User();
+            user.setName("Webhook User");
+            user.setEmail("webhookUser@email.com");
+            user.setPassword("password");
             Long userWebhookID = setUpWebhook.UserWebhookID(user);
 
             Account account = new Account(null,"Webhook Account","Open Finance","teste"
