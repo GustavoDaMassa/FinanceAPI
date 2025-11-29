@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +24,9 @@ class UserServiceImplTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
     @InjectMocks
     private UserServiceImpl userService;
 
@@ -32,7 +36,11 @@ class UserServiceImplTest {
     @BeforeEach
     void setUp() {
         input = new UserInput("Gustavo", "gustavo@test.com", "123456");
-        user = new User(1L, "Gustavo", "gustavo@test.com", "123456", null, null);
+        user = new User();
+        user.setId(1L);
+        user.setName("Gustavo");
+        user.setEmail("gustavo@test.com");
+        user.setPassword("123456");
     }
 
     @Test
@@ -70,6 +78,7 @@ class UserServiceImplTest {
     @DisplayName("Should create user when email does not exist")
     void createUser_success() {
         when(userRepository.existsByEmail("gustavo@test.com")).thenReturn(false);
+        when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
         when(userRepository.save(any())).thenReturn(user);
 
         User result = userService.createUser(input);
@@ -77,6 +86,7 @@ class UserServiceImplTest {
         assertNotNull(result);
         assertEquals("Gustavo", result.getName());
         verify(userRepository).save(any());
+        verify(passwordEncoder).encode("123456");
     }
 
     @Test
@@ -92,6 +102,8 @@ class UserServiceImplTest {
     @DisplayName("Should update user when user exists")
     void updateUser_success() {
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userRepository.existsByEmail("new@test.com")).thenReturn(false);
+        when(passwordEncoder.encode(anyString())).thenReturn("encodedNewPassword");
         when(userRepository.save(any())).thenReturn(user);
 
         UserInput updatedInput = new UserInput("New Name", "new@test.com", "newPass");
@@ -100,6 +112,7 @@ class UserServiceImplTest {
 
         assertEquals("New Name", result.getName());
         assertEquals("new@test.com", result.getEmail());
+        verify(passwordEncoder).encode("newPass");
     }
 
     @Test
