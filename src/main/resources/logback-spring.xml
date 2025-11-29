@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <springProperty scope="context" name="appName" source="spring.application.name" defaultValue="financeApi"/>
+    <springProperty scope="context" name="logstashHost" source="logging.logstash.host" defaultValue="localhost"/>
+    <springProperty scope="context" name="logstashPort" source="logging.logstash.port" defaultValue="5000"/>
+
+    <!-- Console Appender with JSON format -->
+    <appender name="CONSOLE_JSON" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <includeMdcKeyName>userId</includeMdcKeyName>
+            <includeMdcKeyName>userEmail</includeMdcKeyName>
+            <includeMdcKeyName>requestId</includeMdcKeyName>
+            <customFields>{"application":"${appName}"}</customFields>
+        </encoder>
+    </appender>
+
+    <!-- Logstash TCP Appender -->
+    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>${logstashHost}:${logstashPort}</destination>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <includeMdcKeyName>userId</includeMdcKeyName>
+            <includeMdcKeyName>userEmail</includeMdcKeyName>
+            <includeMdcKeyName>requestId</includeMdcKeyName>
+            <customFields>{"application":"${appName}"}</customFields>
+        </encoder>
+        <!-- Reconnection configuration -->
+        <keepAliveDuration>5 minutes</keepAliveDuration>
+        <reconnectionDelay>10 seconds</reconnectionDelay>
+    </appender>
+
+    <!-- Async wrapper for better performance -->
+    <appender name="ASYNC_LOGSTASH" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="LOGSTASH"/>
+        <queueSize>512</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+    </appender>
+
+    <!-- Root logger configuration -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE_JSON"/>
+        <appender-ref ref="ASYNC_LOGSTASH"/>
+    </root>
+
+    <!-- Application specific logging -->
+    <logger name="com.gustavohenrique.financeApi" level="DEBUG" additivity="false">
+        <appender-ref ref="CONSOLE_JSON"/>
+        <appender-ref ref="ASYNC_LOGSTASH"/>
+    </logger>
+
+    <!-- Reduce noise from Spring and Hibernate -->
+    <logger name="org.springframework" level="INFO"/>
+    <logger name="org.hibernate" level="WARN"/>
+    <logger name="org.apache.kafka" level="WARN"/>
+</configuration>
