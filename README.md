@@ -10,6 +10,8 @@
 
 # API GraphQL de Integração Bancária, Análise e Classificação de Transações
 
+**[Read this in English](README_EN.md) | [Leia em Português](README.md)**
+
 A api foi construida com Java mas há também a versão Rest dela em [c#/.Net com o NestJS](https://github.com/GustavoDaMassa/dotNetFinaAPI)
 ## Apresentação
 
