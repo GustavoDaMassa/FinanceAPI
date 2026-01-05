@@ -46,6 +46,153 @@ Entenda um pouco mais sobra a **[Pluggy](#pluggy)** e sobre o **[Ngrok](#ngrok)*
 - Consultar histórico de transações.
 - Visualizar transações de acordo com filtros- por categoria,por período e por tipo.
 - Cálculo automático do saldo de acordo com as transações selecionadas.
+
+---
+
+## Funcionalidades de Produção
+
+A API foi preparada para ambientes de produção com implementações de segurança, observabilidade e confiabilidade:
+
+### 🔐 Autenticação e Segurança
+
+#### **JWT (JSON Web Token)**
+- Sistema completo de autenticação stateless com tokens JWT
+- Tokens com tempo de expiração configurável (padrão: 24h)
+- Senhas criptografadas com BCrypt (algoritmo de hash robusto)
+- Proteção contra ataques de força bruta
+
+**Endpoints de autenticação:**
+- `POST /api/auth/login` - Autenticação de usuários
+- `POST /api/auth/create-admin` - Criação de usuário administrador (requer master key)
+
+#### **Sistema de Roles (Controle de Acesso)**
+- **ADMIN**: Acesso total ao sistema, incluindo operações sensíveis
+- **USER**: Acesso aos próprios dados e recursos
+
+**Proteção de endpoints GraphQL:**
+- Todos os resolvers GraphQL protegidos com `@PreAuthorize`
+- Operações administrativas (deletar usuários, listar todos) restritas a ADMIN
+- Validação automática de permissões via Spring Security
+
+#### **CORS (Cross-Origin Resource Sharing)**
+- Configuração de origens permitidas para acesso da API
+- Suporte a credenciais e headers personalizados
+- Configurável via variáveis de ambiente para produção
+
+### 📊 Observabilidade e Monitoramento
+
+#### **Logging Estruturado (JSON)**
+- Logs em formato JSON compatível com ELK Stack (Elasticsearch, Logstash, Kibana)
+- Enriquecimento automático com informações de contexto:
+  - `userId`: ID do usuário autenticado
+  - `userEmail`: Email do usuário
+  - `requestId`: UUID único por requisição (rastreabilidade)
+  - `application`: Nome da aplicação
+- Appenders assíncronos para não impactar performance
+- Header `X-Request-ID` nas respostas para correlação de logs
+
+#### **Spring Boot Actuator**
+- Endpoints de saúde e métricas para monitoramento:
+  - `/actuator/health` - Status geral da aplicação
+  - `/actuator/health/liveness` - Prova de vida (Kubernetes)
+  - `/actuator/health/readiness` - Prontidão para tráfego
+  - `/actuator/metrics` - Métricas da aplicação
+  - `/actuator/prometheus` - Métricas no formato Prometheus
+
+**Integração com Kubernetes:**
+```yaml
+livenessProbe:
+  httpGet:
+    path: /actuator/health/liveness
+    port: 8080
+readinessProbe:
+  httpGet:
+    path: /actuator/health/readiness
+    port: 8080
+```
+
+### 📄 Paginação de Queries
+
+Sistema de paginação implementado para queries GraphQL que retornam grandes volumes de dados:
+
+**Novos tipos GraphQL:**
+- `PaginationInput`: Controle de paginação (page, size)
+- `PageInfo`: Metadados de paginação (currentPage, totalPages, hasNext, etc.)
+- `TransactionPageDTO`: Resultado paginado com transações e saldo
+
+**Queries paginadas disponíveis:**
+- `listAccountTransactionsPaginated` - Transações da conta com paginação
+- `listTransactionsByPeriodPaginated` - Transações por período paginadas
+- `listTransactionsByTypePaginated` - Transações por tipo paginadas
+
+**Padrões:**
+- Página padrão: 0 (primeira página)
+- Tamanho padrão: 20 itens
+- Tamanho máximo: 100 itens por página
+
+### 🔄 Versionamento GraphQL
+
+Estratégia de **Evolutionary API Design** adotada para evolução da API sem quebrar compatibilidade:
+
+**Princípios:**
+- Sem versionamento de URL (/v1, /v2) - endpoint único `/graphql`
+- Evolução via deprecação de campos com `@deprecated`
+- Mudanças aditivas (novos campos) não quebram clientes existentes
+- Migração gradual permitindo que clientes migrem no próprio ritmo
+
+**Exemplo de deprecação:**
+```graphql
+type Transaction {
+  value: String! @deprecated(reason: "Use 'amount' para melhor precisão")
+  amount: BigDecimal!
+}
+```
+
+**Processo de migração:**
+1. **Deprecação** (3-6 meses): Adicionar novo campo, marcar antigo como deprecated
+2. **Migração** (3-6 meses): Suporte aos clientes, monitoramento de uso
+3. **Remoção**: Apenas quando uso do campo deprecated cair para 0%
+
+### 🚀 CI/CD Pipeline
+
+Pipeline automatizado com GitHub Actions para integração e entrega contínua:
+
+**Jobs implementados:**
+
+1. **build-and-test**
+   - Setup Java 21
+   - Cache de dependências Maven
+   - Build do projeto (`mvn clean install`)
+   - Execução de testes (`mvn test`)
+   - Geração de relatório de cobertura (JaCoCo)
+   - Upload de artefatos de teste
+
+2. **code-quality**
+   - Validação com `mvn verify`
+   - Executa após build-and-test
+
+3. **security-scan**
+   - Scan de vulnerabilidades com Trivy
+   - Upload de resultados para GitHub Security
+   - Executa após build-and-test
+
+**Triggers:**
+- Push em branches: `main`, `develop`, `feature/**`
+- Pull requests para: `main`, `develop`
+
+### 🐳 Docker com Health Checks
+
+Configuração Docker Compose otimizada para confiabilidade:
+
+**Health checks implementados:**
+- PostgreSQL: Verifica conexão com `pg_isready`
+- Kafka: Valida broker com `kafka-broker-api-versions`
+
+**Dependências condicionais:**
+- API só inicia após PostgreSQL e Kafka estarem saudáveis
+- Evita erros de conexão na inicialização
+- Garante ordem correta de inicialização dos serviços
+
 ---
 
 

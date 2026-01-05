@@ -49,6 +49,152 @@ Learn more about **[Pluggy](#pluggy)** and **[Ngrok](#ngrok)**
 
 ---
 
+## Production Features
+
+The API has been prepared for production environments with security, observability, and reliability implementations:
+
+### 🔐 Authentication and Security
+
+#### **JWT (JSON Web Token)**
+- Complete stateless authentication system with JWT tokens
+- Configurable token expiration time (default: 24h)
+- Passwords encrypted with BCrypt (robust hash algorithm)
+- Protection against brute force attacks
+
+**Authentication endpoints:**
+- `POST /api/auth/login` - User authentication
+- `POST /api/auth/create-admin` - Admin user creation (requires master key)
+
+#### **Role System (Access Control)**
+- **ADMIN**: Full system access, including sensitive operations
+- **USER**: Access to own data and resources
+
+**GraphQL endpoint protection:**
+- All GraphQL resolvers protected with `@PreAuthorize`
+- Administrative operations (delete users, list all) restricted to ADMIN
+- Automatic permission validation via Spring Security
+
+#### **CORS (Cross-Origin Resource Sharing)**
+- Configuration of allowed origins for API access
+- Support for credentials and custom headers
+- Configurable via environment variables for production
+
+### 📊 Observability and Monitoring
+
+#### **Structured Logging (JSON)**
+- Logs in JSON format compatible with ELK Stack (Elasticsearch, Logstash, Kibana)
+- Automatic enrichment with context information:
+  - `userId`: Authenticated user ID
+  - `userEmail`: User email
+  - `requestId`: Unique UUID per request (traceability)
+  - `application`: Application name
+- Asynchronous appenders for performance
+- `X-Request-ID` header in responses for log correlation
+
+#### **Spring Boot Actuator**
+- Health and metrics endpoints for monitoring:
+  - `/actuator/health` - Overall application status
+  - `/actuator/health/liveness` - Liveness probe (Kubernetes)
+  - `/actuator/health/readiness` - Readiness for traffic
+  - `/actuator/metrics` - Application metrics
+  - `/actuator/prometheus` - Metrics in Prometheus format
+
+**Kubernetes integration:**
+```yaml
+livenessProbe:
+  httpGet:
+    path: /actuator/health/liveness
+    port: 8080
+readinessProbe:
+  httpGet:
+    path: /actuator/health/readiness
+    port: 8080
+```
+
+### 📄 Query Pagination
+
+Pagination system implemented for GraphQL queries that return large data volumes:
+
+**New GraphQL types:**
+- `PaginationInput`: Pagination control (page, size)
+- `PageInfo`: Pagination metadata (currentPage, totalPages, hasNext, etc.)
+- `TransactionPageDTO`: Paginated result with transactions and balance
+
+**Available paginated queries:**
+- `listAccountTransactionsPaginated` - Account transactions with pagination
+- `listTransactionsByPeriodPaginated` - Transactions by period paginated
+- `listTransactionsByTypePaginated` - Transactions by type paginated
+
+**Defaults:**
+- Default page: 0 (first page)
+- Default size: 20 items
+- Maximum size: 100 items per page
+
+### 🔄 GraphQL Versioning
+
+**Evolutionary API Design** strategy adopted for API evolution without breaking compatibility:
+
+**Principles:**
+- No URL versioning (/v1, /v2) - single `/graphql` endpoint
+- Evolution via field deprecation with `@deprecated`
+- Additive changes (new fields) don't break existing clients
+- Gradual migration allowing clients to migrate at their own pace
+
+**Deprecation example:**
+```graphql
+type Transaction {
+  value: String! @deprecated(reason: "Use 'amount' for better precision")
+  amount: BigDecimal!
+}
+```
+
+**Migration process:**
+1. **Deprecation** (3-6 months): Add new field, mark old as deprecated
+2. **Migration** (3-6 months): Client support, usage monitoring
+3. **Removal**: Only when deprecated field usage drops to 0%
+
+### 🚀 CI/CD Pipeline
+
+Automated pipeline with GitHub Actions for continuous integration and delivery:
+
+**Implemented jobs:**
+
+1. **build-and-test**
+   - Java 21 setup
+   - Maven dependency caching
+   - Project build (`mvn clean install`)
+   - Test execution (`mvn test`)
+   - Coverage report generation (JaCoCo)
+   - Test artifacts upload
+
+2. **code-quality**
+   - Validation with `mvn verify`
+   - Runs after build-and-test
+
+3. **security-scan**
+   - Vulnerability scan with Trivy
+   - Results upload to GitHub Security
+   - Runs after build-and-test
+
+**Triggers:**
+- Push to branches: `main`, `develop`, `feature/**`
+- Pull requests to: `main`, `develop`
+
+### 🐳 Docker with Health Checks
+
+Optimized Docker Compose configuration for reliability:
+
+**Implemented health checks:**
+- PostgreSQL: Verifies connection with `pg_isready`
+- Kafka: Validates broker with `kafka-broker-api-versions`
+
+**Conditional dependencies:**
+- API only starts after PostgreSQL and Kafka are healthy
+- Prevents connection errors on startup
+- Ensures correct service initialization order
+
+---
+
 ## Main Flow:
 #### API usage flow:
 
