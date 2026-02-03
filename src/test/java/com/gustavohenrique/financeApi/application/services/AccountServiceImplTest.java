@@ -1,5 +1,6 @@
 package com.gustavohenrique.financeApi.application.services;
 
+import com.gustavohenrique.financeApi.application.interfaces.FinancialIntegrationService;
 import com.gustavohenrique.financeApi.application.repositories.AccountRepository;
 import com.gustavohenrique.financeApi.application.repositories.FinancialIntegrationRepository;
 import com.gustavohenrique.financeApi.application.repositories.UserRepository;
@@ -35,7 +36,7 @@ class AccountServiceImplTest {
     private UserRepository userRepository;
 
     @Mock
-    private FinancialIntegrationRepository integrationRepository;
+    private FinancialIntegrationService financialIntegrationService;
 
     @InjectMocks
     private AccountServiceImpl accountService;
@@ -54,7 +55,7 @@ class AccountServiceImplTest {
 
         integration = new FinancialIntegration();
         integration.setId(10L);
-        account = new Account(1L, "Main Account", "Bank", "CHECKING", BigDecimal.valueOf(1000), user, integration, null);
+        account = new Account(1L, "Main Account", "Bank", "CHECKING", BigDecimal.valueOf(1000), "pluggy-acc-id", user, integration, null);
     }
 
     @Test
@@ -94,25 +95,6 @@ class AccountServiceImplTest {
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
         assertThrows(UserIDNotFoundException.class, () -> accountService.findByUserId(1L));
-    }
-
-    @Test
-    @DisplayName("Should return integration when ID exists")
-    void findIntegrationById_success() {
-        when(integrationRepository.findById(10L)).thenReturn(Optional.of(integration));
-
-        FinancialIntegration result = accountService.findIntegrationById(10L);
-
-        assertNotNull(result);
-        assertEquals(10L, result.getId());
-    }
-
-    @Test
-    @DisplayName("Should throw when integration ID not found")
-    void findIntegrationById_notFound_shouldThrow() {
-        when(integrationRepository.findById(10L)).thenReturn(Optional.empty());
-
-        assertThrows(IntegrationNotFoundException.class, () -> accountService.findIntegrationById(10L));
     }
 
     @Test

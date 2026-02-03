@@ -23,6 +23,9 @@ public class Account {
     private String type;
     private BigDecimal balance = BigDecimal.ZERO;
 
+    @Column(unique = true)
+    private String pluggyAccountId;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

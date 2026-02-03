@@ -16,9 +16,9 @@ public class PluggyResponseMapper {
              new BigDecimal(String.valueOf(response.getAmount())).abs(),
              mapType(response.getType()),
              response.getDescription(),
-             "here",
-             "there",
-             LocalDate.now(),
+             null,
+             null,
+             response.getDate().toLocalDate(),
             null,
              null,
              null

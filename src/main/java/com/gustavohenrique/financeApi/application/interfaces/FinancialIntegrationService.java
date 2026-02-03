@@ -12,11 +12,11 @@ import java.util.List;
 public interface FinancialIntegrationService {
     FinancialIntegration findById(Long id);
 
-    FinancialIntegration resolveIntegrationByLinkId(String linkId, Long userId, Long accountId, AggregatorType aggregator);
+    FinancialIntegration findByLinkId(String linkId);
 
     List<FinancialIntegration> findByUserId(Long userId);
 
-    FinancialIntegration create(FinancialIntegration financialIntegration, Account account);
+    FinancialIntegration create(FinancialIntegration financialIntegration);
 
     FinancialIntegration update(Long id, FinancialIntegration financialIntegration);
 

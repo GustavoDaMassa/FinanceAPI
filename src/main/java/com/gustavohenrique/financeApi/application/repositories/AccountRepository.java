@@ -6,10 +6,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface AccountRepository extends JpaRepository<Account,Long> {
-    List<Account> findByUser(User user);
+import java.util.Optional;
 
+public interface AccountRepository extends JpaRepository<Account, Long> {
     boolean existsByAccountName(String accountName);
-
     Account findByAccountName(String accountName);
+
+    Optional<Account> findByPluggyAccountIdAndUser(String pluggyAccountId, User user);
+
+    List<Account> findByUser(User user);
 }

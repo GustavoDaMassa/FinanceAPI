@@ -96,26 +96,21 @@ class FinancialIntegrationServiceImplTest {
     @Test
     @DisplayName("Should create integration with timestamps and return it")
      void create_success() {
-        // Arrange
-        Account account = new Account();
-        account.setId(10L);
-        account.setUser(user);
-
         when(userRepository.existsById(user.getId())).thenReturn(true);
-        when(accountRepository.existsById(account.getId())).thenReturn(true);
-        when(integrationRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
-        when(accountRepository.save(any())).thenReturn(account);
+        when(integrationRepository.save(any())).thenAnswer(invocation -> {
+            FinancialIntegration inv = invocation.getArgument(0);
+            inv.setCreatedAt(LocalDateTime.now());
+            inv.setExpiresAt(LocalDateTime.now().plusMonths(12));
+            return inv;
+        });
 
-        // Act
-        FinancialIntegration result = integrationService.create(integration, account);
+        FinancialIntegration result = integrationService.create(integration);
 
-        // Assert
         assertNotNull(result.getCreatedAt());
         assertNotNull(result.getExpiresAt());
         assertTrue(result.getExpiresAt().isAfter(result.getCreatedAt()));
 
         verify(integrationRepository).save(any());
-        verify(accountRepository).save(any());
     }
 
 

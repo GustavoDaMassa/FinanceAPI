@@ -28,11 +28,8 @@ public class FinancialIntegrationMapper {
     }
 
     public FinancialIntegration fromInput(FinancialIntegrationInput input, User user) {
-
-        FinancialIntegration integration;
-        if(financialIntegrationRepository.existsByLinkId(input.getLinkId()))  integration = financialIntegrationRepository
-                .findByLinkId(input.getLinkId());
-        else integration = new FinancialIntegration();
+        FinancialIntegration integration = financialIntegrationRepository.findByLinkId(input.getLinkId())
+                .orElse(new FinancialIntegration());
 
         integration.setAggregator(input.getAggregator());
         integration.setLinkId(input.getLinkId());

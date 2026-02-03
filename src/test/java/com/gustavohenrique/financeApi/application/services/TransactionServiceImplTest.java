@@ -5,6 +5,7 @@ import com.gustavohenrique.financeApi.application.interfaces.CategoryService;
 import com.gustavohenrique.financeApi.application.repositories.AccountRepository;
 import com.gustavohenrique.financeApi.application.repositories.TransactionRepository;
 import com.gustavohenrique.financeApi.application.repositories.UserRepository;
+import com.gustavohenrique.financeApi.application.wrappers.TransactionPageResult;
 import com.gustavohenrique.financeApi.application.wrappers.TransactionQueryResult;
 import com.gustavohenrique.financeApi.domain.enums.TransactionType;
 import com.gustavohenrique.financeApi.domain.models.*;
@@ -16,6 +17,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -41,7 +45,7 @@ class TransactionServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        account = new Account(1L, "Main", "Bank", "Checking", BigDecimal.ZERO, null, null, null);
+        account = new Account(1L, "Main", "Bank", "Checking", BigDecimal.ZERO, null, null, null, null);
         transaction = new Transaction(1L, new BigDecimal("100.00"), TransactionType.INFLOW, "Salary",
                 "Employer", "Me", LocalDate.now(), null, null, account);
     }
@@ -178,5 +182,50 @@ class TransactionServiceImplTest {
 
         assertEquals(transaction, deleted);
         verify(transactionRepository).delete(transaction);
+    }
+
+    @Test
+    @DisplayName("Should return paginated transactions by account ID")
+    void listByAccountPaginated() {
+        Page<Transaction> page = new PageImpl<>(List.of(transaction));
+        when(accountRepository.existsById(1L)).thenReturn(true);
+        when(transactionRepository.findByAccount_Id(eq(1L), any(Pageable.class))).thenReturn(page);
+        when(transactionRepository.findByAccount_Id(1L)).thenReturn(List.of(transaction));
+        when(balanceCalculatorService.calculate(List.of(transaction))).thenReturn(new BigDecimal("100.00"));
+
+        TransactionPageResult result = transactionService.listByAccountPaginated(1L, 0, 10);
+
+        assertEquals(1, result.getPage().getContent().size());
+        assertEquals(new BigDecimal("100.00"), result.getBalance());
+    }
+
+    @Test
+    @DisplayName("Should return paginated transactions by period")
+    void listByPeriodPaginated() {
+        Page<Transaction> page = new PageImpl<>(List.of(transaction));
+        when(accountRepository.existsById(1L)).thenReturn(true);
+        when(transactionRepository.findByAccountIdAndTransactionDateBetween(eq(1L), any(), any(), any(Pageable.class))).thenReturn(page);
+        when(transactionRepository.findByAccountIdAndTransactionDateBetween(eq(1L), any(), any())).thenReturn(List.of(transaction));
+        when(balanceCalculatorService.calculate(List.of(transaction))).thenReturn(new BigDecimal("100.00"));
+
+        TransactionPageResult result = transactionService.listByPeriodPaginated(1L, "2024-01-01", "2024-12-31", 0, 10);
+
+        assertEquals(1, result.getPage().getContent().size());
+        assertEquals(new BigDecimal("100.00"), result.getBalance());
+    }
+
+    @Test
+    @DisplayName("Should return paginated transactions by type")
+    void listByTypePaginated() {
+        Page<Transaction> page = new PageImpl<>(List.of(transaction));
+        when(accountRepository.existsById(1L)).thenReturn(true);
+        when(transactionRepository.findByAccountIdAndType(eq(1L), eq(TransactionType.INFLOW), any(Pageable.class))).thenReturn(page);
+        when(transactionRepository.findByAccountIdAndType(1L, TransactionType.INFLOW)).thenReturn(List.of(transaction));
+        when(balanceCalculatorService.calculate(List.of(transaction))).thenReturn(new BigDecimal("100.00"));
+
+        TransactionPageResult result = transactionService.listByTypePaginated(1L, "INFLOW", 0, 10);
+
+        assertEquals(1, result.getPage().getContent().size());
+        assertEquals(new BigDecimal("100.00"), result.getBalance());
     }
 }
