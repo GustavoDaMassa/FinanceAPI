@@ -7,7 +7,7 @@ services:
     environment:
       POSTGRES_DB: financeapi
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: custo
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
@@ -62,7 +62,9 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/financeapi
       SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: custo
+      SPRING_DATASOURCE_PASSWORD: ${DATABASE_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      MASTER_KEY: ${MASTER_KEY}
       SPRING_JPA_HIBERNATE_DDL_AUTO: validate
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
     depends_on:
