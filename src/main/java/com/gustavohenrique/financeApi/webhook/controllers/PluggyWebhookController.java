@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping
+@RequestMapping("/webhook/pluggy")
 @RequiredArgsConstructor
 public class PluggyWebhookController {
 
