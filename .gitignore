@@ -41,3 +41,8 @@ build/
 
 ### CLAUDE.md ###
 CLAUDE.md
+
+### SSL certificates ###
+nginx/ssl/*.pem
+nginx/ssl/*.crt
+nginx/ssl/*.key

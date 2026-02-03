@@ -54,11 +54,25 @@ services:
     networks:
       - finance-network
 
+  nginx:
+    image: nginx:alpine
+    container_name: finance-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/ssl:/etc/nginx/ssl
+    depends_on:
+      - finance-api
+    networks:
+      - finance-network
+
   finance-api:
     build: .
     container_name: finance-api
-    ports:
-      - "8080:8080"
+    expose:
+      - "8080"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/financeapi
       SPRING_DATASOURCE_USERNAME: postgres
