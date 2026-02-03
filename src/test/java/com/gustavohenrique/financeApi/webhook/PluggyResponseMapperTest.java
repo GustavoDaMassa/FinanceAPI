@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,6 +29,7 @@ class PluggyResponseMapperTest {
         response.setType("CREDIT");
         response.setAmount(new BigDecimal("100.50"));
         response.setDescription("Salary");
+        response.setDate(ZonedDateTime.now());
 
         Transaction result = mapper.mapPluggyToTransaction(response);
 
@@ -43,6 +45,7 @@ class PluggyResponseMapperTest {
         response.setType("DEBIT");
         response.setAmount(new BigDecimal("-50.00"));
         response.setDescription("Purchase");
+        response.setDate(ZonedDateTime.now());
 
         Transaction result = mapper.mapPluggyToTransaction(response);
 
@@ -57,6 +60,7 @@ class PluggyResponseMapperTest {
         response.setType("INVALID");
         response.setAmount(new BigDecimal("10.00"));
         response.setDescription("test");
+        response.setDate(ZonedDateTime.now());
 
         assertThrows(IllegalArgumentException.class, () -> mapper.mapPluggyToTransaction(response));
     }

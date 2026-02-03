@@ -2,6 +2,7 @@ package com.gustavohenrique.financeApi.webhook.service;
 
 import com.gustavohenrique.financeApi.graphql.dtos.PluggyAccountDTO;
 import com.gustavohenrique.financeApi.webhook.dataTransfer.ClientCredencials;
+import com.gustavohenrique.financeApi.webhook.dataTransfer.ListAccountsResponse;
 import com.gustavohenrique.financeApi.webhook.dataTransfer.ListTransactionsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
