@@ -8,6 +8,7 @@ import com.gustavohenrique.financeApi.graphql.dtos.FinancialIntegrationDTO;
 import com.gustavohenrique.financeApi.graphql.inputs.FinancialIntegrationInput;
 import com.gustavohenrique.financeApi.graphql.mappers.AccountMapper;
 import com.gustavohenrique.financeApi.graphql.mappers.FinancialIntegrationMapper;
+import com.gustavohenrique.financeApi.webhook.service.RequestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 public class FinancialIntegrationResolver {
 
     private final FinancialIntegrationService integrationService;
+    private final RequestService requestService;
     private final FinancialIntegrationMapper mapper;
     private final AccountMapper accountMapper;
 
@@ -49,6 +51,15 @@ public class FinancialIntegrationResolver {
         return integrationService.listIntegrationAccounts(id).stream()
                 .map(accountMapper::toDto)
                 .collect(Collectors.toList());
+    }
+
+    @QueryMapping
+    public List<PluggyAccountDTO> accountsFromPluggy(@Argument Long integrationId, @AuthenticationPrincipal User user) {
+        FinancialIntegration integration = integrationService.findById(integrationId);
+        if (!integration.getUser().getId().equals(user.getId())) {
+            throw new SecurityException("Integration does not belong to the authenticated user.");
+        }
+        return requestService.fetchAccounts(integration.getLinkId());
     }
 
 

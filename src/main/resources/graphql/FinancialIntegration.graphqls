@@ -26,8 +26,17 @@ type Mutation {
     deleteFinancialIntegration(id: ID!): FinancialIntegration
 }
 
-extend type Query {
-    findFinancialIntegrationById(id: ID!): FinancialIntegrationDTO
-    listFinancialIntegrationsByUser: [FinancialIntegrationDTO!]!
-    listAccountsByIntegration(id: ID!): [AccountDTO!]!
+type Query {
+    findFinancialIntegrationById(id: ID!): FinancialIntegration
+    listFinancialIntegrationsByUser: [FinancialIntegration]
+    listAccountsByIntegration(id: ID!): [Account]
+    accountsFromPluggy(integrationId: ID!): [PluggyAccountDTO]
+}
+
+type PluggyAccountDTO {
+    id: ID
+    name: String
+    type: String
+    balance: Float
+    currency: String
 }
