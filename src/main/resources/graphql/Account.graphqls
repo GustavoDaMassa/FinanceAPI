@@ -16,10 +16,18 @@ input AccountInput {
     integrationId: ID
 }
 
-extend type Mutation {
-    createAccount(input: AccountInput!): AccountDTO
-    updateAccount(id: ID!, input: AccountInput!): AccountDTO
-    deleteAccount(id: ID!): AccountDTO
+input LinkAccountInput {
+    integrationId: ID!
+    pluggyAccountId: String!
+    name: String!
+    type: String!
+}
+
+type Mutation {
+    createAccount(account: AccountInput!): Account
+    updateAccount(id: ID!, account: AccountInput!): Account
+    deleteAccount(id: ID!): Account
+    linkAccount(input: LinkAccountInput!): Account
 }
 
 extend type Query {
