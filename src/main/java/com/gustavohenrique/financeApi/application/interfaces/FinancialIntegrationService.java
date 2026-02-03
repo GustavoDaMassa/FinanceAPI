@@ -12,7 +12,7 @@ import java.util.List;
 public interface FinancialIntegrationService {
     FinancialIntegration findById(Long id);
 
-    FinancialIntegration resolveIntegrationByLinkId(String linkId, Long userId, Long accountId, AggregatorType aggregator);
+    FinancialIntegration findByLinkId(String linkId);
 
     List<FinancialIntegration> findByUserId(Long userId);
 

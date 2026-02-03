@@ -78,30 +78,14 @@ public class FinancialIntegrationServiceImpl implements FinancialIntegrationServ
     }
 
     @Override
-    public List<Account> listIntegrationAccounts(Long id) {
-        FinancialIntegration integration = findById(id);
-        return integration.getAccounts();
+    public FinancialIntegration findByLinkId(String linkId) {
+        return integrationRepository.findByLinkId(linkId)
+                .orElseThrow(() -> new IntegrationLinkIdNotFoundException(linkId));
     }
 
     @Override
-    public FinancialIntegration resolveIntegrationByLinkId(String linkId,Long userId, Long accountId, AggregatorType aggregator) {
-
-        FinancialIntegration integration;
-        if(integrationRepository.existsByLinkId(linkId)) return integrationRepository
-                .findByLinkId(linkId);
-        else integration = new FinancialIntegration();
-
-        integration.setLinkId(linkId);
-        integration.setUser(userRepository.findById(userId).orElseThrow(()-> new UserIDNotFoundException(userId)));
-        integration.setAggregator(aggregator);
-        integration.setCreatedAt(LocalDateTime.now());
-        integration.setExpiresAt(LocalDateTime.now().plusMonths(12));
-
-        integrationRepository.save(integration);
-        Account account = accountService.findById(accountId);
-        account.setIntegration(integration);
-        accountRepository.save(account);
-
-        return integration;
+    public List<Account> listIntegrationAccounts(Long id) {
+        FinancialIntegration integration = findById(id);
+        return integration.getAccounts();
     }
 }

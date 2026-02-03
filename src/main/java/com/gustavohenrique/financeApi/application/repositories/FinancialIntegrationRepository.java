@@ -6,12 +6,13 @@ import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface FinancialIntegrationRepository extends JpaRepository<FinancialIntegration,Long> {
     List<FinancialIntegration> findByUser(User user);
 
     boolean existsByLinkId(@NotBlank String linkId);
 
-    FinancialIntegration findByLinkId(@NotBlank String linkId);
+    Optional<FinancialIntegration> findByLinkId(@NotBlank String linkId);
 
 }
