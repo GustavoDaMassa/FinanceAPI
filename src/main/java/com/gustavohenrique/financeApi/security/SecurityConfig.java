@@ -42,10 +42,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/auth/login",
                                 "/api/auth/create-admin",
-                                "/actuator/**",
-                                "/actuator/health/**",
-                                "/graphiql",
-                                "/graphiql/**"
+                                "/actuator/health/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
