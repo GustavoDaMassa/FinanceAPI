@@ -16,7 +16,7 @@ public interface FinancialIntegrationService {
 
     List<FinancialIntegration> findByUserId(Long userId);
 
-    FinancialIntegration create(FinancialIntegration financialIntegration, Account account);
+    FinancialIntegration create(FinancialIntegration financialIntegration);
 
     FinancialIntegration update(Long id, FinancialIntegration financialIntegration);
 

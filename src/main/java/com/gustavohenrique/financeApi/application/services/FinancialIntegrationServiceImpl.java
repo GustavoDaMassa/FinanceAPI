@@ -42,19 +42,14 @@ public class FinancialIntegrationServiceImpl implements FinancialIntegrationServ
     }
 
     @Override
-    public FinancialIntegration create(FinancialIntegration financialIntegration, Account account) {
+    public FinancialIntegration create(FinancialIntegration financialIntegration) {
         if(!userRepository.existsById(financialIntegration.getUser().getId()))
             throw new UserIDNotFoundException(financialIntegration.getUser().getId());
-
-        if(!accountRepository.existsById(account.getId())) throw new AccountNotFoundException(account.getId());
 
         financialIntegration.setCreatedAt(LocalDateTime.now());
         financialIntegration.setExpiresAt(LocalDateTime.now().plusMonths(12));
 
-        integrationRepository.save(financialIntegration);
-        account.setIntegration(financialIntegration);
-        accountRepository.save(account);
-        return financialIntegration;
+        return integrationRepository.save(financialIntegration);
     }
 
     @Override

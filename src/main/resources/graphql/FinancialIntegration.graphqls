@@ -20,14 +20,14 @@ input FinancialIntegrationInput {
     userId: ID!
 }
 
-extend type Mutation {
-    createFinancialIntegration(input: FinancialIntegrationInput!, accountId: ID!): FinancialIntegrationDTO
-    updateFinancialIntegration(id: ID!, input: FinancialIntegrationInput!): FinancialIntegrationDTO
-    deleteFinancialIntegration(id: ID!): FinancialIntegrationDTO
+type Mutation {
+    createFinancialIntegration(itemId: String!): FinancialIntegration
+    updateFinancialIntegration(id: ID!, financialIntegration: FinancialIntegrationInput!): FinancialIntegration
+    deleteFinancialIntegration(id: ID!): FinancialIntegration
 }
 
 extend type Query {
     findFinancialIntegrationById(id: ID!): FinancialIntegrationDTO
-    listFinancialIntegrationsByUser(userId: ID!): [FinancialIntegrationDTO!]!
+    listFinancialIntegrationsByUser: [FinancialIntegrationDTO!]!
     listAccountsByIntegration(id: ID!): [AccountDTO!]!
 }
