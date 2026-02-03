@@ -20,8 +20,7 @@ public class PluggyAuthClient {
                 .bodyToMono(AuthResponse.class)
                 .block();
 
-        log.info("🔑 api key obtida com sucesso");
-        if(response != null)System.out.println(response.apiKey());
+        log.info("Pluggy access token obtained successfully");
         return response != null ? response.apiKey() : null;
     }
 
