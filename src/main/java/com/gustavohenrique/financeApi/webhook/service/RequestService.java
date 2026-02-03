@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.io.IOException;
-
 @Component
 public class RequestService {
 
@@ -20,7 +18,7 @@ public class RequestService {
         this.credentialService = credentialService;
     }
 
-    public ListTransactionsResponse fetchTransaction(String linkTransactions) throws IOException {
+    public ListTransactionsResponse fetchTransaction(String linkTransactions) {
         ClientCredencials clientCredencials = credentialService.readCredentials();
         String token = authClient.getAccessToken(clientCredencials.getClientId(), clientCredencials.getClientSecret());
         WebClient client = WebClient.builder()
