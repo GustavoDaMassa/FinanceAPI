@@ -2,6 +2,8 @@ package com.gustavohenrique.financeApi.application.repositories;
 
 import com.gustavohenrique.financeApi.domain.models.Transaction;
 import com.gustavohenrique.financeApi.domain.enums.TransactionType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -32,5 +34,11 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             @Param("categoryIds") List<Long> categoryIds,
             @Param("subcategoryIds") List<Long> subcategoryIds
     );
+
+    Page<Transaction> findByAccount_Id(Long accountId, Pageable pageable);
+
+    Page<Transaction> findByAccountIdAndTransactionDateBetween(Long accountId, LocalDate start, LocalDate end, Pageable pageable);
+
+    Page<Transaction> findByAccountIdAndType(Long accountId, TransactionType type, Pageable pageable);
 
 }

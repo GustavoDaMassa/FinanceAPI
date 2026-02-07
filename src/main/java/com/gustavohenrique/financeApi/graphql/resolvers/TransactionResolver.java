@@ -5,7 +5,9 @@ import com.gustavohenrique.financeApi.application.wrappers.TransactionQueryResul
 import com.gustavohenrique.financeApi.domain.models.Transaction;
 import com.gustavohenrique.financeApi.graphql.dtos.TransactionDTO;
 import com.gustavohenrique.financeApi.graphql.dtos.TransactionListWithBalanceDTO;
+import com.gustavohenrique.financeApi.graphql.dtos.TransactionPageDTO;
 import com.gustavohenrique.financeApi.graphql.inputs.DateRangeInput;
+import com.gustavohenrique.financeApi.graphql.inputs.PaginationInput;
 import com.gustavohenrique.financeApi.graphql.inputs.TransactionFilterInput;
 import com.gustavohenrique.financeApi.graphql.inputs.TransactionInput;
 import com.gustavohenrique.financeApi.graphql.mappers.TransactionMapper;
@@ -63,6 +65,27 @@ public class TransactionResolver {
                 .stream()
                 .map(transactionMapper::toDto)
                 .toList();
+    }
+
+    @QueryMapping
+    public TransactionPageDTO listAccountTransactionsPaginated(@Argument Long accountId, @Argument PaginationInput pagination) {
+        PaginationInput p = pagination != null ? pagination : new PaginationInput();
+        var result = transactionService.listByAccountPaginated(accountId, p.getPage(), p.getSize());
+        return transactionMapper.toPageDTO(result);
+    }
+
+    @QueryMapping
+    public TransactionPageDTO listTransactionsByPeriodPaginated(@Argument Long accountId, @Argument DateRangeInput range, @Argument PaginationInput pagination) {
+        PaginationInput p = pagination != null ? pagination : new PaginationInput();
+        var result = transactionService.listByPeriodPaginated(accountId, range.getStartDate(), range.getEndDate(), p.getPage(), p.getSize());
+        return transactionMapper.toPageDTO(result);
+    }
+
+    @QueryMapping
+    public TransactionPageDTO listTransactionsByTypePaginated(@Argument Long accountId, @Argument String type, @Argument PaginationInput pagination) {
+        PaginationInput p = pagination != null ? pagination : new PaginationInput();
+        var result = transactionService.listByTypePaginated(accountId, type, p.getPage(), p.getSize());
+        return transactionMapper.toPageDTO(result);
     }
 
 //----------------------------------------------------------------------------------------

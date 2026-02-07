@@ -1,13 +1,17 @@
 package com.gustavohenrique.financeApi.graphql.mappers;
 
+import com.gustavohenrique.financeApi.application.wrappers.TransactionPageResult;
 import com.gustavohenrique.financeApi.domain.models.Account;
 import com.gustavohenrique.financeApi.domain.models.Category;
 import com.gustavohenrique.financeApi.domain.models.Transaction;
+import com.gustavohenrique.financeApi.graphql.dtos.PageInfo;
 import com.gustavohenrique.financeApi.graphql.dtos.TransactionDTO;
 import com.gustavohenrique.financeApi.graphql.dtos.TransactionListWithBalanceDTO;
+import com.gustavohenrique.financeApi.graphql.dtos.TransactionPageDTO;
 import com.gustavohenrique.financeApi.graphql.inputs.TransactionInput;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -69,5 +73,24 @@ public class TransactionMapper {
         dto.setTransactions(transactions.stream().map(this::toDto).toList());
         dto.setBalance(balance.toPlainString());
         return dto;
+    }
+
+    public TransactionPageDTO toPageDTO(TransactionPageResult result) {
+        Page<Transaction> page = result.getPage();
+
+        PageInfo pageInfo = PageInfo.builder()
+                .currentPage(page.getNumber())
+                .pageSize(page.getSize())
+                .totalElements(page.getTotalElements())
+                .totalPages(page.getTotalPages())
+                .hasNext(page.hasNext())
+                .hasPrevious(page.hasPrevious())
+                .build();
+
+        return TransactionPageDTO.builder()
+                .transactions(page.getContent().stream().map(this::toDto).toList())
+                .pageInfo(pageInfo)
+                .balance(result.getBalance())
+                .build();
     }
 }

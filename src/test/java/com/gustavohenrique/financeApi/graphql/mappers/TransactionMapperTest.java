@@ -1,16 +1,21 @@
 package com.gustavohenrique.financeApi.graphql.mappers;
 
+import com.gustavohenrique.financeApi.application.wrappers.TransactionPageResult;
 import com.gustavohenrique.financeApi.domain.enums.TransactionType;
 import com.gustavohenrique.financeApi.domain.models.Account;
 import com.gustavohenrique.financeApi.domain.models.Category;
 import com.gustavohenrique.financeApi.domain.models.Transaction;
 import com.gustavohenrique.financeApi.graphql.dtos.TransactionDTO;
 import com.gustavohenrique.financeApi.graphql.dtos.TransactionListWithBalanceDTO;
+import com.gustavohenrique.financeApi.graphql.dtos.TransactionPageDTO;
 import com.gustavohenrique.financeApi.graphql.inputs.TransactionInput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -138,5 +143,33 @@ class TransactionMapperTest {
 
         assertEquals("500.00", dto.getBalance());
         assertEquals(1, dto.getTransactions().size());
+    }
+
+    @Test
+    @DisplayName("Should map TransactionPageResult to TransactionPageDTO")
+    void toPageDTO() {
+        Account account = new Account();
+        account.setId(1L);
+
+        Transaction t = new Transaction();
+        t.setId(1L);
+        t.setAmount(new BigDecimal("100.00"));
+        t.setType(TransactionType.INFLOW);
+        t.setTransactionDate(LocalDate.of(2025, 1, 1));
+        t.setAccount(account);
+
+        Page<Transaction> page = new PageImpl<>(List.of(t), PageRequest.of(0, 10), 25);
+        TransactionPageResult result = new TransactionPageResult(page, new BigDecimal("500.00"));
+
+        TransactionPageDTO dto = transactionMapper.toPageDTO(result);
+
+        assertEquals(new BigDecimal("500.00"), dto.getBalance());
+        assertEquals(1, dto.getTransactions().size());
+        assertEquals(0, dto.getPageInfo().getCurrentPage());
+        assertEquals(10, dto.getPageInfo().getPageSize());
+        assertEquals(25L, dto.getPageInfo().getTotalElements());
+        assertEquals(3, dto.getPageInfo().getTotalPages());
+        assertTrue(dto.getPageInfo().getHasNext());
+        assertFalse(dto.getPageInfo().getHasPrevious());
     }
 }
