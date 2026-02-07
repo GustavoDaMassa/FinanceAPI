@@ -140,4 +140,40 @@ class FinancialIntegrationServiceImplTest {
 
         assertThrows(IntegrationNotFoundException.class, () -> integrationService.delete(1L));
     }
+
+    @Test
+    @DisplayName("Should find integration by linkId")
+    void findByLinkId_success() {
+        when(integrationRepository.findByLinkId("link123")).thenReturn(Optional.of(integration));
+
+        FinancialIntegration result = integrationService.findByLinkId("link123");
+
+        assertNotNull(result);
+        assertEquals("link123", result.getLinkId());
+    }
+
+    @Test
+    @DisplayName("Should throw when linkId not found")
+    void findByLinkId_notFound_shouldThrow() {
+        when(integrationRepository.findByLinkId("unknown")).thenReturn(Optional.empty());
+
+        assertThrows(com.gustavohenrique.financeApi.exception.IntegrationLinkIdNotFoundException.class,
+                () -> integrationService.findByLinkId("unknown"));
+    }
+
+    @Test
+    @DisplayName("Should list accounts for integration")
+    void listIntegrationAccounts_success() {
+        Account account = new Account();
+        account.setId(1L);
+        account.setAccountName("Test Account");
+        integration.setAccounts(List.of(account));
+
+        when(integrationRepository.findById(1L)).thenReturn(Optional.of(integration));
+
+        List<Account> result = integrationService.listIntegrationAccounts(1L);
+
+        assertEquals(1, result.size());
+        assertEquals("Test Account", result.get(0).getAccountName());
+    }
 }
