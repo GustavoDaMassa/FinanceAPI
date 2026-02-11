@@ -9,7 +9,6 @@ import com.gustavohenrique.financeApi.application.wrappers.TransactionPageResult
 import com.gustavohenrique.financeApi.application.wrappers.TransactionQueryResult;
 import com.gustavohenrique.financeApi.domain.enums.TransactionType;
 import com.gustavohenrique.financeApi.domain.models.*;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,7 +46,7 @@ class TransactionServiceImplTest {
     void setUp() {
         account = new Account(1L, "Main", "Bank", "Checking", BigDecimal.ZERO, null, null, null, null);
         transaction = new Transaction(1L, new BigDecimal("100.00"), TransactionType.INFLOW, "Salary",
-                "Employer", "Me", LocalDate.now(), null, null, account);
+                "Employer", "Me", LocalDate.now(), null, account);
     }
 
     @Test
@@ -103,10 +102,10 @@ class TransactionServiceImplTest {
     @DisplayName("Should return transactions and balance by custom filters")
     void listByFilter() {
         when(accountRepository.existsById(1L)).thenReturn(true);
-        when(transactionRepository.findByFilter(1L, List.of(1L), List.of())).thenReturn(List.of(transaction));
+        when(transactionRepository.findByFilter(1L, List.of(1L))).thenReturn(List.of(transaction));
         when(balanceCalculatorService.calculate(List.of(transaction))).thenReturn(new BigDecimal("100.00"));
 
-        TransactionQueryResult result = transactionService.listByFilter(1L, List.of(1L), List.of());
+        TransactionQueryResult result = transactionService.listByFilter(1L, List.of(1L));
 
         assertEquals(1, result.getTransactions().size());
     }
@@ -154,20 +153,17 @@ class TransactionServiceImplTest {
     }
 
     @Test
-    @DisplayName("Should categorize transaction by category and subcategory IDs")
+    @DisplayName("Should categorize transaction by category ID")
     void categorize() {
-        Category category = new Category(1L, "Food", null, null, null);
-        Category subcategory = new Category(2L, "Groceries", null, null, null);
+        Category category = new Category(1L, "Food", null);
 
         when(transactionRepository.findById(1L)).thenReturn(Optional.of(transaction));
         when(categoryService.findById(1L)).thenReturn(category);
-        when(categoryService.findById(2L)).thenReturn(subcategory);
         when(transactionRepository.save(transaction)).thenReturn(transaction);
 
-        Transaction result = transactionService.categorize(1L, 1L, 2L);
+        Transaction result = transactionService.categorize(1L, 1L);
 
         assertEquals(category, result.getCategory());
-        assertEquals(subcategory, result.getSubcategory());
     }
 
     @Test

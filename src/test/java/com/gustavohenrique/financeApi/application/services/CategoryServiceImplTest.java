@@ -6,7 +6,6 @@ import com.gustavohenrique.financeApi.domain.models.Category;
 import com.gustavohenrique.financeApi.domain.models.User;
 import com.gustavohenrique.financeApi.exception.CategoryNotFoundException;
 import com.gustavohenrique.financeApi.exception.UserIDNotFoundException;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,7 +43,7 @@ class CategoryServiceImplTest {
         user.setEmail("gustavo@test.com");
         user.setPassword("123456");
 
-        category = new Category(1L, "Alimentação", user, null, List.of());
+        category = new Category(1L, "Alimentação", user);
     }
 
     @Test
@@ -101,7 +100,7 @@ class CategoryServiceImplTest {
     @Test
     @DisplayName("Should update category when ID exists")
     void update_success() {
-        Category updatedCategory = new Category(null, "Transporte", user, null, null);
+        Category updatedCategory = new Category(null, "Transporte", user);
 
         when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
         when(categoryRepository.save(any())).thenReturn(updatedCategory);

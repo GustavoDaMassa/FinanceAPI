@@ -41,9 +41,6 @@ class TransactionMapperTest {
         Category category = new Category();
         category.setId(2L);
 
-        Category subcategory = new Category();
-        subcategory.setId(3L);
-
         Transaction transaction = new Transaction();
         transaction.setId(10L);
         transaction.setAmount(new BigDecimal("250.00"));
@@ -54,7 +51,6 @@ class TransactionMapperTest {
         transaction.setTransactionDate(LocalDate.of(2025, 1, 15));
         transaction.setAccount(account);
         transaction.setCategory(category);
-        transaction.setSubcategory(subcategory);
 
         TransactionDTO dto = transactionMapper.toDto(transaction);
 
@@ -63,7 +59,6 @@ class TransactionMapperTest {
         assertEquals(TransactionType.INFLOW, dto.getType());
         assertEquals(1L, dto.getAccountId());
         assertEquals(2L, dto.getCategoryId());
-        assertEquals(3L, dto.getSubcategoryId());
         assertEquals("2025-01-15", dto.getTransactionDate());
     }
 
@@ -80,12 +75,10 @@ class TransactionMapperTest {
         transaction.setTransactionDate(LocalDate.of(2025, 2, 1));
         transaction.setAccount(account);
         transaction.setCategory(null);
-        transaction.setSubcategory(null);
 
         TransactionDTO dto = transactionMapper.toDto(transaction);
 
         assertNull(dto.getCategoryId());
-        assertNull(dto.getSubcategoryId());
     }
 
     @Test
@@ -100,7 +93,6 @@ class TransactionMapperTest {
         input.setTransactionDate("2025-03-01");
         input.setAccountId(1L);
         input.setCategoryId(2L);
-        input.setSubcategoryId(3L);
 
         Transaction result = transactionMapper.fromInput(input);
 
@@ -108,7 +100,6 @@ class TransactionMapperTest {
         assertEquals(TransactionType.INFLOW, result.getType());
         assertEquals(1L, result.getAccount().getId());
         assertEquals(2L, result.getCategory().getId());
-        assertEquals(3L, result.getSubcategory().getId());
     }
 
     @Test
@@ -123,7 +114,6 @@ class TransactionMapperTest {
         Transaction result = transactionMapper.fromInput(input);
 
         assertNull(result.getCategory());
-        assertNull(result.getSubcategory());
     }
 
     @Test
