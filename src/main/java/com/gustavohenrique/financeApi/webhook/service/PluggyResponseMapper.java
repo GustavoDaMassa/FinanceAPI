@@ -20,7 +20,6 @@ public class PluggyResponseMapper {
              null,
              response.getDate().toLocalDate(),
             null,
-             null,
              null
         );
 }

@@ -47,18 +47,16 @@ public class CategoryResolver {
     @MutationMapping
     public CategoryDTO createCategory(@Argument CategoryInput input) {
         User user = userService.findById(input.getUserId());
-        Category parent = input.getParentId() != null ? categoryService.findById(input.getParentId()) : null;
 
-        Category created = categoryService.create(categoryMapper.fromInput(input, user, parent));
+        Category created = categoryService.create(categoryMapper.fromInput(input, user));
         return categoryMapper.toDto(created);
     }
 
     @MutationMapping
     public CategoryDTO updateCategory(@Argument Long id, @Argument CategoryInput input) {
         User user = userService.findById(input.getUserId());
-        Category parent = input.getParentId() != null ? categoryService.findById(input.getParentId()) : null;
 
-        Category updated = categoryService.update(id, categoryMapper.fromInput(input, user, parent));
+        Category updated = categoryService.update(id, categoryMapper.fromInput(input, user));
         return categoryMapper.toDto(updated);
     }
 

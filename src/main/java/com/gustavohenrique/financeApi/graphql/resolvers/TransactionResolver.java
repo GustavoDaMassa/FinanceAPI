@@ -55,7 +55,7 @@ public class TransactionResolver {
 
     @QueryMapping
     public TransactionListWithBalanceDTO listTransactionsByFilter(@Argument Long accountId, @Argument TransactionFilterInput filter) {
-        var result = transactionService.listByFilter(accountId, filter.getCategoryIds(), filter.getSubcategoryIds());
+        var result = transactionService.listByFilter(accountId, filter.getCategoryIds());
         return transactionMapper.toListWithBalanceDTO(result.getTransactions(), result.getBalance());
     }
 
@@ -105,8 +105,8 @@ public class TransactionResolver {
     }
 
     @MutationMapping
-    public TransactionDTO categorizeTransaction(@Argument Long id, @Argument Long categoryId, @Argument Long subcategoryId) {
-        Transaction categorized = transactionService.categorize(id, categoryId, subcategoryId);
+    public TransactionDTO categorizeTransaction(@Argument Long id, @Argument Long categoryId) {
+        Transaction categorized = transactionService.categorize(id, categoryId);
         return transactionMapper.toDto(categorized);
     }
 
