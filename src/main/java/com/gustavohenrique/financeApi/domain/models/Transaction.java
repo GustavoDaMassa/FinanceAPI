@@ -36,11 +36,6 @@ public class Transaction {
     private Category category;
 
     @ManyToOne
-    @JoinColumn(name = "subcategory_id")
-    private Category subcategory;
-
-
-    @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;
 }
