@@ -2,14 +2,11 @@ type CategoryDTO {
     id: ID!
     name: String!
     userId: ID!
-    parentId: ID
-    subcategories: [CategoryDTO!]
 }
 
 input CategoryInput {
     name: String!
     userId: ID!
-    parentId: ID
 }
 
 extend type Query {

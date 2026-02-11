@@ -12,12 +12,10 @@ input TransactionInput {
     transactionDate: String
     accountId: ID!
     categoryId: ID
-    subcategoryId: ID
 }
 
 input TransactionFilterInput {
     categoryIds: [ID!]
-    subcategoryIds: [ID!]
 }
 
 input DateRangeInput {
@@ -41,7 +39,6 @@ type TransactionDTO {
     transactionDate: String!
     accountId: ID!
     categoryId: ID
-    subcategoryId: ID
 }
 
 type TransactionListWithBalanceDTO {
@@ -83,6 +80,6 @@ extend type Mutation {
 
     createTransaction(input: TransactionInput!): TransactionDTO
     updateTransaction(id: ID!, input: TransactionInput!): TransactionDTO
-    categorizeTransaction(id: ID!, categoryId: ID, subcategoryId: ID): TransactionDTO
+    categorizeTransaction(id: ID!, categoryId: ID): TransactionDTO
     deleteTransaction(id: ID!): TransactionDTO
 }
