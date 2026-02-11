@@ -12,5 +12,4 @@ public class CategoryInput {
 
     @NotNull
     private Long userId;
-    private Long parentId;
 }

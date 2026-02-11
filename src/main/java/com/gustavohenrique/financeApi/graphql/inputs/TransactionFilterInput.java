@@ -6,5 +6,4 @@ import java.util.List;
 @Data
 public class TransactionFilterInput {
     private List<Long> categoryIds;
-    private List<Long> subcategoryIds;
 }

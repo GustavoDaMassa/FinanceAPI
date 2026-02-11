@@ -14,6 +14,5 @@ public class TransactionDTO {
     private String transactionDate;
 
     private Long categoryId;
-    private Long subcategoryId;
     private Long accountId;
 }

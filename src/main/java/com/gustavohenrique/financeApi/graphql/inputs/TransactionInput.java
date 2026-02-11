@@ -25,5 +25,4 @@ public class TransactionInput {
     private Long accountId;
 
     private Long categoryId;
-    private Long subcategoryId;
 }
