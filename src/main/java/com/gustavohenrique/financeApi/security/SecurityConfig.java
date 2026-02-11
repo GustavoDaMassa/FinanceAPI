@@ -36,20 +36,28 @@ public class SecurityConfig {
     @org.springframework.beans.factory.annotation.Value("${cors.allowed-origins:http://localhost:3000,http://localhost:8080}")
     private String allowedOrigins;
 
+    @org.springframework.beans.factory.annotation.Value("${spring.graphql.graphiql.enabled:false}")
+    private boolean graphiqlEnabled;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
+                .authorizeHttpRequests(auth -> {
+                        auth.requestMatchers(
                                 "/api/auth/login",
                                 "/api/auth/create-admin",
                                 "/actuator/health/**",
                                 "/webhook/pluggy"
-                        ).permitAll()
-                        .anyRequest().authenticated()
-                )
+                        ).permitAll();
+
+                        if (graphiqlEnabled) {
+                            auth.requestMatchers("/graphiql").permitAll();
+                        }
+
+                        auth.anyRequest().authenticated();
+                })
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
