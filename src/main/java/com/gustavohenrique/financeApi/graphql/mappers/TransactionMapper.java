@@ -33,9 +33,6 @@ public class TransactionMapper {
         if (transaction.getCategory() != null)
             dto.setCategoryId(transaction.getCategory().getId());
 
-        if (transaction.getSubcategory() != null)
-            dto.setSubcategoryId(transaction.getSubcategory().getId());
-
         return dto;
     }
 
@@ -57,12 +54,6 @@ public class TransactionMapper {
             Category category = new Category();
             category.setId(input.getCategoryId());
             transaction.setCategory(category);
-        }
-
-        if (input.getSubcategoryId() != null) {
-            Category subcategory = new Category();
-            subcategory.setId(input.getSubcategoryId());
-            transaction.setSubcategory(subcategory);
         }
 
         return transaction;
