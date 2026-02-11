@@ -37,20 +37,35 @@
         <discardingThreshold>0</discardingThreshold>
     </appender>
 
-    <!-- Root logger configuration -->
-    <root level="INFO">
-        <appender-ref ref="CONSOLE_JSON"/>
-        <appender-ref ref="ASYNC_LOGSTASH"/>
-    </root>
+    <!-- Production: only console JSON (no Logstash) -->
+    <springProfile name="prod">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE_JSON"/>
+        </root>
 
-    <!-- Application specific logging -->
-    <logger name="com.gustavohenrique.financeApi" level="INFO" additivity="false">
-        <appender-ref ref="CONSOLE_JSON"/>
-        <appender-ref ref="ASYNC_LOGSTASH"/>
-    </logger>
+        <logger name="com.gustavohenrique.financeApi" level="INFO" additivity="false">
+            <appender-ref ref="CONSOLE_JSON"/>
+        </logger>
 
-    <!-- Reduce noise from Spring and Hibernate -->
-    <logger name="org.springframework" level="INFO"/>
-    <logger name="org.hibernate" level="WARN"/>
-    <logger name="org.apache.kafka" level="WARN"/>
+        <logger name="org.springframework" level="WARN"/>
+        <logger name="org.hibernate" level="WARN"/>
+        <logger name="org.apache.kafka" level="WARN"/>
+    </springProfile>
+
+    <!-- Non-production: console JSON + Logstash -->
+    <springProfile name="!prod">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE_JSON"/>
+            <appender-ref ref="ASYNC_LOGSTASH"/>
+        </root>
+
+        <logger name="com.gustavohenrique.financeApi" level="INFO" additivity="false">
+            <appender-ref ref="CONSOLE_JSON"/>
+            <appender-ref ref="ASYNC_LOGSTASH"/>
+        </logger>
+
+        <logger name="org.springframework" level="INFO"/>
+        <logger name="org.hibernate" level="WARN"/>
+        <logger name="org.apache.kafka" level="WARN"/>
+    </springProfile>
 </configuration>
