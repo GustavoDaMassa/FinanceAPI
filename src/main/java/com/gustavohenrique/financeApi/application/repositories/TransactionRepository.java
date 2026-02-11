@@ -27,12 +27,10 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
         SELECT t FROM Transaction t
         WHERE (:accountId IS NULL OR t.account.id = :accountId)
           AND (:categoryIds IS NULL OR t.category.id IN :categoryIds)
-          AND (:subcategoryIds IS NULL OR t.subcategory.id IN :subcategoryIds)
     """)
     List<Transaction> findByFilter(
             @Param("accountId") Long accountId,
-            @Param("categoryIds") List<Long> categoryIds,
-            @Param("subcategoryIds") List<Long> subcategoryIds
+            @Param("categoryIds") List<Long> categoryIds
     );
 
     Page<Transaction> findByAccount_Id(Long accountId, Pageable pageable);

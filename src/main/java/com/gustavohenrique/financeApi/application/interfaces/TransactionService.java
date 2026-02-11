@@ -17,7 +17,7 @@ public interface TransactionService {
 
     TransactionQueryResult listByType(Long accountId, String type);
 
-    TransactionQueryResult listByFilter(Long accountId, List<Long> categoryIds, List<Long> subcategoryIds);
+    TransactionQueryResult listByFilter(Long accountId, List<Long> categoryIds);
 
     List<Transaction> listUncategorized(Long accountId);
 
@@ -31,7 +31,7 @@ public interface TransactionService {
 
     Transaction update(Long id, Transaction transaction);
 
-    Transaction categorize(Long id, Long categoryId, Long subcategoryId);
+    Transaction categorize(Long id, Long categoryId);
 
     Transaction delete(Long id);
 }

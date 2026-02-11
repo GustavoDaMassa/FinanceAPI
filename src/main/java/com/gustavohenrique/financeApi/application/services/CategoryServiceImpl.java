@@ -7,8 +7,6 @@ import com.gustavohenrique.financeApi.domain.models.Category;
 import com.gustavohenrique.financeApi.domain.models.User;
 import com.gustavohenrique.financeApi.exception.CategoryNotFoundException;
 import com.gustavohenrique.financeApi.exception.UserIDNotFoundException;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -44,17 +42,14 @@ public class CategoryServiceImpl implements CategoryService {
         Category existing = findById(id);
 
         existing.setName(updatedCategory.getName());
-        existing.setParent(updatedCategory.getParent());
         existing.setUser(updatedCategory.getUser());
 
         return categoryRepository.save(existing);
     }
 
     @Override
-    @Transactional
     public Category delete(Long id) {
         Category existing = findById(id);
-        existing.getSubcategories().size();
         categoryRepository.delete(existing);
         return existing;
     }

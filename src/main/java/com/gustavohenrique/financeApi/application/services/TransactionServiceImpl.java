@@ -77,9 +77,9 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public TransactionQueryResult listByFilter(Long accountId, List<Long> categoryIds, List<Long> subcategoryIds) {
+    public TransactionQueryResult listByFilter(Long accountId, List<Long> categoryIds) {
         if(!accountRepository.existsById(accountId)) throw new AccountNotFoundException(accountId);
-        List<Transaction> transactions = transactionRepository.findByFilter(accountId, categoryIds, subcategoryIds);
+        List<Transaction> transactions = transactionRepository.findByFilter(accountId, categoryIds);
         BigDecimal balance = balanceCalculatorService.calculate(transactions);
         return new TransactionQueryResult(transactions, balance);
     }
@@ -142,7 +142,6 @@ public class TransactionServiceImpl implements TransactionService {
         existing.setTransactionDate(transaction.getTransactionDate());
         existing.setAccount(transaction.getAccount());
         existing.setCategory(transaction.getCategory());
-        existing.setSubcategory(transaction.getSubcategory());
 
         transactionRepository.save(existing);
         updateAccountBalance(existing.getAccount().getId());
@@ -150,15 +149,13 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Transaction categorize(Long id, Long categoryId, Long subcategoryId) {
+    public Transaction categorize(Long id, Long categoryId) {
         Transaction transaction = transactionRepository.findById(id)
                 .orElseThrow(() -> new TransactionNotFoundException(id));
 
         Category category = categoryId != null ? categoryService.findById(categoryId) : null;
-        Category subcategory = subcategoryId != null ? categoryService.findById(subcategoryId) : null;
 
         transaction.setCategory(category);
-        transaction.setSubcategory(subcategory);
 
         return transactionRepository.save(transaction);
     }
