@@ -63,6 +63,7 @@ type TransactionPageDTO {
 
 extend type Query {
 
+    findTransactionById(id: ID!): TransactionDTO
     listUserTransactions(userId: ID!): TransactionListWithBalanceDTO!
     listAccountTransactions(accountId: ID!): TransactionListWithBalanceDTO!
     listTransactionsByPeriod(accountId: ID!, range: DateRangeInput!): TransactionListWithBalanceDTO!

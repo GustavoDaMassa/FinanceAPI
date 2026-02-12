@@ -27,6 +27,8 @@ public interface TransactionService {
 
     TransactionPageResult listByTypePaginated(Long accountId, String type, int page, int size);
 
+    Transaction findById(Long id);
+
     Transaction create(Transaction transaction);
 
     Transaction update(Long id, Transaction transaction);

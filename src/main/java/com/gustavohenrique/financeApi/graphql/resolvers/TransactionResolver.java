@@ -30,6 +30,12 @@ public class TransactionResolver {
 
 
     @QueryMapping
+    public TransactionDTO findTransactionById(@Argument Long id) {
+        Transaction transaction = transactionService.findById(id);
+        return transactionMapper.toDto(transaction);
+    }
+
+    @QueryMapping
     public TransactionListWithBalanceDTO listUserTransactions(@Argument Long userId) {
         TransactionQueryResult result = transactionService.listByUserId(userId);
         return transactionMapper.toListWithBalanceDTO(result.getTransactions(), result.getBalance());
