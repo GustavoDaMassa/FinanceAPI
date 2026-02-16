@@ -6,6 +6,7 @@ import com.gustavohenrique.financeApi.domain.models.User;
 import com.gustavohenrique.financeApi.security.dto.CreateAdminRequest;
 import com.gustavohenrique.financeApi.security.dto.LoginRequest;
 import com.gustavohenrique.financeApi.security.dto.LoginResponse;
+import com.gustavohenrique.financeApi.security.dto.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -45,6 +46,30 @@ public class AuthenticationService {
                 user.getEmail(),
                 user.getName(),
                 user.getRole()
+        );
+    }
+
+    public LoginResponse register(RegisterRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new IllegalArgumentException("Email already exists");
+        }
+
+        User user = new User();
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole(Role.USER);
+
+        User savedUser = userRepository.save(user);
+
+        String jwtToken = jwtService.generateToken(savedUser);
+
+        return new LoginResponse(
+                jwtToken,
+                savedUser.getId(),
+                savedUser.getEmail(),
+                savedUser.getName(),
+                savedUser.getRole()
         );
     }
 
