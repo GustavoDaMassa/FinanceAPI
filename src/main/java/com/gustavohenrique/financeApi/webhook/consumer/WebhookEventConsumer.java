@@ -33,6 +33,7 @@ public class WebhookEventConsumer {
     private final TransactionService transactionService;
     private final AccountRepository accountRepository;
     private final PluggyResponseMapper pluggyResponseMapper;
+    private final com.gustavohenrique.financeApi.application.repositories.TransactionRepository transactionRepository;
 
     @KafkaListener(topics = "webhook-transactions", groupId = "finance-consumer")
     public void consume(ConsumerRecord<String, String> record) {
@@ -51,6 +52,11 @@ public class WebhookEventConsumer {
             ListTransactionsResponse transactionsResponse = pluggyClient.fetchTransaction(event.getLinkTransactions());
 
             for (TransactionResponse result : transactionsResponse.getResults()) {
+                if (transactionRepository.existsByExternalId(result.getId())) {
+                    log.info("⏭️ Transaction with externalId {} already exists. Skipping.", result.getId());
+                    continue;
+                }
+
                 accountRepository.findByPluggyAccountIdAndUser(result.getAccountId(), user)
                         .ifPresentOrElse(
                                 account -> {

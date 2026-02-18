@@ -35,6 +35,9 @@ public class Transaction {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @Column(name = "external_id", unique = true)
+    private String externalId;
+
     @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;

@@ -39,4 +39,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     Page<Transaction> findByAccountIdAndType(Long accountId, TransactionType type, Pageable pageable);
 
+    boolean existsByExternalId(String externalId);
+
 }
