@@ -46,7 +46,7 @@ class TransactionServiceImplTest {
     void setUp() {
         account = new Account(1L, "Main", "Bank", "Checking", BigDecimal.ZERO, null, null, null, null);
         transaction = new Transaction(1L, new BigDecimal("100.00"), TransactionType.INFLOW, "Salary",
-                "Employer", "Me", LocalDate.now(), null, account);
+                "Employer", "Me", LocalDate.now(), null, null, account);
     }
 
     @Test

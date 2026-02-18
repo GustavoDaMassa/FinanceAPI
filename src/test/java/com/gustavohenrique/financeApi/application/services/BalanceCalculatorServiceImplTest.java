@@ -26,9 +26,9 @@ class BalanceCalculatorServiceImplTest {
     @DisplayName("Should sum all INFLOW transactions correctly")
     void calculate_onlyInflows_shouldReturnTotal() {
         var t1 = new Transaction(1L, new BigDecimal("100.00"), TransactionType.INFLOW,
-                "Salary", null, null, LocalDate.now(), null, null);
+                "Salary", null, null, LocalDate.now(), null, null, null);
         var t2 = new Transaction(2L, new BigDecimal("50.00"), TransactionType.INFLOW,
-                "Bonus", null, null, LocalDate.now(), null, null);
+                "Bonus", null, null, LocalDate.now(), null, null, null);
 
         var result = balanceCalculator.calculate(List.of(t1, t2));
         assertEquals(new BigDecimal("150.00"), result);
@@ -38,9 +38,9 @@ class BalanceCalculatorServiceImplTest {
     @DisplayName("Should subtract all OUTFLOW transactions correctly")
     void calculate_onlyOutflows_shouldReturnNegativeTotal() {
         var t1 = new Transaction(1L, new BigDecimal("30.00"), TransactionType.OUTFLOW,
-                "Groceries", null, null, LocalDate.now(), null, null);
+                "Groceries", null, null, LocalDate.now(), null, null, null);
         var t2 = new Transaction(2L, new BigDecimal("20.00"), TransactionType.OUTFLOW,
-                "Transport", null, null, LocalDate.now(), null, null);
+                "Transport", null, null, LocalDate.now(), null, null, null);
 
         var result = balanceCalculator.calculate(List.of(t1, t2));
         assertEquals(new BigDecimal("-50.00"), result);
@@ -50,9 +50,9 @@ class BalanceCalculatorServiceImplTest {
     @DisplayName("Should calculate net balance with both INFLOW and OUTFLOW")
     void calculate_mixedTransactions_shouldReturnNetBalance() {
         var inflow = new Transaction(1L, new BigDecimal("200.00"), TransactionType.INFLOW,
-                "Freelance", null, null, LocalDate.now(), null, null);
+                "Freelance", null, null, LocalDate.now(), null, null, null);
         var outflow = new Transaction(2L, new BigDecimal("70.00"), TransactionType.OUTFLOW,
-                "Bills", null, null, LocalDate.now(), null, null);
+                "Bills", null, null, LocalDate.now(), null, null, null);
 
         var result = balanceCalculator.calculate(List.of(inflow, outflow));
         assertEquals(new BigDecimal("130.00"), result);

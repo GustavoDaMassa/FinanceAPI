@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gustavohenrique.financeApi.application.interfaces.FinancialIntegrationService;
 import com.gustavohenrique.financeApi.application.interfaces.TransactionService;
 import com.gustavohenrique.financeApi.application.repositories.AccountRepository;
+import com.gustavohenrique.financeApi.application.repositories.TransactionRepository;
 import com.gustavohenrique.financeApi.domain.enums.Role;
 import com.gustavohenrique.financeApi.domain.enums.TransactionType;
 import com.gustavohenrique.financeApi.domain.models.Account;
@@ -48,6 +49,8 @@ class WebhookEventConsumerTest {
     private AccountRepository accountRepository;
     @Mock
     private PluggyResponseMapper pluggyResponseMapper;
+    @Mock
+    private TransactionRepository transactionRepository;
 
     @InjectMocks
     private WebhookEventConsumer webhookEventConsumer;
@@ -99,6 +102,7 @@ class WebhookEventConsumerTest {
         );
         when(financialIntegrationService.findByLinkId("item-123")).thenReturn(integration);
         when(pluggyClient.fetchTransaction("http://api.pluggy.ai/transactions")).thenReturn(listResponse);
+        when(transactionRepository.existsByExternalId(any())).thenReturn(false);
         when(accountRepository.findByPluggyAccountIdAndUser("pluggy-acc-123", user)).thenReturn(Optional.of(account));
         when(pluggyResponseMapper.mapPluggyToTransaction(transactionResponse)).thenReturn(mappedTransaction);
         when(transactionService.create(any())).thenReturn(mappedTransaction);
@@ -128,6 +132,7 @@ class WebhookEventConsumerTest {
         );
         when(financialIntegrationService.findByLinkId("item-123")).thenReturn(integration);
         when(pluggyClient.fetchTransaction("http://api.pluggy.ai/transactions")).thenReturn(listResponse);
+        when(transactionRepository.existsByExternalId(any())).thenReturn(false);
         when(accountRepository.findByPluggyAccountIdAndUser("unknown-acc", user)).thenReturn(Optional.empty());
 
         webhookEventConsumer.consume(record);
