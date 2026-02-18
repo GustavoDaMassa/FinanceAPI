@@ -1,0 +1,31 @@
+# =============================================================================
+# FinanceAPI Terraform Variables — Oracle Cloud
+# =============================================================================
+# Copy this file to terraform.tfvars and fill in the values:
+#   cp terraform.tfvars.example terraform.tfvars
+#
+# NEVER commit terraform.tfvars to version control!
+# =============================================================================
+
+# OCI region
+oci_region = "sa-saopaulo-1"
+
+# OCI authentication — get these from your OCI console:
+#   Profile menu > Tenancy > OCID  (tenancy)
+#   Profile menu > My profile > OCID  (user)
+#   Profile menu > My profile > API keys > Fingerprint
+oci_tenancy_ocid     = "ocid1.tenancy.oc1..aaaaaaaaXXXXX"
+oci_user_ocid        = "ocid1.user.oc1..aaaaaaaaXXXXX"
+oci_fingerprint      = "aa:bb:cc:dd:ee:ff:00:11:22:33:44:55:66:77:88:99"
+oci_private_key_path = "~/.oci/oci_api_key.pem"
+
+# Compartment — use tenancy OCID for root compartment, or create a dedicated one
+compartment_ocid = "ocid1.compartment.oc1..aaaaaaaaXXXXX"
+
+# SSH key for instance access
+ssh_public_key_path = "~/.ssh/id_ed25519.pub"
+
+# Instance shape config (Always Free limits: 4 OCPUs, 24GB RAM, 200GB disk)
+instance_ocpus      = 2
+instance_memory_gb  = 8
+boot_volume_size_gb = 50
