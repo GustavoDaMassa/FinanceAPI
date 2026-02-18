@@ -46,7 +46,7 @@ public class AccountResolver {
 
 
     @MutationMapping
-    public AccountDTO createAccount(@Argument AccountInput input, @AuthenticationPrincipal User user) {
+    public AccountDTO createAccount(@Argument("account") AccountInput input, @AuthenticationPrincipal User user) {
         FinancialIntegration integration = input.getIntegrationId() != null
                 ? financialIntegrationService.findById(input.getIntegrationId())
                 : null;
@@ -74,7 +74,7 @@ public class AccountResolver {
     }
 
     @MutationMapping
-    public AccountDTO updateAccount(@Argument Long id, @Argument AccountInput input, @AuthenticationPrincipal User user) {
+    public AccountDTO updateAccount(@Argument Long id, @Argument("account") AccountInput input, @AuthenticationPrincipal User user) {
         FinancialIntegration integration = input.getIntegrationId() != null
                 ? financialIntegrationService.findById(input.getIntegrationId())
                 : null;

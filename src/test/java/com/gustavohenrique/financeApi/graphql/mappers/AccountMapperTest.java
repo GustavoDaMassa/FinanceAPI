@@ -8,7 +8,6 @@ import com.gustavohenrique.financeApi.graphql.inputs.AccountInput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
 
 import java.math.BigDecimal;
 
@@ -20,7 +19,7 @@ class AccountMapperTest {
 
     @BeforeEach
     void setUp() {
-        accountMapper = new AccountMapper(new ModelMapper());
+        accountMapper = new AccountMapper();
     }
 
     @Test

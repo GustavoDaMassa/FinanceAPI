@@ -83,7 +83,7 @@ public class FinancialIntegrationResolver {
     }
 
     @MutationMapping
-    public FinancialIntegrationDTO updateFinancialIntegration(@Argument Long id, @Argument FinancialIntegrationInput input) {
+    public FinancialIntegrationDTO updateFinancialIntegration(@Argument Long id, @Argument("financialIntegration") FinancialIntegrationInput input) {
         // This might need adjustment if the input and mapper are user-dependent
         FinancialIntegration existingIntegration = integrationService.findById(id);
         User user = existingIntegration.getUser();

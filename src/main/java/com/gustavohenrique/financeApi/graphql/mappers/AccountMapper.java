@@ -5,7 +5,6 @@ import com.gustavohenrique.financeApi.domain.models.FinancialIntegration;
 import com.gustavohenrique.financeApi.domain.models.User;
 import com.gustavohenrique.financeApi.graphql.dtos.AccountDTO;
 import com.gustavohenrique.financeApi.graphql.inputs.AccountInput;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -14,24 +13,21 @@ import java.util.Optional;
 @Component
 public class AccountMapper {
 
-    private final ModelMapper modelMapper;
-
-    public AccountMapper(ModelMapper modelMapper) {
-        this.modelMapper = modelMapper;
-    }
-
     public AccountDTO toDto(Account account) {
-        AccountDTO dto = modelMapper.map(account, AccountDTO.class);
+        AccountDTO dto = new AccountDTO();
+        dto.setId(account.getId());
+        dto.setAccountName(account.getAccountName());
+        dto.setInstitution(account.getInstitution());
+        dto.setType(account.getType());
         dto.setUserId(account.getUser().getId());
-        if (account.getIntegration() != null) {
-            dto.setIntegrationId(account.getIntegration().getId());
-        }
         dto.setBalance(
                 Optional.ofNullable(account.getBalance())
                         .orElse(BigDecimal.ZERO)
                         .toPlainString()
         );
-
+        if (account.getIntegration() != null) {
+            dto.setIntegrationId(account.getIntegration().getId());
+        }
         return dto;
     }
 
