@@ -20,17 +20,22 @@ input FinancialIntegrationInput {
     userId: ID!
 }
 
-type Mutation {
-    createFinancialIntegration(itemId: String!): FinancialIntegration
-    updateFinancialIntegration(id: ID!, financialIntegration: FinancialIntegrationInput!): FinancialIntegration
-    deleteFinancialIntegration(id: ID!): FinancialIntegration
+extend type Mutation {
+    createFinancialIntegration(itemId: String!): FinancialIntegrationDTO
+    updateFinancialIntegration(id: ID!, financialIntegration: FinancialIntegrationInput!): FinancialIntegrationDTO
+    deleteFinancialIntegration(id: ID!): FinancialIntegrationDTO
 }
 
-type Query {
-    findFinancialIntegrationById(id: ID!): FinancialIntegration
-    listFinancialIntegrationsByUser: [FinancialIntegration]
-    listAccountsByIntegration(id: ID!): [Account]
+extend type Query {
+    findFinancialIntegrationById(id: ID!): FinancialIntegrationDTO
+    listFinancialIntegrationsByUser: [FinancialIntegrationDTO]
+    listAccountsByIntegration(id: ID!): [AccountDTO]
     accountsFromPluggy(integrationId: ID!): [PluggyAccountDTO]
+    createConnectToken: ConnectTokenDTO
+}
+
+type ConnectTokenDTO {
+    accessToken: String!
 }
 
 type PluggyAccountDTO {

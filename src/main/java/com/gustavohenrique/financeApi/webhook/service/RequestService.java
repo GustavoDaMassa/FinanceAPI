@@ -2,6 +2,7 @@ package com.gustavohenrique.financeApi.webhook.service;
 
 import com.gustavohenrique.financeApi.graphql.dtos.PluggyAccountDTO;
 import com.gustavohenrique.financeApi.webhook.dataTransfer.ClientCredencials;
+import com.gustavohenrique.financeApi.webhook.dataTransfer.ConnectTokenResponse;
 import com.gustavohenrique.financeApi.webhook.dataTransfer.ListAccountsResponse;
 import com.gustavohenrique.financeApi.webhook.dataTransfer.ListTransactionsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,21 @@ public class RequestService {
                 .retrieve()
                 .bodyToMono(ListTransactionsResponse.class)
                 .block();
+    }
+
+    public String createConnectToken() {
+        ClientCredencials clientCredencials = credentialService.readCredentials();
+        String token = authClient.getAccessToken(clientCredencials.getClientId(), clientCredencials.getClientSecret());
+
+        ConnectTokenResponse response = webClient.post()
+                .uri("/connect_token")
+                .header("X-API-KEY", token)
+                .bodyValue("{}")
+                .retrieve()
+                .bodyToMono(ConnectTokenResponse.class)
+                .block();
+
+        return response != null ? response.accessToken() : null;
     }
 
     public List<PluggyAccountDTO> fetchAccounts(String itemId) {
