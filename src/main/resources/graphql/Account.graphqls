@@ -23,11 +23,11 @@ input LinkAccountInput {
     type: String!
 }
 
-type Mutation {
-    createAccount(account: AccountInput!): Account
-    updateAccount(id: ID!, account: AccountInput!): Account
-    deleteAccount(id: ID!): Account
-    linkAccount(input: LinkAccountInput!): Account
+extend type Mutation {
+    createAccount(account: AccountInput!): AccountDTO
+    updateAccount(id: ID!, account: AccountInput!): AccountDTO
+    deleteAccount(id: ID!): AccountDTO
+    linkAccount(input: LinkAccountInput!): AccountDTO
 }
 
 extend type Query {
