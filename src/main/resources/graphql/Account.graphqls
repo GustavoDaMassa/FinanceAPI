@@ -2,7 +2,7 @@ type AccountDTO {
     id: ID!
     accountName: String!
     institution: String!
-    type: String!
+    description: String
     balance: String!
     userId: ID!
     integrationId: ID
@@ -11,7 +11,7 @@ type AccountDTO {
 input AccountInput {
     accountName: String!
     institution: String!
-    type: String!
+    description: String
     userId: ID!
     integrationId: ID
 }
@@ -20,7 +20,7 @@ input LinkAccountInput {
     integrationId: ID!
     pluggyAccountId: String!
     name: String!
-    type: String!
+    description: String
 }
 
 extend type Mutation {

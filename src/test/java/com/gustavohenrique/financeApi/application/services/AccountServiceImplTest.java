@@ -115,7 +115,7 @@ class AccountServiceImplTest {
         Account updated = new Account();
         updated.setAccountName("Updated Account");
         updated.setInstitution("New Bank");
-        updated.setType("SAVINGS");
+        updated.setDescription("SAVINGS");
         updated.setBalance(BigDecimal.valueOf(2000));
         updated.setUser(user);
         updated.setIntegration(integration);
@@ -127,7 +127,7 @@ class AccountServiceImplTest {
 
         assertEquals("Updated Account", result.getAccountName());
         assertEquals("New Bank", result.getInstitution());
-        assertEquals("SAVINGS", result.getType());
+        assertEquals("SAVINGS", result.getDescription());
         assertEquals(BigDecimal.valueOf(2000), result.getBalance());
     }
 

@@ -98,7 +98,7 @@ class AccountResolverTest {
         input.setIntegrationId(1L);
         input.setPluggyAccountId("pluggy-123");
         input.setName("Checking");
-        input.setType("BANK");
+        input.setDescription("BANK");
 
         when(financialIntegrationService.findById(1L)).thenReturn(integration);
         when(accountService.create(any(Account.class))).thenReturn(account);

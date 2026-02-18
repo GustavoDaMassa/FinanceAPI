@@ -18,7 +18,7 @@ public class AccountMapper {
         dto.setId(account.getId());
         dto.setAccountName(account.getAccountName());
         dto.setInstitution(account.getInstitution());
-        dto.setType(account.getType());
+        dto.setDescription(account.getDescription());
         dto.setUserId(account.getUser().getId());
         dto.setBalance(
                 Optional.ofNullable(account.getBalance())
@@ -35,7 +35,7 @@ public class AccountMapper {
         Account account = new Account();
         account.setAccountName(input.getAccountName());
         account.setInstitution(input.getInstitution());
-        account.setType(input.getType());
+        account.setDescription(input.getDescription());
         account.setUser(user);
         account.setIntegration(integration);
         return account;

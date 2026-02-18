@@ -35,7 +35,7 @@ class AccountMapperTest {
         account.setId(10L);
         account.setAccountName("Checking");
         account.setInstitution("Bank");
-        account.setType("checking");
+        account.setDescription("checking");
         account.setBalance(new BigDecimal("1500.75"));
         account.setUser(user);
         account.setIntegration(integration);
@@ -74,7 +74,7 @@ class AccountMapperTest {
         AccountInput input = new AccountInput();
         input.setAccountName("Checking");
         input.setInstitution("Bank");
-        input.setType("checking");
+        input.setDescription("checking");
 
         User user = new User();
         user.setId(1L);

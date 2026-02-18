@@ -10,7 +10,7 @@ public class AccountInput {
     @NotBlank
     private String accountName;
     private String institution;
-    private String type;
+    private String description;
 
     @NotNull
     private Long userId;

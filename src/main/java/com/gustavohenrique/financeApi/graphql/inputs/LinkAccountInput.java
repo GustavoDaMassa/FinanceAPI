@@ -7,5 +7,5 @@ public class LinkAccountInput {
     private Long integrationId;
     private String pluggyAccountId;
     private String name;
-    private String type;
+    private String description;
 }

@@ -16,7 +16,7 @@ public class AccountDTO {
 
     private Long id;
     private String institution;
-    private String type;
+    private String description;
     private String accountName;
     private String balance;
     private Long userId;
