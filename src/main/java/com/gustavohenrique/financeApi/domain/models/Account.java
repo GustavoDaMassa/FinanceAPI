@@ -20,6 +20,7 @@ public class Account {
 
     private String accountName;
     private String institution;
+    @Column(columnDefinition = "TEXT")
     private String description;
     private BigDecimal balance = BigDecimal.ZERO;
 
