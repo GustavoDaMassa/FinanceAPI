@@ -64,17 +64,17 @@ type TransactionPageDTO {
 extend type Query {
 
     findTransactionById(id: ID!): TransactionDTO
-    listUserTransactions(userId: ID!): TransactionListWithBalanceDTO!
-    listAccountTransactions(accountId: ID!): TransactionListWithBalanceDTO!
-    listTransactionsByPeriod(accountId: ID!, range: DateRangeInput!): TransactionListWithBalanceDTO!
-    listTransactionsByType(accountId: ID!, type: TransactionType!): TransactionListWithBalanceDTO!
-    listTransactionsByFilter(accountId: ID!, filter: TransactionFilterInput!): TransactionListWithBalanceDTO!
-    listUncategorizedTransactions(accountId: ID!): [TransactionDTO!]!
+    listUserTransactions: TransactionListWithBalanceDTO!
+    listAccountTransactions(accountId: ID): TransactionListWithBalanceDTO!
+    listTransactionsByPeriod(accountId: ID, range: DateRangeInput!): TransactionListWithBalanceDTO!
+    listTransactionsByType(accountId: ID, type: TransactionType!): TransactionListWithBalanceDTO!
+    listTransactionsByFilter(accountId: ID, filter: TransactionFilterInput!): TransactionListWithBalanceDTO!
+    listUncategorizedTransactions(accountId: ID): [TransactionDTO!]!
 
     # Paginated queries
-    listAccountTransactionsPaginated(accountId: ID!, pagination: PaginationInput): TransactionPageDTO!
-    listTransactionsByPeriodPaginated(accountId: ID!, range: DateRangeInput!, pagination: PaginationInput): TransactionPageDTO!
-    listTransactionsByTypePaginated(accountId: ID!, type: TransactionType!, pagination: PaginationInput): TransactionPageDTO!
+    listAccountTransactionsPaginated(accountId: ID, pagination: PaginationInput): TransactionPageDTO!
+    listTransactionsByPeriodPaginated(accountId: ID, range: DateRangeInput!, pagination: PaginationInput): TransactionPageDTO!
+    listTransactionsByTypePaginated(accountId: ID, type: TransactionType!, pagination: PaginationInput): TransactionPageDTO!
 }
 
 extend type Mutation {
