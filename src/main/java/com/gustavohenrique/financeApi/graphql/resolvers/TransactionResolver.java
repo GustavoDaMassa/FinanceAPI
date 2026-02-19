@@ -3,6 +3,7 @@ package com.gustavohenrique.financeApi.graphql.resolvers;
 import com.gustavohenrique.financeApi.application.interfaces.TransactionService;
 import com.gustavohenrique.financeApi.application.wrappers.TransactionQueryResult;
 import com.gustavohenrique.financeApi.domain.models.Transaction;
+import com.gustavohenrique.financeApi.domain.models.User;
 import com.gustavohenrique.financeApi.graphql.dtos.TransactionDTO;
 import com.gustavohenrique.financeApi.graphql.dtos.TransactionListWithBalanceDTO;
 import com.gustavohenrique.financeApi.graphql.dtos.TransactionPageDTO;
@@ -16,6 +17,7 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
@@ -36,61 +38,113 @@ public class TransactionResolver {
     }
 
     @QueryMapping
-    public TransactionListWithBalanceDTO listUserTransactions(@Argument Long userId) {
-        TransactionQueryResult result = transactionService.listByUserId(userId);
+    public TransactionListWithBalanceDTO listUserTransactions(@AuthenticationPrincipal User user) {
+        TransactionQueryResult result = transactionService.listByUserId(user.getId());
         return transactionMapper.toListWithBalanceDTO(result.getTransactions(), result.getBalance());
     }
 
     @QueryMapping
-    public TransactionListWithBalanceDTO listAccountTransactions(@Argument Long accountId) {
-        var result = transactionService.listByAccount(accountId);
+    public TransactionListWithBalanceDTO listAccountTransactions(
+            @AuthenticationPrincipal User user,
+            @Argument Long accountId) {
+        if (accountId != null) {
+            var result = transactionService.listByAccount(accountId);
+            return transactionMapper.toListWithBalanceDTO(result.getTransactions(), result.getBalance());
+        }
+        var result = transactionService.listByUserId(user.getId());
         return transactionMapper.toListWithBalanceDTO(result.getTransactions(), result.getBalance());
     }
 
     @QueryMapping
-    public TransactionListWithBalanceDTO listTransactionsByPeriod(@Argument Long accountId, @Argument DateRangeInput range) {
-        var result = transactionService.listByPeriod(accountId, range.getStartDate(), range.getEndDate());
+    public TransactionListWithBalanceDTO listTransactionsByPeriod(
+            @AuthenticationPrincipal User user,
+            @Argument Long accountId,
+            @Argument DateRangeInput range) {
+        if (accountId != null) {
+            var result = transactionService.listByPeriod(accountId, range.getStartDate(), range.getEndDate());
+            return transactionMapper.toListWithBalanceDTO(result.getTransactions(), result.getBalance());
+        }
+        var result = transactionService.listByPeriodForUser(user.getId(), range.getStartDate(), range.getEndDate());
         return transactionMapper.toListWithBalanceDTO(result.getTransactions(), result.getBalance());
     }
 
     @QueryMapping
-    public TransactionListWithBalanceDTO listTransactionsByType(@Argument Long accountId, @Argument String type) {
-        var result = transactionService.listByType(accountId, type);
+    public TransactionListWithBalanceDTO listTransactionsByType(
+            @AuthenticationPrincipal User user,
+            @Argument Long accountId,
+            @Argument String type) {
+        if (accountId != null) {
+            var result = transactionService.listByType(accountId, type);
+            return transactionMapper.toListWithBalanceDTO(result.getTransactions(), result.getBalance());
+        }
+        var result = transactionService.listByTypeForUser(user.getId(), type);
         return transactionMapper.toListWithBalanceDTO(result.getTransactions(), result.getBalance());
     }
 
     @QueryMapping
-    public TransactionListWithBalanceDTO listTransactionsByFilter(@Argument Long accountId, @Argument TransactionFilterInput filter) {
-        var result = transactionService.listByFilter(accountId, filter.getCategoryIds());
+    public TransactionListWithBalanceDTO listTransactionsByFilter(
+            @AuthenticationPrincipal User user,
+            @Argument Long accountId,
+            @Argument TransactionFilterInput filter) {
+        if (accountId != null) {
+            var result = transactionService.listByFilter(accountId, filter.getCategoryIds());
+            return transactionMapper.toListWithBalanceDTO(result.getTransactions(), result.getBalance());
+        }
+        var result = transactionService.listByFilterForUser(user.getId(), filter.getCategoryIds());
         return transactionMapper.toListWithBalanceDTO(result.getTransactions(), result.getBalance());
     }
 
     @QueryMapping
-    public List<TransactionDTO> listUncategorizedTransactions(@Argument Long accountId) {
-        return transactionService.listUncategorized(accountId)
-                .stream()
-                .map(transactionMapper::toDto)
-                .toList();
+    public List<TransactionDTO> listUncategorizedTransactions(
+            @AuthenticationPrincipal User user,
+            @Argument Long accountId) {
+        List<Transaction> transactions = accountId != null
+                ? transactionService.listUncategorized(accountId)
+                : transactionService.listUncategorizedForUser(user.getId());
+        return transactions.stream().map(transactionMapper::toDto).toList();
     }
 
     @QueryMapping
-    public TransactionPageDTO listAccountTransactionsPaginated(@Argument Long accountId, @Argument PaginationInput pagination) {
+    public TransactionPageDTO listAccountTransactionsPaginated(
+            @AuthenticationPrincipal User user,
+            @Argument Long accountId,
+            @Argument PaginationInput pagination) {
         PaginationInput p = pagination != null ? pagination : new PaginationInput();
-        var result = transactionService.listByAccountPaginated(accountId, p.getPage(), p.getSize());
+        if (accountId != null) {
+            var result = transactionService.listByAccountPaginated(accountId, p.getPage(), p.getSize());
+            return transactionMapper.toPageDTO(result);
+        }
+        var result = transactionService.listByUserPaginated(user.getId(), p.getPage(), p.getSize());
         return transactionMapper.toPageDTO(result);
     }
 
     @QueryMapping
-    public TransactionPageDTO listTransactionsByPeriodPaginated(@Argument Long accountId, @Argument DateRangeInput range, @Argument PaginationInput pagination) {
+    public TransactionPageDTO listTransactionsByPeriodPaginated(
+            @AuthenticationPrincipal User user,
+            @Argument Long accountId,
+            @Argument DateRangeInput range,
+            @Argument PaginationInput pagination) {
         PaginationInput p = pagination != null ? pagination : new PaginationInput();
-        var result = transactionService.listByPeriodPaginated(accountId, range.getStartDate(), range.getEndDate(), p.getPage(), p.getSize());
+        if (accountId != null) {
+            var result = transactionService.listByPeriodPaginated(accountId, range.getStartDate(), range.getEndDate(), p.getPage(), p.getSize());
+            return transactionMapper.toPageDTO(result);
+        }
+        var result = transactionService.listByPeriodPaginatedForUser(user.getId(), range.getStartDate(), range.getEndDate(), p.getPage(), p.getSize());
         return transactionMapper.toPageDTO(result);
     }
 
     @QueryMapping
-    public TransactionPageDTO listTransactionsByTypePaginated(@Argument Long accountId, @Argument String type, @Argument PaginationInput pagination) {
+    public TransactionPageDTO listTransactionsByTypePaginated(
+            @AuthenticationPrincipal User user,
+            @Argument Long accountId,
+            @Argument String type,
+            @Argument PaginationInput pagination) {
         PaginationInput p = pagination != null ? pagination : new PaginationInput();
-        var result = transactionService.listByTypePaginated(accountId, type, p.getPage(), p.getSize());
+        if (accountId != null) {
+            var result = transactionService.listByTypePaginated(accountId, type, p.getPage(), p.getSize());
+            return transactionMapper.toPageDTO(result);
+        }
+        var result = transactionService.listByTypePaginatedForUser(user.getId(), type, p.getPage(), p.getSize());
         return transactionMapper.toPageDTO(result);
     }
 
