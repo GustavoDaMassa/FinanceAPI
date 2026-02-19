@@ -120,6 +120,70 @@ public class TransactionServiceImpl implements TransactionService {
         return new TransactionPageResult(transactionPage, balance);
     }
 
+    // ── User-scoped variants ──────────────────────────────────────────────────
+
+    @Override
+    public TransactionQueryResult listByPeriodForUser(Long userId, String startDate, String endDate) {
+        if (!userRepository.existsById(userId)) throw new UserIDNotFoundException(userId);
+        List<Transaction> transactions = transactionRepository.findByAccount_User_IdAndTransactionDateBetween(
+                userId, LocalDate.parse(startDate), LocalDate.parse(endDate));
+        BigDecimal balance = balanceCalculatorService.calculate(transactions);
+        return new TransactionQueryResult(transactions, balance);
+    }
+
+    @Override
+    public TransactionQueryResult listByTypeForUser(Long userId, String type) {
+        if (!userRepository.existsById(userId)) throw new UserIDNotFoundException(userId);
+        TransactionType transactionType = TransactionType.valueOf(type);
+        List<Transaction> transactions = transactionRepository.findByAccount_User_IdAndType(userId, transactionType);
+        BigDecimal balance = balanceCalculatorService.calculate(transactions);
+        return new TransactionQueryResult(transactions, balance);
+    }
+
+    @Override
+    public TransactionQueryResult listByFilterForUser(Long userId, List<Long> categoryIds) {
+        if (!userRepository.existsById(userId)) throw new UserIDNotFoundException(userId);
+        List<Transaction> transactions = transactionRepository.findByFilterForUser(userId, categoryIds);
+        BigDecimal balance = balanceCalculatorService.calculate(transactions);
+        return new TransactionQueryResult(transactions, balance);
+    }
+
+    @Override
+    public List<Transaction> listUncategorizedForUser(Long userId) {
+        if (!userRepository.existsById(userId)) throw new UserIDNotFoundException(userId);
+        return transactionRepository.findByAccount_User_IdAndCategoryIsNull(userId);
+    }
+
+    @Override
+    public TransactionPageResult listByUserPaginated(Long userId, int page, int size) {
+        if (!userRepository.existsById(userId)) throw new UserIDNotFoundException(userId);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "transactionDate"));
+        Page<Transaction> transactionPage = transactionRepository.findByAccount_User_Id(userId, pageable);
+        BigDecimal balance = balanceCalculatorService.calculate(transactionRepository.findByAccount_User_Id(userId));
+        return new TransactionPageResult(transactionPage, balance);
+    }
+
+    @Override
+    public TransactionPageResult listByPeriodPaginatedForUser(Long userId, String startDate, String endDate, int page, int size) {
+        if (!userRepository.existsById(userId)) throw new UserIDNotFoundException(userId);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "transactionDate"));
+        Page<Transaction> transactionPage = transactionRepository.findByAccount_User_IdAndTransactionDateBetween(
+                userId, LocalDate.parse(startDate), LocalDate.parse(endDate), pageable);
+        BigDecimal balance = balanceCalculatorService.calculate(
+                transactionRepository.findByAccount_User_IdAndTransactionDateBetween(userId, LocalDate.parse(startDate), LocalDate.parse(endDate)));
+        return new TransactionPageResult(transactionPage, balance);
+    }
+
+    @Override
+    public TransactionPageResult listByTypePaginatedForUser(Long userId, String type, int page, int size) {
+        if (!userRepository.existsById(userId)) throw new UserIDNotFoundException(userId);
+        TransactionType transactionType = TransactionType.valueOf(type);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "transactionDate"));
+        Page<Transaction> transactionPage = transactionRepository.findByAccount_User_IdAndType(userId, transactionType, pageable);
+        BigDecimal balance = balanceCalculatorService.calculate(transactionRepository.findByAccount_User_IdAndType(userId, transactionType));
+        return new TransactionPageResult(transactionPage, balance);
+    }
+
     @Override
     public Transaction findById(Long id) {
         return transactionRepository.findById(id)

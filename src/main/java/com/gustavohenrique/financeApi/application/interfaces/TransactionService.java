@@ -27,6 +27,21 @@ public interface TransactionService {
 
     TransactionPageResult listByTypePaginated(Long accountId, String type, int page, int size);
 
+    // User-scoped variants (accountId optional — fallback to authenticated user)
+    TransactionQueryResult listByPeriodForUser(Long userId, String startDate, String endDate);
+
+    TransactionQueryResult listByTypeForUser(Long userId, String type);
+
+    TransactionQueryResult listByFilterForUser(Long userId, List<Long> categoryIds);
+
+    List<Transaction> listUncategorizedForUser(Long userId);
+
+    TransactionPageResult listByUserPaginated(Long userId, int page, int size);
+
+    TransactionPageResult listByPeriodPaginatedForUser(Long userId, String startDate, String endDate, int page, int size);
+
+    TransactionPageResult listByTypePaginatedForUser(Long userId, String type, int page, int size);
+
     Transaction findById(Long id);
 
     Transaction create(Transaction transaction);
