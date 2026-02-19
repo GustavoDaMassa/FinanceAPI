@@ -7,9 +7,9 @@ import com.gustavohenrique.financeApi.webhook.dataTransfer.ListAccountsResponse;
 import com.gustavohenrique.financeApi.webhook.dataTransfer.ListTransactionsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Flux;
 
 import java.util.List;
 
@@ -20,11 +20,11 @@ public class RequestService {
     private final CredentialService credentialService;
     private final PluggyAuthClient authClient;
 
-    @Value("${pluggy.base-url:https://api.pluggy.ai}")
-    private String pluggyBaseUrl;
-
     @Autowired
-    public RequestService(CredentialService credentialService, PluggyAuthClient authClient) {
+    public RequestService(
+            CredentialService credentialService,
+            PluggyAuthClient authClient,
+            @Value("${pluggy.base-url:https://api.pluggy.ai}") String pluggyBaseUrl) {
         this.credentialService = credentialService;
         this.authClient = authClient;
         this.webClient = WebClient.builder().baseUrl(pluggyBaseUrl).build();
@@ -48,6 +48,7 @@ public class RequestService {
         ConnectTokenResponse response = webClient.post()
                 .uri("/connect_token")
                 .header("X-API-KEY", token)
+                .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue("{}")
                 .retrieve()
                 .bodyToMono(ConnectTokenResponse.class)
