@@ -224,4 +224,99 @@ class TransactionServiceImplTest {
         assertEquals(1, result.getPage().getContent().size());
         assertEquals(new BigDecimal("100.00"), result.getBalance());
     }
+
+    // ── User-scoped variants ──────────────────────────────────────────────────
+
+    @Test
+    @DisplayName("Should return transactions by period for user")
+    void listByPeriodForUser() {
+        when(userRepository.existsById(1L)).thenReturn(true);
+        when(transactionRepository.findByAccount_User_IdAndTransactionDateBetween(eq(1L), any(), any())).thenReturn(List.of(transaction));
+        when(balanceCalculatorService.calculate(List.of(transaction))).thenReturn(new BigDecimal("100.00"));
+
+        TransactionQueryResult result = transactionService.listByPeriodForUser(1L, "2024-01-01", "2024-12-31");
+
+        assertEquals(1, result.getTransactions().size());
+        assertEquals(new BigDecimal("100.00"), result.getBalance());
+    }
+
+    @Test
+    @DisplayName("Should return transactions by type for user")
+    void listByTypeForUser() {
+        when(userRepository.existsById(1L)).thenReturn(true);
+        when(transactionRepository.findByAccount_User_IdAndType(1L, TransactionType.INFLOW)).thenReturn(List.of(transaction));
+        when(balanceCalculatorService.calculate(List.of(transaction))).thenReturn(new BigDecimal("100.00"));
+
+        TransactionQueryResult result = transactionService.listByTypeForUser(1L, "INFLOW");
+
+        assertEquals(1, result.getTransactions().size());
+    }
+
+    @Test
+    @DisplayName("Should return transactions by filter for user")
+    void listByFilterForUser() {
+        when(userRepository.existsById(1L)).thenReturn(true);
+        when(transactionRepository.findByFilterForUser(1L, List.of(1L))).thenReturn(List.of(transaction));
+        when(balanceCalculatorService.calculate(List.of(transaction))).thenReturn(new BigDecimal("100.00"));
+
+        TransactionQueryResult result = transactionService.listByFilterForUser(1L, List.of(1L));
+
+        assertEquals(1, result.getTransactions().size());
+    }
+
+    @Test
+    @DisplayName("Should return uncategorized transactions for user")
+    void listUncategorizedForUser() {
+        when(userRepository.existsById(1L)).thenReturn(true);
+        when(transactionRepository.findByAccount_User_IdAndCategoryIsNull(1L)).thenReturn(List.of(transaction));
+
+        List<Transaction> result = transactionService.listUncategorizedForUser(1L);
+
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    @DisplayName("Should return paginated transactions for user")
+    void listByUserPaginated() {
+        Page<Transaction> page = new PageImpl<>(List.of(transaction));
+        when(userRepository.existsById(1L)).thenReturn(true);
+        when(transactionRepository.findByAccount_User_Id(eq(1L), any(Pageable.class))).thenReturn(page);
+        when(transactionRepository.findByAccount_User_Id(1L)).thenReturn(List.of(transaction));
+        when(balanceCalculatorService.calculate(List.of(transaction))).thenReturn(new BigDecimal("100.00"));
+
+        TransactionPageResult result = transactionService.listByUserPaginated(1L, 0, 10);
+
+        assertEquals(1, result.getPage().getContent().size());
+        assertEquals(new BigDecimal("100.00"), result.getBalance());
+    }
+
+    @Test
+    @DisplayName("Should return paginated transactions by period for user")
+    void listByPeriodPaginatedForUser() {
+        Page<Transaction> page = new PageImpl<>(List.of(transaction));
+        when(userRepository.existsById(1L)).thenReturn(true);
+        when(transactionRepository.findByAccount_User_IdAndTransactionDateBetween(eq(1L), any(), any(), any(Pageable.class))).thenReturn(page);
+        when(transactionRepository.findByAccount_User_IdAndTransactionDateBetween(eq(1L), any(), any())).thenReturn(List.of(transaction));
+        when(balanceCalculatorService.calculate(List.of(transaction))).thenReturn(new BigDecimal("100.00"));
+
+        TransactionPageResult result = transactionService.listByPeriodPaginatedForUser(1L, "2024-01-01", "2024-12-31", 0, 10);
+
+        assertEquals(1, result.getPage().getContent().size());
+        assertEquals(new BigDecimal("100.00"), result.getBalance());
+    }
+
+    @Test
+    @DisplayName("Should return paginated transactions by type for user")
+    void listByTypePaginatedForUser() {
+        Page<Transaction> page = new PageImpl<>(List.of(transaction));
+        when(userRepository.existsById(1L)).thenReturn(true);
+        when(transactionRepository.findByAccount_User_IdAndType(eq(1L), eq(TransactionType.INFLOW), any(Pageable.class))).thenReturn(page);
+        when(transactionRepository.findByAccount_User_IdAndType(1L, TransactionType.INFLOW)).thenReturn(List.of(transaction));
+        when(balanceCalculatorService.calculate(List.of(transaction))).thenReturn(new BigDecimal("100.00"));
+
+        TransactionPageResult result = transactionService.listByTypePaginatedForUser(1L, "INFLOW", 0, 10);
+
+        assertEquals(1, result.getPage().getContent().size());
+        assertEquals(new BigDecimal("100.00"), result.getBalance());
+    }
 }
