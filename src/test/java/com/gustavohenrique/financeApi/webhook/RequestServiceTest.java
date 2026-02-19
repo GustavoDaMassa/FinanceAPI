@@ -46,7 +46,7 @@ class RequestServiceTest {
 
     @BeforeEach
     void setUp() {
-        requestService = new RequestService(credentialService, authClient);
+        requestService = new RequestService(credentialService, authClient, "https://api.pluggy.ai");
         ReflectionTestUtils.setField(requestService, "webClient", webClient);
     }
 
