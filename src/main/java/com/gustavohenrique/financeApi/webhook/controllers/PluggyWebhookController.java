@@ -17,6 +17,14 @@ public class PluggyWebhookController {
 
     private final WebhookEventProducer webhookEventProducer;
 
+
+    @GetMapping
+    public String healthCheck() {
+        log.info("🔍 Pluggy verificando endpoint via GET");
+        return "Webhook endpoint is active!";
+    }
+
+
     @PostMapping
     public void receiveWebhook(@RequestBody Map<String, Object> payload) {
         log.info("🔔 Webhook recebido: {}", payload);
