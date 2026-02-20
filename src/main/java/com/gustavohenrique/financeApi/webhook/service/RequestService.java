@@ -5,6 +5,7 @@ import com.gustavohenrique.financeApi.webhook.dataTransfer.ClientCredencials;
 import com.gustavohenrique.financeApi.webhook.dataTransfer.ConnectTokenResponse;
 import com.gustavohenrique.financeApi.webhook.dataTransfer.ListAccountsResponse;
 import com.gustavohenrique.financeApi.webhook.dataTransfer.ListTransactionsResponse;
+import com.gustavohenrique.financeApi.webhook.dataTransfer.TransactionResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -55,6 +56,20 @@ public class RequestService {
                 .block();
 
         return response != null ? response.accessToken() : null;
+    }
+
+    public List<TransactionResponse> fetchTransactionsByAccount(String pluggyAccountId) {
+        ClientCredencials clientCredencials = credentialService.readCredentials();
+        String token = authClient.getAccessToken(clientCredencials.getClientId(), clientCredencials.getClientSecret());
+
+        ListTransactionsResponse response = webClient.get()
+                .uri("/transactions?accountId=" + pluggyAccountId + "&pageSize=500")
+                .header("X-API-KEY", token)
+                .retrieve()
+                .bodyToMono(ListTransactionsResponse.class)
+                .block();
+
+        return response != null ? response.getResults() : List.of();
     }
 
     public List<PluggyAccountDTO> fetchAccounts(String itemId) {

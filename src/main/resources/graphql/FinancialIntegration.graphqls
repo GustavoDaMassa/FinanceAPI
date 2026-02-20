@@ -24,6 +24,7 @@ extend type Mutation {
     createFinancialIntegration(itemId: String!): FinancialIntegrationDTO
     updateFinancialIntegration(id: ID!, financialIntegration: FinancialIntegrationInput!): FinancialIntegrationDTO
     deleteFinancialIntegration(id: ID!): FinancialIntegrationDTO
+    syncIntegrationTransactions(integrationId: ID!): Boolean
 }
 
 extend type Query {
