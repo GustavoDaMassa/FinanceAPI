@@ -48,6 +48,7 @@ public class FinancialIntegrationServiceImpl implements FinancialIntegrationServ
 
         financialIntegration.setCreatedAt(LocalDateTime.now());
         financialIntegration.setExpiresAt(LocalDateTime.now().plusMonths(12));
+        financialIntegration.setStatus("UPDATED");
 
         return integrationRepository.save(financialIntegration);
     }

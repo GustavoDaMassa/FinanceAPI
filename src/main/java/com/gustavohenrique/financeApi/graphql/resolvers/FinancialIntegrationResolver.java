@@ -96,7 +96,6 @@ public class FinancialIntegrationResolver {
         FinancialIntegration newIntegration = new FinancialIntegration();
         newIntegration.setLinkId(itemId);
         newIntegration.setAggregator(com.gustavohenrique.financeApi.domain.enums.AggregatorType.PLUGGY);
-        newIntegration.setStatus("UPDATED");
         newIntegration.setUser(user);
         FinancialIntegration created = integrationService.create(newIntegration);
         return mapper.toDto(created);
