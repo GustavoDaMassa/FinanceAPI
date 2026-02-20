@@ -65,6 +65,7 @@ public class AccountResolver {
         Account newAccount = new Account();
         newAccount.setPluggyAccountId(input.getPluggyAccountId());
         newAccount.setAccountName(input.getName());
+        newAccount.setInstitution(input.getInstitution());
         newAccount.setDescription(input.getDescription());
         newAccount.setUser(user);
         newAccount.setIntegration(integration);

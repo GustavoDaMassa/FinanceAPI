@@ -20,6 +20,7 @@ input LinkAccountInput {
     integrationId: ID!
     pluggyAccountId: String!
     name: String!
+    institution: String!
     description: String
 }
 
