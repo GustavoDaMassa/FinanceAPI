@@ -43,14 +43,22 @@ public class RequestService {
     }
 
     public String createConnectToken() {
+        return createConnectToken(null);
+    }
+
+    public String createConnectToken(String itemId) {
         ClientCredencials clientCredencials = credentialService.readCredentials();
         String token = authClient.getAccessToken(clientCredencials.getClientId(), clientCredencials.getClientSecret());
+
+        String body = itemId != null
+                ? "{\"itemId\":\"" + itemId + "\"}"
+                : "{}";
 
         ConnectTokenResponse response = webClient.post()
                 .uri("/connect_token")
                 .header("X-API-KEY", token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue("{}")
+                .bodyValue(body)
                 .retrieve()
                 .bodyToMono(ConnectTokenResponse.class)
                 .block();

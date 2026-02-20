@@ -75,6 +75,12 @@ public class FinancialIntegrationResolver {
     }
 
     @QueryMapping
+    public ConnectTokenDTO createConnectTokenForItem(@Argument String itemId, @AuthenticationPrincipal User user) {
+        String token = requestService.createConnectToken(itemId);
+        return new ConnectTokenDTO(token);
+    }
+
+    @QueryMapping
     public List<PluggyAccountDTO> accountsFromPluggy(@Argument Long integrationId, @AuthenticationPrincipal User user) {
         FinancialIntegration integration = integrationService.findById(integrationId);
         if (!integration.getUser().getId().equals(user.getId())) {
