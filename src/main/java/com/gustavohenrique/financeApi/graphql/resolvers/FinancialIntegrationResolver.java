@@ -2,6 +2,7 @@ package com.gustavohenrique.financeApi.graphql.resolvers;
 
 import com.gustavohenrique.financeApi.application.interfaces.FinancialIntegrationService;
 import com.gustavohenrique.financeApi.application.interfaces.TransactionService;
+import com.gustavohenrique.financeApi.application.repositories.FinancialIntegrationRepository;
 import com.gustavohenrique.financeApi.application.repositories.TransactionRepository;
 import com.gustavohenrique.financeApi.domain.models.Account;
 import com.gustavohenrique.financeApi.domain.models.FinancialIntegration;
@@ -36,6 +37,7 @@ import java.util.stream.Collectors;
 public class FinancialIntegrationResolver {
 
     private final FinancialIntegrationService integrationService;
+    private final FinancialIntegrationRepository integrationRepository;
     private final RequestService requestService;
     private final FinancialIntegrationMapper mapper;
     private final AccountMapper accountMapper;
@@ -106,6 +108,17 @@ public class FinancialIntegrationResolver {
     public FinancialIntegrationDTO deleteFinancialIntegration(@Argument Long id) {
         FinancialIntegration deleted = integrationService.delete(id);
         return mapper.toDto(deleted);
+    }
+
+    @MutationMapping
+    public FinancialIntegrationDTO reconnectIntegration(@Argument Long integrationId, @AuthenticationPrincipal User user) {
+        FinancialIntegration integration = integrationService.findById(integrationId);
+        if (!integration.getUser().getId().equals(user.getId())) {
+            throw new SecurityException("Integration does not belong to the authenticated user.");
+        }
+        integration.setStatus("UPDATED");
+        FinancialIntegration saved = integrationRepository.save(integration);
+        return mapper.toDto(saved);
     }
 
     @MutationMapping

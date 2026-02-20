@@ -25,6 +25,7 @@ extend type Mutation {
     updateFinancialIntegration(id: ID!, financialIntegration: FinancialIntegrationInput!): FinancialIntegrationDTO
     deleteFinancialIntegration(id: ID!): FinancialIntegrationDTO
     syncIntegrationTransactions(integrationId: ID!): Boolean
+    reconnectIntegration(integrationId: ID!): FinancialIntegrationDTO
 }
 
 extend type Query {
