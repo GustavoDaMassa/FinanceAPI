@@ -16,27 +16,6 @@
         </encoder>
     </appender>
 
-    <!-- Logstash TCP Appender -->
-    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-        <destination>${logstashHost}:${logstashPort}</destination>
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-            <includeMdcKeyName>userId</includeMdcKeyName>
-            <includeMdcKeyName>userEmail</includeMdcKeyName>
-            <includeMdcKeyName>requestId</includeMdcKeyName>
-            <customFields>{"application":"${appName}"}</customFields>
-        </encoder>
-        <!-- Reconnection configuration -->
-        <keepAliveDuration>5 minutes</keepAliveDuration>
-        <reconnectionDelay>10 seconds</reconnectionDelay>
-    </appender>
-
-    <!-- Async wrapper for better performance -->
-    <appender name="ASYNC_LOGSTASH" class="ch.qos.logback.classic.AsyncAppender">
-        <appender-ref ref="LOGSTASH"/>
-        <queueSize>512</queueSize>
-        <discardingThreshold>0</discardingThreshold>
-    </appender>
-
     <!-- Production: only console JSON (no Logstash) -->
     <springProfile name="prod">
         <root level="INFO">
@@ -54,6 +33,24 @@
 
     <!-- Non-production: console JSON + Logstash -->
     <springProfile name="!prod">
+        <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+            <destination>${logstashHost}:${logstashPort}</destination>
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                <includeMdcKeyName>userId</includeMdcKeyName>
+                <includeMdcKeyName>userEmail</includeMdcKeyName>
+                <includeMdcKeyName>requestId</includeMdcKeyName>
+                <customFields>{"application":"${appName}"}</customFields>
+            </encoder>
+            <keepAliveDuration>5 minutes</keepAliveDuration>
+            <reconnectionDelay>10 seconds</reconnectionDelay>
+        </appender>
+
+        <appender name="ASYNC_LOGSTASH" class="ch.qos.logback.classic.AsyncAppender">
+            <appender-ref ref="LOGSTASH"/>
+            <queueSize>512</queueSize>
+            <discardingThreshold>0</discardingThreshold>
+        </appender>
+
         <root level="INFO">
             <appender-ref ref="CONSOLE_JSON"/>
             <appender-ref ref="ASYNC_LOGSTASH"/>
