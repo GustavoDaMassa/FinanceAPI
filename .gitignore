@@ -42,6 +42,10 @@ build/
 ### CLAUDE.md ###
 CLAUDE.md
 
+### Server docs ###
+HOME_SERVER.md
+SERVER_GUIDE.md
+
 ### SSL certificates ###
 nginx/ssl/*.pem
 nginx/ssl/*.crt
