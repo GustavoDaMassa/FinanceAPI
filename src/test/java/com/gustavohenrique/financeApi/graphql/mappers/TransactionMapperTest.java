@@ -41,16 +41,8 @@ class TransactionMapperTest {
         Category category = new Category();
         category.setId(2L);
 
-        Transaction transaction = new Transaction();
-        transaction.setId(10L);
-        transaction.setAmount(new BigDecimal("250.00"));
-        transaction.setType(TransactionType.INFLOW);
-        transaction.setDescription("Salary");
-        transaction.setSource("Employer");
-        transaction.setDestination("My Account");
-        transaction.setTransactionDate(LocalDate.of(2025, 1, 15));
-        transaction.setAccount(account);
-        transaction.setCategory(category);
+        Transaction transaction = new Transaction(10L, new BigDecimal("250.00"), TransactionType.INFLOW,
+                "Salary", "Employer", "My Account", LocalDate.of(2025, 1, 15), category, null, account);
 
         TransactionDTO dto = transactionMapper.toDto(transaction);
 
@@ -68,13 +60,8 @@ class TransactionMapperTest {
         Account account = new Account();
         account.setId(1L);
 
-        Transaction transaction = new Transaction();
-        transaction.setId(10L);
-        transaction.setAmount(new BigDecimal("50.00"));
-        transaction.setType(TransactionType.OUTFLOW);
-        transaction.setTransactionDate(LocalDate.of(2025, 2, 1));
-        transaction.setAccount(account);
-        transaction.setCategory(null);
+        Transaction transaction = new Transaction(10L, new BigDecimal("50.00"), TransactionType.OUTFLOW,
+                null, null, null, LocalDate.of(2025, 2, 1), null, null, account);
 
         TransactionDTO dto = transactionMapper.toDto(transaction);
 
@@ -122,12 +109,8 @@ class TransactionMapperTest {
         Account account = new Account();
         account.setId(1L);
 
-        Transaction t = new Transaction();
-        t.setId(1L);
-        t.setAmount(new BigDecimal("100.00"));
-        t.setType(TransactionType.INFLOW);
-        t.setTransactionDate(LocalDate.of(2025, 1, 1));
-        t.setAccount(account);
+        Transaction t = new Transaction(1L, new BigDecimal("100.00"), TransactionType.INFLOW,
+                null, null, null, LocalDate.of(2025, 1, 1), null, null, account);
 
         TransactionListWithBalanceDTO dto = transactionMapper.toListWithBalanceDTO(List.of(t), new BigDecimal("500.00"));
 
@@ -141,12 +124,8 @@ class TransactionMapperTest {
         Account account = new Account();
         account.setId(1L);
 
-        Transaction t = new Transaction();
-        t.setId(1L);
-        t.setAmount(new BigDecimal("100.00"));
-        t.setType(TransactionType.INFLOW);
-        t.setTransactionDate(LocalDate.of(2025, 1, 1));
-        t.setAccount(account);
+        Transaction t = new Transaction(1L, new BigDecimal("100.00"), TransactionType.INFLOW,
+                null, null, null, LocalDate.of(2025, 1, 1), null, null, account);
 
         Page<Transaction> page = new PageImpl<>(List.of(t), PageRequest.of(0, 10), 25);
         TransactionPageResult result = new TransactionPageResult(page, new BigDecimal("500.00"));
