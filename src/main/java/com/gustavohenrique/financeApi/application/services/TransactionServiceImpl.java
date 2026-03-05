@@ -26,7 +26,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -44,46 +43,32 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public TransactionQueryResult listByUserId(Long userId) {
         if(!userRepository.existsById(userId)) throw new UserIDNotFoundException(userId);
-        List<Transaction> transactions = transactionRepository.findByAccount_User_Id(userId);
-        BigDecimal balance = balanceCalculatorService.calculate(transactions);
-        return new TransactionQueryResult(transactions, balance);
+        return buildResult(transactionRepository.findByAccount_User_Id(userId));
     }
 
     @Override
     public TransactionQueryResult listByAccount(Long accountId) {
         if(!accountRepository.existsById(accountId)) throw new AccountNotFoundException(accountId);
-        List<Transaction> transactions = transactionRepository.findByAccount_Id(accountId);
-        BigDecimal balance = balanceCalculatorService.calculate(transactions);
-        return new TransactionQueryResult(transactions, balance);
+        return buildResult(transactionRepository.findByAccount_Id(accountId));
     }
 
     @Override
     public TransactionQueryResult listByPeriod(Long accountId, String startDate, String endDate) {
         if(!accountRepository.existsById(accountId)) throw new AccountNotFoundException(accountId);
-        List<Transaction> transactions = transactionRepository.findByAccountIdAndTransactionDateBetween(
-                accountId,
-                LocalDate.parse(startDate),
-                LocalDate.parse(endDate)
-        );
-        BigDecimal balance = balanceCalculatorService.calculate(transactions);
-        return new TransactionQueryResult(transactions, balance);
+        return buildResult(transactionRepository.findByAccountIdAndTransactionDateBetween(
+                accountId, LocalDate.parse(startDate), LocalDate.parse(endDate)));
     }
 
     @Override
     public TransactionQueryResult listByType(Long accountId, String type) {
         if(!accountRepository.existsById(accountId)) throw new AccountNotFoundException(accountId);
-        TransactionType transactionType = TransactionType.valueOf(type);
-        List<Transaction> transactions = transactionRepository.findByAccountIdAndType(accountId, transactionType);
-        BigDecimal balance = balanceCalculatorService.calculate(transactions);
-        return new TransactionQueryResult(transactions, balance);
+        return buildResult(transactionRepository.findByAccountIdAndType(accountId, TransactionType.valueOf(type)));
     }
 
     @Override
     public TransactionQueryResult listByFilter(Long accountId, List<Long> categoryIds) {
         if(!accountRepository.existsById(accountId)) throw new AccountNotFoundException(accountId);
-        List<Transaction> transactions = transactionRepository.findByFilter(accountId, categoryIds);
-        BigDecimal balance = balanceCalculatorService.calculate(transactions);
-        return new TransactionQueryResult(transactions, balance);
+        return buildResult(transactionRepository.findByFilter(accountId, categoryIds));
     }
 
     @Override
@@ -96,20 +81,17 @@ public class TransactionServiceImpl implements TransactionService {
     public TransactionPageResult listByAccountPaginated(Long accountId, int page, int size) {
         if(!accountRepository.existsById(accountId)) throw new AccountNotFoundException(accountId);
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "transactionDate"));
-        Page<Transaction> transactionPage = transactionRepository.findByAccount_Id(accountId, pageable);
-        BigDecimal balance = balanceCalculatorService.calculate(transactionRepository.findByAccount_Id(accountId));
-        return new TransactionPageResult(transactionPage, balance);
+        return buildPageResult(transactionRepository.findByAccount_Id(accountId, pageable),
+                transactionRepository.findByAccount_Id(accountId));
     }
 
     @Override
     public TransactionPageResult listByPeriodPaginated(Long accountId, String startDate, String endDate, int page, int size) {
         if(!accountRepository.existsById(accountId)) throw new AccountNotFoundException(accountId);
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "transactionDate"));
-        Page<Transaction> transactionPage = transactionRepository.findByAccountIdAndTransactionDateBetween(
-                accountId, LocalDate.parse(startDate), LocalDate.parse(endDate), pageable);
-        BigDecimal balance = balanceCalculatorService.calculate(
+        return buildPageResult(
+                transactionRepository.findByAccountIdAndTransactionDateBetween(accountId, LocalDate.parse(startDate), LocalDate.parse(endDate), pageable),
                 transactionRepository.findByAccountIdAndTransactionDateBetween(accountId, LocalDate.parse(startDate), LocalDate.parse(endDate)));
-        return new TransactionPageResult(transactionPage, balance);
     }
 
     @Override
@@ -117,9 +99,8 @@ public class TransactionServiceImpl implements TransactionService {
         if(!accountRepository.existsById(accountId)) throw new AccountNotFoundException(accountId);
         TransactionType transactionType = TransactionType.valueOf(type);
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "transactionDate"));
-        Page<Transaction> transactionPage = transactionRepository.findByAccountIdAndType(accountId, transactionType, pageable);
-        BigDecimal balance = balanceCalculatorService.calculate(transactionRepository.findByAccountIdAndType(accountId, transactionType));
-        return new TransactionPageResult(transactionPage, balance);
+        return buildPageResult(transactionRepository.findByAccountIdAndType(accountId, transactionType, pageable),
+                transactionRepository.findByAccountIdAndType(accountId, transactionType));
     }
 
     // ── User-scoped variants ──────────────────────────────────────────────────
@@ -127,27 +108,20 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public TransactionQueryResult listByPeriodForUser(Long userId, String startDate, String endDate) {
         if (!userRepository.existsById(userId)) throw new UserIDNotFoundException(userId);
-        List<Transaction> transactions = transactionRepository.findByAccount_User_IdAndTransactionDateBetween(
-                userId, LocalDate.parse(startDate), LocalDate.parse(endDate));
-        BigDecimal balance = balanceCalculatorService.calculate(transactions);
-        return new TransactionQueryResult(transactions, balance);
+        return buildResult(transactionRepository.findByAccount_User_IdAndTransactionDateBetween(
+                userId, LocalDate.parse(startDate), LocalDate.parse(endDate)));
     }
 
     @Override
     public TransactionQueryResult listByTypeForUser(Long userId, String type) {
         if (!userRepository.existsById(userId)) throw new UserIDNotFoundException(userId);
-        TransactionType transactionType = TransactionType.valueOf(type);
-        List<Transaction> transactions = transactionRepository.findByAccount_User_IdAndType(userId, transactionType);
-        BigDecimal balance = balanceCalculatorService.calculate(transactions);
-        return new TransactionQueryResult(transactions, balance);
+        return buildResult(transactionRepository.findByAccount_User_IdAndType(userId, TransactionType.valueOf(type)));
     }
 
     @Override
     public TransactionQueryResult listByFilterForUser(Long userId, List<Long> categoryIds) {
         if (!userRepository.existsById(userId)) throw new UserIDNotFoundException(userId);
-        List<Transaction> transactions = transactionRepository.findByFilterForUser(userId, categoryIds);
-        BigDecimal balance = balanceCalculatorService.calculate(transactions);
-        return new TransactionQueryResult(transactions, balance);
+        return buildResult(transactionRepository.findByFilterForUser(userId, categoryIds));
     }
 
     @Override
@@ -160,20 +134,17 @@ public class TransactionServiceImpl implements TransactionService {
     public TransactionPageResult listByUserPaginated(Long userId, int page, int size) {
         if (!userRepository.existsById(userId)) throw new UserIDNotFoundException(userId);
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "transactionDate"));
-        Page<Transaction> transactionPage = transactionRepository.findByAccount_User_Id(userId, pageable);
-        BigDecimal balance = balanceCalculatorService.calculate(transactionRepository.findByAccount_User_Id(userId));
-        return new TransactionPageResult(transactionPage, balance);
+        return buildPageResult(transactionRepository.findByAccount_User_Id(userId, pageable),
+                transactionRepository.findByAccount_User_Id(userId));
     }
 
     @Override
     public TransactionPageResult listByPeriodPaginatedForUser(Long userId, String startDate, String endDate, int page, int size) {
         if (!userRepository.existsById(userId)) throw new UserIDNotFoundException(userId);
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "transactionDate"));
-        Page<Transaction> transactionPage = transactionRepository.findByAccount_User_IdAndTransactionDateBetween(
-                userId, LocalDate.parse(startDate), LocalDate.parse(endDate), pageable);
-        BigDecimal balance = balanceCalculatorService.calculate(
+        return buildPageResult(
+                transactionRepository.findByAccount_User_IdAndTransactionDateBetween(userId, LocalDate.parse(startDate), LocalDate.parse(endDate), pageable),
                 transactionRepository.findByAccount_User_IdAndTransactionDateBetween(userId, LocalDate.parse(startDate), LocalDate.parse(endDate)));
-        return new TransactionPageResult(transactionPage, balance);
     }
 
     @Override
@@ -181,9 +152,8 @@ public class TransactionServiceImpl implements TransactionService {
         if (!userRepository.existsById(userId)) throw new UserIDNotFoundException(userId);
         TransactionType transactionType = TransactionType.valueOf(type);
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "transactionDate"));
-        Page<Transaction> transactionPage = transactionRepository.findByAccount_User_IdAndType(userId, transactionType, pageable);
-        BigDecimal balance = balanceCalculatorService.calculate(transactionRepository.findByAccount_User_IdAndType(userId, transactionType));
-        return new TransactionPageResult(transactionPage, balance);
+        return buildPageResult(transactionRepository.findByAccount_User_IdAndType(userId, transactionType, pageable),
+                transactionRepository.findByAccount_User_IdAndType(userId, transactionType));
     }
 
     @Override
@@ -239,6 +209,14 @@ public class TransactionServiceImpl implements TransactionService {
         transactionRepository.delete(transaction);
         accountService.recalculateBalance(transaction.getAccount().getId());
         return transaction;
+    }
+
+    private TransactionQueryResult buildResult(List<Transaction> transactions) {
+        return new TransactionQueryResult(transactions, balanceCalculatorService.calculate(transactions));
+    }
+
+    private TransactionPageResult buildPageResult(Page<Transaction> page, List<Transaction> allForBalance) {
+        return new TransactionPageResult(page, balanceCalculatorService.calculate(allForBalance));
     }
 
 }
