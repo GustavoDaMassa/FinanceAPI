@@ -2,7 +2,7 @@ package com.gustavohenrique.financeApi.graphql.resolvers;
 
 import com.gustavohenrique.financeApi.exception.EmailAlreadyExistException;
 import com.gustavohenrique.financeApi.exception.InvalidTransactionTypeException;
-import com.gustavohenrique.financeApi.exception.NotFoundException;
+import com.gustavohenrique.financeApi.exception.UserIDNotFoundException;
 import graphql.GraphQLError;
 import graphql.execution.ExecutionStepInfo;
 import graphql.language.Field;
@@ -43,12 +43,12 @@ class CustomGraphQLExceptionResolverTest {
     @Test
     @DisplayName("Should map NotFoundException to NOT_FOUND")
     void resolveNotFoundException() {
-        NotFoundException ex = new NotFoundException("User not found");
+        UserIDNotFoundException ex = new UserIDNotFoundException(1L);
 
         GraphQLError error = resolver.resolveToSingleError(ex, env);
 
         assertNotNull(error);
-        assertEquals("User not found", error.getMessage());
+        assertEquals("User not found with ID: 1", error.getMessage());
         assertEquals(ErrorType.NOT_FOUND, error.getErrorType());
     }
 
