@@ -1,5 +1,6 @@
 package com.gustavohenrique.financeApi.application.services;
 
+import com.gustavohenrique.financeApi.application.interfaces.AccountService;
 import com.gustavohenrique.financeApi.application.interfaces.BalanceCalculatorService;
 import com.gustavohenrique.financeApi.application.interfaces.CategoryService;
 import com.gustavohenrique.financeApi.application.repositories.AccountRepository;
@@ -36,6 +37,7 @@ class TransactionServiceImplTest {
     @Mock private UserRepository userRepository;
     @Mock private BalanceCalculatorService balanceCalculatorService;
     @Mock private CategoryService categoryService;
+    @Mock private AccountService accountService;
 
     @InjectMocks private TransactionServiceImpl transactionService;
 
@@ -126,10 +128,6 @@ class TransactionServiceImplTest {
     void create() {
         when(accountRepository.existsById(1L)).thenReturn(true);
         when(transactionRepository.save(transaction)).thenReturn(transaction);
-        when(transactionRepository.findByAccount_Id(1L)).thenReturn(List.of(transaction));
-        when(balanceCalculatorService.calculate(List.of(transaction))).thenReturn(new BigDecimal("100.00"));
-        when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
-        when(accountRepository.save(account)).thenReturn(account);
 
         Transaction result = transactionService.create(transaction);
 
@@ -142,9 +140,6 @@ class TransactionServiceImplTest {
     void update() {
         when(transactionRepository.findById(1L)).thenReturn(Optional.of(transaction));
         when(transactionRepository.save(any())).thenReturn(transaction);
-        when(transactionRepository.findByAccount_Id(1L)).thenReturn(List.of(transaction));
-        when(balanceCalculatorService.calculate(List.of(transaction))).thenReturn(new BigDecimal("100.00"));
-        when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
 
         Transaction result = transactionService.update(1L, transaction);
 
@@ -170,9 +165,6 @@ class TransactionServiceImplTest {
     @DisplayName("Should delete transaction and update account balance")
     void delete() {
         when(transactionRepository.findById(1L)).thenReturn(Optional.of(transaction));
-        when(transactionRepository.findByAccount_Id(1L)).thenReturn(List.of());
-        when(balanceCalculatorService.calculate(List.of())).thenReturn(BigDecimal.ZERO);
-        when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
 
         Transaction deleted = transactionService.delete(1L);
 

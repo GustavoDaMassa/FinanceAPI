@@ -1,9 +1,12 @@
 package com.gustavohenrique.financeApi.application.services;
 
+import com.gustavohenrique.financeApi.application.interfaces.BalanceCalculatorService;
 import com.gustavohenrique.financeApi.application.interfaces.FinancialIntegrationService;
 import com.gustavohenrique.financeApi.application.repositories.AccountRepository;
 import com.gustavohenrique.financeApi.application.repositories.FinancialIntegrationRepository;
+import com.gustavohenrique.financeApi.application.repositories.TransactionRepository;
 import com.gustavohenrique.financeApi.application.repositories.UserRepository;
+import com.gustavohenrique.financeApi.domain.models.Transaction;
 import com.gustavohenrique.financeApi.domain.models.Account;
 import com.gustavohenrique.financeApi.domain.models.FinancialIntegration;
 import com.gustavohenrique.financeApi.domain.models.User;
@@ -37,6 +40,12 @@ class AccountServiceImplTest {
 
     @Mock
     private FinancialIntegrationService financialIntegrationService;
+
+    @Mock
+    private TransactionRepository transactionRepository;
+
+    @Mock
+    private BalanceCalculatorService balanceCalculatorService;
 
     @InjectMocks
     private AccountServiceImpl accountService;
@@ -157,5 +166,19 @@ class AccountServiceImplTest {
         when(accountRepository.findById(1L)).thenReturn(Optional.empty());
 
         assertThrows(AccountNotFoundException.class, () -> accountService.delete(1L));
+    }
+
+    @Test
+    @DisplayName("Should recalculate and persist account balance")
+    void recalculateBalance_success() {
+        List<Transaction> transactions = List.of();
+        when(transactionRepository.findByAccount_Id(1L)).thenReturn(transactions);
+        when(balanceCalculatorService.calculate(transactions)).thenReturn(BigDecimal.ZERO);
+        when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
+
+        accountService.recalculateBalance(1L);
+
+        verify(accountRepository).save(account);
+        assertEquals(BigDecimal.ZERO, account.getBalance());
     }
 }

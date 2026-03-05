@@ -19,4 +19,6 @@ public interface AccountService {
     Account update(Long id, Account account);
 
     Account delete(Long id);
+
+    void recalculateBalance(Long accountId);
 }

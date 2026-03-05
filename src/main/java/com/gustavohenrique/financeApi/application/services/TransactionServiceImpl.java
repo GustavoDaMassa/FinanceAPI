@@ -1,5 +1,6 @@
 package com.gustavohenrique.financeApi.application.services;
 
+import com.gustavohenrique.financeApi.application.interfaces.AccountService;
 import com.gustavohenrique.financeApi.application.interfaces.BalanceCalculatorService;
 import com.gustavohenrique.financeApi.application.interfaces.CategoryService;
 import com.gustavohenrique.financeApi.application.interfaces.TransactionService;
@@ -38,6 +39,7 @@ public class TransactionServiceImpl implements TransactionService {
     private final UserRepository userRepository;
     private final BalanceCalculatorService balanceCalculatorService;
     private final CategoryService categoryService;
+    private final AccountService accountService;
 
     @Override
     public TransactionQueryResult listByUserId(Long userId) {
@@ -195,7 +197,7 @@ public class TransactionServiceImpl implements TransactionService {
         if(!accountRepository.existsById(transaction.getAccount().getId()))
             throw new AccountNotFoundException(transaction.getAccount().getId());
         transactionRepository.save(transaction);
-        updateAccountBalance(transaction.getAccount().getId());
+        accountService.recalculateBalance(transaction.getAccount().getId());
         return transaction;
     }
 
@@ -214,7 +216,7 @@ public class TransactionServiceImpl implements TransactionService {
         existing.setCategory(transaction.getCategory());
 
         transactionRepository.save(existing);
-        updateAccountBalance(existing.getAccount().getId());
+        accountService.recalculateBalance(existing.getAccount().getId());
         return existing;
     }
 
@@ -235,19 +237,8 @@ public class TransactionServiceImpl implements TransactionService {
         Transaction transaction = transactionRepository.findById(id)
                 .orElseThrow(() -> new TransactionNotFoundException(id));
         transactionRepository.delete(transaction);
-        updateAccountBalance(transaction.getAccount().getId());
+        accountService.recalculateBalance(transaction.getAccount().getId());
         return transaction;
-    }
-
-    private void updateAccountBalance(Long accountId) {
-        List<Transaction> transactions = transactionRepository.findByAccount_Id(accountId);
-        BigDecimal newBalance = balanceCalculatorService.calculate(transactions);
-
-        Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new AccountNotFoundException(accountId));
-
-        account.setBalance(newBalance);
-        accountRepository.save(account);
     }
 
 }
