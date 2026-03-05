@@ -1,7 +1,6 @@
 package com.gustavohenrique.financeApi.graphql.resolvers;
 
-import com.gustavohenrique.financeApi.exception.EmailAlreadyExistException;
-import com.gustavohenrique.financeApi.exception.InvalidTransactionTypeException;
+import com.gustavohenrique.financeApi.exception.BadRequestException;
 import com.gustavohenrique.financeApi.exception.NotFoundException;
 import graphql.GraphQLError;
 import graphql.GraphqlErrorBuilder;
@@ -25,11 +24,7 @@ public class CustomGraphQLExceptionResolver extends DataFetcherExceptionResolver
                     .message(e.getMessage())
                     .errorType(ErrorType.NOT_FOUND)
                     .build();
-            case EmailAlreadyExistException emailAlreadyExistException -> GraphqlErrorBuilder.newError(env)
-                    .message(e.getMessage())
-                    .errorType(ErrorType.BAD_REQUEST)
-                    .build();
-            case InvalidTransactionTypeException invalidTransactionTypeException -> GraphqlErrorBuilder.newError(env)
+            case BadRequestException badRequestException -> GraphqlErrorBuilder.newError(env)
                     .message(e.getMessage())
                     .errorType(ErrorType.BAD_REQUEST)
                     .build();
