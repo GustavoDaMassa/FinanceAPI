@@ -29,12 +29,7 @@ class JwtServiceTest {
         ReflectionTestUtils.setField(jwtService, "secretKey", SECRET);
         ReflectionTestUtils.setField(jwtService, "jwtExpiration", 86400000L);
 
-        user = new User();
-        user.setId(1L);
-        user.setName("Test");
-        user.setEmail("test@test.com");
-        user.setPassword("password");
-        user.setRole(Role.USER);
+        user = new User(1L, "Test", "test@test.com", "password", Role.USER, null, null);
     }
 
     @Test

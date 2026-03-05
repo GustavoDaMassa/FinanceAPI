@@ -3,8 +3,9 @@ package com.gustavohenrique.financeApi.domain.models;
 import com.gustavohenrique.financeApi.domain.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,7 +15,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class User implements UserDetails {
@@ -22,20 +23,24 @@ public class User implements UserDetails {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    @Setter private String name;
 
+    @Setter
     @Column(unique = true)
     private String email;
 
-    private String password;
+    @Setter private String password;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role = Role.USER;
 
+    @Setter
     @OneToMany(mappedBy = "user")
     private List<Account> accounts;
 
+    @Setter
     @OneToMany(mappedBy = "user")
     private List<FinancialIntegration> integrations;
 

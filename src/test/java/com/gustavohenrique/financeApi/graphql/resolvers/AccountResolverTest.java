@@ -44,22 +44,11 @@ class AccountResolverTest {
 
     @BeforeEach
     void setUp() {
-        user = new User();
-        user.setId(1L);
-        user.setEmail("test@test.com");
-        user.setRole(Role.USER);
+        user = new User(1L, null, "test@test.com", null, Role.USER, null, null);
 
-        integration = new FinancialIntegration();
-        integration.setId(1L);
-        integration.setUser(user);
+        integration = new FinancialIntegration(1L, null, null, null, null, null, user, null);
 
-        account = new Account();
-        account.setId(1L);
-        account.setAccountName("Checking");
-        account.setPluggyAccountId("pluggy-123");
-        account.setUser(user);
-        account.setIntegration(integration);
-        account.setBalance(BigDecimal.ZERO);
+        account = new Account(1L, "Checking", null, null, BigDecimal.ZERO, "pluggy-123", user, integration, null);
 
         accountDTO = new AccountDTO();
         accountDTO.setId(1L);
@@ -114,12 +103,9 @@ class AccountResolverTest {
     @Test
     @DisplayName("Should throw when linking account from another user's integration")
     void linkAccount_wrongUser() {
-        User otherUser = new User();
-        otherUser.setId(2L);
+        User otherUser = new User(2L, null, null, null, null, null, null);
 
-        FinancialIntegration otherIntegration = new FinancialIntegration();
-        otherIntegration.setId(1L);
-        otherIntegration.setUser(otherUser);
+        FinancialIntegration otherIntegration = new FinancialIntegration(1L, null, null, null, null, null, otherUser, null);
 
         LinkAccountInput input = new LinkAccountInput();
         input.setIntegrationId(1L);

@@ -36,11 +36,7 @@ class UserServiceImplTest {
     @BeforeEach
     void setUp() {
         input = new UserInput("Gustavo", "gustavo@test.com", "123456");
-        user = new User();
-        user.setId(1L);
-        user.setName("Gustavo");
-        user.setEmail("gustavo@test.com");
-        user.setPassword("123456");
+        user = new User(1L, "Gustavo", "gustavo@test.com", "123456", null, null, null);
     }
 
     @Test

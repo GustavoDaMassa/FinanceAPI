@@ -62,13 +62,8 @@ public class AccountResolver {
             throw new SecurityException("Integration does not belong to the authenticated user.");
         }
 
-        Account newAccount = new Account();
-        newAccount.setPluggyAccountId(input.getPluggyAccountId());
-        newAccount.setAccountName(input.getName());
-        newAccount.setInstitution(input.getInstitution());
-        newAccount.setDescription(input.getDescription());
-        newAccount.setUser(user);
-        newAccount.setIntegration(integration);
+        Account newAccount = new Account(null, input.getName(), input.getInstitution(),
+                input.getDescription(), null, input.getPluggyAccountId(), user, integration, null);
         
         Account created = accountService.create(newAccount);
         return accountMapper.toDto(created);

@@ -33,15 +33,9 @@ class SetUpWebhookImplTest {
     @Test
     @DisplayName("Should return existing user ID when user exists")
     void userWebhookID_existing() {
-        User user = new User();
-        user.setId(1L);
-        user.setEmail("test@test.com");
-        user.setRole(Role.USER);
+        User user = new User(1L, null, "test@test.com", null, Role.USER, null, null);
 
-        User existingUser = new User();
-        existingUser.setId(5L);
-        existingUser.setEmail("test@test.com");
-        existingUser.setRole(Role.USER);
+        User existingUser = new User(5L, null, "test@test.com", null, Role.USER, null, null);
 
         when(userRepository.existsByEmail("test@test.com")).thenReturn(true);
         when(userRepository.findByEmail("test@test.com")).thenReturn(Optional.of(existingUser));
@@ -59,10 +53,7 @@ class SetUpWebhookImplTest {
         user.setEmail("new@test.com");
         user.setRole(Role.USER);
 
-        User savedUser = new User();
-        savedUser.setId(10L);
-        savedUser.setEmail("new@test.com");
-        savedUser.setRole(Role.USER);
+        User savedUser = new User(10L, null, "new@test.com", null, Role.USER, null, null);
 
         when(userRepository.existsByEmail("new@test.com")).thenReturn(false);
         when(userRepository.save(user)).thenReturn(savedUser);
@@ -78,9 +69,7 @@ class SetUpWebhookImplTest {
         Account account = new Account();
         account.setAccountName("My Account");
 
-        Account existingAccount = new Account();
-        existingAccount.setId(3L);
-        existingAccount.setAccountName("My Account");
+        Account existingAccount = new Account(3L, "My Account", null, null, null, null, null, null, null);
 
         when(accountRepository.existsByAccountName("My Account")).thenReturn(true);
         when(accountRepository.findByAccountName("My Account")).thenReturn(existingAccount);
@@ -97,9 +86,7 @@ class SetUpWebhookImplTest {
         Account account = new Account();
         account.setAccountName("New Account");
 
-        Account savedAccount = new Account();
-        savedAccount.setId(7L);
-        savedAccount.setAccountName("New Account");
+        Account savedAccount = new Account(7L, "New Account", null, null, null, null, null, null, null);
 
         when(accountRepository.existsByAccountName("New Account")).thenReturn(false);
         when(accountRepository.save(account)).thenReturn(savedAccount);

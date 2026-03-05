@@ -46,12 +46,7 @@ class AuthenticationServiceTest {
     void setUp() {
         ReflectionTestUtils.setField(authenticationService, "masterKey", "TEST_MASTER_KEY");
 
-        user = new User();
-        user.setId(1L);
-        user.setName("Gustavo");
-        user.setEmail("gustavo@test.com");
-        user.setPassword("encoded");
-        user.setRole(Role.USER);
+        user = new User(1L, "Gustavo", "gustavo@test.com", "encoded", Role.USER, null, null);
     }
 
     @Test
@@ -87,8 +82,7 @@ class AuthenticationServiceTest {
         when(passwordEncoder.encode("pass")).thenReturn("encoded-pass");
         when(userRepository.save(any(User.class))).thenAnswer(inv -> {
             User u = inv.getArgument(0);
-            u.setId(2L);
-            return u;
+            return new User(2L, u.getName(), u.getEmail(), u.getPassword(), u.getRole(), null, null);
         });
         when(jwtService.generateToken(any(User.class))).thenReturn("admin-token");
 

@@ -35,11 +35,9 @@ class TransactionMapperTest {
     @Test
     @DisplayName("Should map Transaction to TransactionDTO")
     void toDto() {
-        Account account = new Account();
-        account.setId(1L);
+        Account account = new Account(1L, null, null, null, null, null, null, null, null);
 
-        Category category = new Category();
-        category.setId(2L);
+        Category category = new Category(2L, null, null);
 
         Transaction transaction = new Transaction(10L, new BigDecimal("250.00"), TransactionType.INFLOW,
                 "Salary", "Employer", "My Account", LocalDate.of(2025, 1, 15), category, null, account);
@@ -57,8 +55,7 @@ class TransactionMapperTest {
     @Test
     @DisplayName("Should map Transaction to DTO with null category")
     void toDto_nullCategory() {
-        Account account = new Account();
-        account.setId(1L);
+        Account account = new Account(1L, null, null, null, null, null, null, null, null);
 
         Transaction transaction = new Transaction(10L, new BigDecimal("50.00"), TransactionType.OUTFLOW,
                 null, null, null, LocalDate.of(2025, 2, 1), null, null, account);
@@ -106,8 +103,7 @@ class TransactionMapperTest {
     @Test
     @DisplayName("Should map list to TransactionListWithBalanceDTO")
     void toListWithBalanceDTO() {
-        Account account = new Account();
-        account.setId(1L);
+        Account account = new Account(1L, null, null, null, null, null, null, null, null);
 
         Transaction t = new Transaction(1L, new BigDecimal("100.00"), TransactionType.INFLOW,
                 null, null, null, LocalDate.of(2025, 1, 1), null, null, account);
@@ -121,8 +117,7 @@ class TransactionMapperTest {
     @Test
     @DisplayName("Should map TransactionPageResult to TransactionPageDTO")
     void toPageDTO() {
-        Account account = new Account();
-        account.setId(1L);
+        Account account = new Account(1L, null, null, null, null, null, null, null, null);
 
         Transaction t = new Transaction(1L, new BigDecimal("100.00"), TransactionType.INFLOW,
                 null, null, null, LocalDate.of(2025, 1, 1), null, null, account);

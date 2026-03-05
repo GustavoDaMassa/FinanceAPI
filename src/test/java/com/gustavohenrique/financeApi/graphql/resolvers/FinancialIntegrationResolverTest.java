@@ -46,16 +46,9 @@ class FinancialIntegrationResolverTest {
 
     @BeforeEach
     void setUp() {
-        user = new User();
-        user.setId(1L);
-        user.setEmail("test@test.com");
-        user.setRole(Role.USER);
+        user = new User(1L, null, "test@test.com", null, Role.USER, null, null);
 
-        integration = new FinancialIntegration();
-        integration.setId(1L);
-        integration.setLinkId("item-123");
-        integration.setAggregator(AggregatorType.PLUGGY);
-        integration.setUser(user);
+        integration = new FinancialIntegration(1L, AggregatorType.PLUGGY, "item-123", null, null, null, user, null);
 
         integrationDTO = new FinancialIntegrationDTO();
         integrationDTO.setId(1L);
@@ -117,12 +110,9 @@ class FinancialIntegrationResolverTest {
     @Test
     @DisplayName("Should throw when fetching accounts from another user's integration")
     void accountsFromPluggy_wrongUser() {
-        User otherUser = new User();
-        otherUser.setId(2L);
+        User otherUser = new User(2L, null, null, null, null, null, null);
 
-        FinancialIntegration otherIntegration = new FinancialIntegration();
-        otherIntegration.setId(1L);
-        otherIntegration.setUser(otherUser);
+        FinancialIntegration otherIntegration = new FinancialIntegration(1L, null, null, null, null, null, otherUser, null);
 
         when(integrationService.findById(1L)).thenReturn(otherIntegration);
 

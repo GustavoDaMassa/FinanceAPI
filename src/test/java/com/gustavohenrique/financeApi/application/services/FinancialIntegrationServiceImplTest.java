@@ -45,11 +45,7 @@ class FinancialIntegrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        user = new User();
-        user.setId(1L);
-        user.setName("Gustavo");
-        user.setEmail("gustavo@test.com");
-        user.setPassword("123456");
+        user = new User(1L, "Gustavo", "gustavo@test.com", "123456", null, null, null);
 
         integration = new FinancialIntegration(1L, AggregatorType.PLUGGY, "link123", "active", null, null, user, null);
     }
@@ -164,9 +160,7 @@ class FinancialIntegrationServiceImplTest {
     @Test
     @DisplayName("Should list accounts for integration")
     void listIntegrationAccounts_success() {
-        Account account = new Account();
-        account.setId(1L);
-        account.setAccountName("Test Account");
+        Account account = new Account(1L, "Test Account", null, null, null, null, null, null, null);
         integration.setAccounts(List.of(account));
 
         when(integrationRepository.findById(1L)).thenReturn(Optional.of(integration));

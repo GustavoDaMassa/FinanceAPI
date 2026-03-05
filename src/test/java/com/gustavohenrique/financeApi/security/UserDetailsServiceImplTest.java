@@ -29,11 +29,7 @@ class UserDetailsServiceImplTest {
     @Test
     @DisplayName("Should return UserDetails when user exists")
     void loadUserByUsername_success() {
-        User user = new User();
-        user.setId(1L);
-        user.setEmail("test@test.com");
-        user.setPassword("pass");
-        user.setRole(Role.USER);
+        User user = new User(1L, null, "test@test.com", "pass", Role.USER, null, null);
 
         when(userRepository.findByEmail("test@test.com")).thenReturn(Optional.of(user));
 

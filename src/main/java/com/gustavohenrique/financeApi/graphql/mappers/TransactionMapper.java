@@ -46,13 +46,11 @@ public class TransactionMapper {
         transaction.setDestination(input.getDestination());
         transaction.setTransactionDate(LocalDate.parse(input.getTransactionDate()));
 
-        Account account = new Account();
-        account.setId(input.getAccountId());
+        Account account = new Account(input.getAccountId(), null, null, null, null, null, null, null, null);
         transaction.setAccount(account);
 
         if (input.getCategoryId() != null) {
-            Category category = new Category();
-            category.setId(input.getCategoryId());
+            Category category = new Category(input.getCategoryId(), null, null);
             transaction.setCategory(category);
         }
 

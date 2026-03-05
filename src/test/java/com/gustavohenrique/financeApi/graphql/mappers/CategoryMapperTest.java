@@ -23,13 +23,9 @@ class CategoryMapperTest {
     @Test
     @DisplayName("Should map Category to CategoryDTO")
     void toDto() {
-        User user = new User();
-        user.setId(1L);
+        User user = new User(1L, null, null, null, null, null, null);
 
-        Category category = new Category();
-        category.setId(10L);
-        category.setName("Food");
-        category.setUser(user);
+        Category category = new Category(10L, "Food", user);
 
         CategoryDTO dto = categoryMapper.toDto(category);
 
@@ -45,8 +41,7 @@ class CategoryMapperTest {
         input.setName("Transport");
         input.setUserId(1L);
 
-        User user = new User();
-        user.setId(1L);
+        User user = new User(1L, null, null, null, null, null, null);
 
         Category result = categoryMapper.fromInput(input, user);
 

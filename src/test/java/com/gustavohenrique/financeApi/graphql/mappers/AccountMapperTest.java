@@ -25,20 +25,11 @@ class AccountMapperTest {
     @Test
     @DisplayName("Should map Account to AccountDTO")
     void toDto() {
-        User user = new User();
-        user.setId(1L);
+        User user = new User(1L, null, null, null, null, null, null);
 
-        FinancialIntegration integration = new FinancialIntegration();
-        integration.setId(2L);
+        FinancialIntegration integration = new FinancialIntegration(2L, null, null, null, null, null, null, null);
 
-        Account account = new Account();
-        account.setId(10L);
-        account.setAccountName("Checking");
-        account.setInstitution("Bank");
-        account.setDescription("checking");
-        account.setBalance(new BigDecimal("1500.75"));
-        account.setUser(user);
-        account.setIntegration(integration);
+        Account account = new Account(10L, "Checking", "Bank", "checking", new BigDecimal("1500.75"), null, user, integration, null);
 
         AccountDTO dto = accountMapper.toDto(account);
 
@@ -52,15 +43,9 @@ class AccountMapperTest {
     @Test
     @DisplayName("Should map Account to DTO with null integration")
     void toDto_nullIntegration() {
-        User user = new User();
-        user.setId(1L);
+        User user = new User(1L, null, null, null, null, null, null);
 
-        Account account = new Account();
-        account.setId(10L);
-        account.setAccountName("Savings");
-        account.setBalance(null);
-        account.setUser(user);
-        account.setIntegration(null);
+        Account account = new Account(10L, "Savings", null, null, null, null, user, null, null);
 
         AccountDTO dto = accountMapper.toDto(account);
 
@@ -76,11 +61,9 @@ class AccountMapperTest {
         input.setInstitution("Bank");
         input.setDescription("checking");
 
-        User user = new User();
-        user.setId(1L);
+        User user = new User(1L, null, null, null, null, null, null);
 
-        FinancialIntegration integration = new FinancialIntegration();
-        integration.setId(2L);
+        FinancialIntegration integration = new FinancialIntegration(2L, null, null, null, null, null, null, null);
 
         Account result = accountMapper.fromInput(input, user, integration);
 
