@@ -2,14 +2,12 @@ package com.gustavohenrique.financeApi.webhook.consumer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gustavohenrique.financeApi.application.interfaces.AccountService;
 import com.gustavohenrique.financeApi.application.interfaces.FinancialIntegrationService;
 import com.gustavohenrique.financeApi.application.interfaces.TransactionService;
-import com.gustavohenrique.financeApi.application.repositories.AccountRepository;
-import com.gustavohenrique.financeApi.domain.models.Account;
 import com.gustavohenrique.financeApi.domain.models.FinancialIntegration;
 import com.gustavohenrique.financeApi.domain.models.Transaction;
 import com.gustavohenrique.financeApi.domain.models.User;
-import com.gustavohenrique.financeApi.exception.AccountNotFoundException;
 import com.gustavohenrique.financeApi.exception.IntegrationLinkIdNotFoundException;
 import com.gustavohenrique.financeApi.webhook.dataTransfer.KafkaMessage;
 import com.gustavohenrique.financeApi.webhook.dataTransfer.ListTransactionsResponse;
@@ -31,9 +29,8 @@ public class WebhookEventConsumer {
     private final RequestService pluggyClient;
     private final FinancialIntegrationService financialIntegrationService;
     private final TransactionService transactionService;
-    private final AccountRepository accountRepository;
+    private final AccountService accountService;
     private final PluggyResponseMapper pluggyResponseMapper;
-    private final com.gustavohenrique.financeApi.application.repositories.TransactionRepository transactionRepository;
 
     @KafkaListener(topics = "webhook-transactions", groupId = "finance-consumer")
     public void consume(ConsumerRecord<String, String> record) {
@@ -52,12 +49,12 @@ public class WebhookEventConsumer {
             ListTransactionsResponse transactionsResponse = pluggyClient.fetchTransaction(event.getLinkTransactions());
 
             for (TransactionResponse result : transactionsResponse.getResults()) {
-                if (transactionRepository.existsByExternalId(result.getId())) {
+                if (transactionService.existsByExternalId(result.getId())) {
                     log.info("⏭️ Transaction with externalId {} already exists. Skipping.", result.getId());
                     continue;
                 }
 
-                accountRepository.findByPluggyAccountIdAndUser(result.getAccountId(), user)
+                accountService.findByPluggyAccountIdAndUser(result.getAccountId(), user)
                         .ifPresentOrElse(
                                 account -> {
                                     Transaction transaction = pluggyResponseMapper.mapPluggyToTransaction(result);

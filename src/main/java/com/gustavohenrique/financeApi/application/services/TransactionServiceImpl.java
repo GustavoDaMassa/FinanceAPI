@@ -211,6 +211,11 @@ public class TransactionServiceImpl implements TransactionService {
         return transaction;
     }
 
+    @Override
+    public boolean existsByExternalId(String externalId) {
+        return transactionRepository.existsByExternalId(externalId);
+    }
+
     private TransactionQueryResult buildResult(List<Transaction> transactions) {
         return new TransactionQueryResult(transactions, balanceCalculatorService.calculate(transactions));
     }

@@ -10,6 +10,7 @@ import com.gustavohenrique.financeApi.domain.models.Account;
 import com.gustavohenrique.financeApi.domain.models.FinancialIntegration;
 import com.gustavohenrique.financeApi.domain.models.Transaction;
 import com.gustavohenrique.financeApi.domain.models.User;
+import java.util.Optional;
 import com.gustavohenrique.financeApi.exception.AccountNotFoundException;
 import com.gustavohenrique.financeApi.exception.IntegrationNotFoundException;
 import com.gustavohenrique.financeApi.exception.UserIDNotFoundException;
@@ -82,6 +83,11 @@ public class AccountServiceImpl implements AccountService {
         Account existing = findById(id);
         accountRepository.delete(existing);
         return existing;
+    }
+
+    @Override
+    public Optional<Account> findByPluggyAccountIdAndUser(String pluggyAccountId, User user) {
+        return accountRepository.findByPluggyAccountIdAndUser(pluggyAccountId, user);
     }
 
     @Override

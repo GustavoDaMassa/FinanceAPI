@@ -51,4 +51,6 @@ public interface TransactionService {
     Transaction categorize(Long id, Long categoryId);
 
     Transaction delete(Long id);
+
+    boolean existsByExternalId(String externalId);
 }

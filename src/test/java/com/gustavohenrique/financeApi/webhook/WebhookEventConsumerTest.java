@@ -1,10 +1,9 @@
 package com.gustavohenrique.financeApi.webhook;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gustavohenrique.financeApi.application.interfaces.AccountService;
 import com.gustavohenrique.financeApi.application.interfaces.FinancialIntegrationService;
 import com.gustavohenrique.financeApi.application.interfaces.TransactionService;
-import com.gustavohenrique.financeApi.application.repositories.AccountRepository;
-import com.gustavohenrique.financeApi.application.repositories.TransactionRepository;
 import com.gustavohenrique.financeApi.domain.enums.Role;
 import com.gustavohenrique.financeApi.domain.enums.TransactionType;
 import com.gustavohenrique.financeApi.domain.models.Account;
@@ -46,11 +45,9 @@ class WebhookEventConsumerTest {
     @Mock
     private TransactionService transactionService;
     @Mock
-    private AccountRepository accountRepository;
+    private AccountService accountService;
     @Mock
     private PluggyResponseMapper pluggyResponseMapper;
-    @Mock
-    private TransactionRepository transactionRepository;
 
     @InjectMocks
     private WebhookEventConsumer webhookEventConsumer;
@@ -62,9 +59,7 @@ class WebhookEventConsumerTest {
     @BeforeEach
     void setUp() {
         user = new User(1L, null, "test@test.com", null, Role.USER, null, null);
-
         integration = new FinancialIntegration(1L, null, "item-123", null, null, null, user, null);
-
         account = new Account(1L, null, null, null, null, "pluggy-acc-123", user, null, null);
     }
 
@@ -93,8 +88,8 @@ class WebhookEventConsumerTest {
         );
         when(financialIntegrationService.findByLinkId("item-123")).thenReturn(integration);
         when(pluggyClient.fetchTransaction("http://api.pluggy.ai/transactions")).thenReturn(listResponse);
-        when(transactionRepository.existsByExternalId(any())).thenReturn(false);
-        when(accountRepository.findByPluggyAccountIdAndUser("pluggy-acc-123", user)).thenReturn(Optional.of(account));
+        when(transactionService.existsByExternalId(any())).thenReturn(false);
+        when(accountService.findByPluggyAccountIdAndUser("pluggy-acc-123", user)).thenReturn(Optional.of(account));
         when(pluggyResponseMapper.mapPluggyToTransaction(transactionResponse)).thenReturn(mappedTransaction);
         when(transactionService.create(any())).thenReturn(mappedTransaction);
 
@@ -123,8 +118,8 @@ class WebhookEventConsumerTest {
         );
         when(financialIntegrationService.findByLinkId("item-123")).thenReturn(integration);
         when(pluggyClient.fetchTransaction("http://api.pluggy.ai/transactions")).thenReturn(listResponse);
-        when(transactionRepository.existsByExternalId(any())).thenReturn(false);
-        when(accountRepository.findByPluggyAccountIdAndUser("unknown-acc", user)).thenReturn(Optional.empty());
+        when(transactionService.existsByExternalId(any())).thenReturn(false);
+        when(accountService.findByPluggyAccountIdAndUser("unknown-acc", user)).thenReturn(Optional.empty());
 
         webhookEventConsumer.consume(record);
 

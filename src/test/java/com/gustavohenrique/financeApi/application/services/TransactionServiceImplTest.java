@@ -173,6 +173,24 @@ class TransactionServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should return true when externalId already exists")
+    void existsByExternalId_exists() {
+        when(transactionRepository.existsByExternalId("ext-123")).thenReturn(true);
+
+        assertTrue(transactionService.existsByExternalId("ext-123"));
+        verify(transactionRepository).existsByExternalId("ext-123");
+    }
+
+    @Test
+    @DisplayName("Should return false when externalId does not exist")
+    void existsByExternalId_notExists() {
+        when(transactionRepository.existsByExternalId("ext-999")).thenReturn(false);
+
+        assertFalse(transactionService.existsByExternalId("ext-999"));
+        verify(transactionRepository).existsByExternalId("ext-999");
+    }
+
+    @Test
     @DisplayName("Should return paginated transactions by account ID")
     void listByAccountPaginated() {
         Page<Transaction> page = new PageImpl<>(List.of(transaction));

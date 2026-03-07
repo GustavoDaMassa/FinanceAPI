@@ -164,6 +164,29 @@ class AccountServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should return account by pluggyAccountId and user when found")
+    void findByPluggyAccountIdAndUser_found() {
+        when(accountRepository.findByPluggyAccountIdAndUser("pluggy-acc-id", user)).thenReturn(Optional.of(account));
+
+        Optional<Account> result = accountService.findByPluggyAccountIdAndUser("pluggy-acc-id", user);
+
+        assertTrue(result.isPresent());
+        assertEquals(account, result.get());
+        verify(accountRepository).findByPluggyAccountIdAndUser("pluggy-acc-id", user);
+    }
+
+    @Test
+    @DisplayName("Should return empty when pluggyAccountId not found for user")
+    void findByPluggyAccountIdAndUser_notFound() {
+        when(accountRepository.findByPluggyAccountIdAndUser("unknown-id", user)).thenReturn(Optional.empty());
+
+        Optional<Account> result = accountService.findByPluggyAccountIdAndUser("unknown-id", user);
+
+        assertTrue(result.isEmpty());
+        verify(accountRepository).findByPluggyAccountIdAndUser("unknown-id", user);
+    }
+
+    @Test
     @DisplayName("Should recalculate and persist account balance")
     void recalculateBalance_success() {
         List<Transaction> transactions = List.of();
