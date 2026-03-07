@@ -1,19 +1,14 @@
 package com.gustavohenrique.financeApi.application.services;
 
-import com.gustavohenrique.financeApi.application.interfaces.BalanceCalculatorService;
-import com.gustavohenrique.financeApi.application.interfaces.FinancialIntegrationService;
+import com.gustavohenrique.financeApi.application.interfaces.AccountBalanceService;
 import com.gustavohenrique.financeApi.application.repositories.AccountRepository;
 import com.gustavohenrique.financeApi.application.repositories.FinancialIntegrationRepository;
-import com.gustavohenrique.financeApi.application.repositories.TransactionRepository;
 import com.gustavohenrique.financeApi.application.repositories.UserRepository;
-import com.gustavohenrique.financeApi.domain.models.Transaction;
 import com.gustavohenrique.financeApi.domain.models.Account;
 import com.gustavohenrique.financeApi.domain.models.FinancialIntegration;
 import com.gustavohenrique.financeApi.domain.models.User;
 import com.gustavohenrique.financeApi.exception.AccountNotFoundException;
-import com.gustavohenrique.financeApi.exception.IntegrationNotFoundException;
 import com.gustavohenrique.financeApi.exception.UserIDNotFoundException;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,13 +34,10 @@ class AccountServiceImplTest {
     private UserRepository userRepository;
 
     @Mock
-    private FinancialIntegrationService financialIntegrationService;
+    private FinancialIntegrationRepository integrationRepository;
 
     @Mock
-    private TransactionRepository transactionRepository;
-
-    @Mock
-    private BalanceCalculatorService balanceCalculatorService;
+    private AccountBalanceService accountBalanceService;
 
     @InjectMocks
     private AccountServiceImpl accountService;
@@ -187,16 +179,10 @@ class AccountServiceImplTest {
     }
 
     @Test
-    @DisplayName("Should recalculate and persist account balance")
-    void recalculateBalance_success() {
-        List<Transaction> transactions = List.of();
-        when(transactionRepository.findByAccount_Id(1L)).thenReturn(transactions);
-        when(balanceCalculatorService.calculate(transactions)).thenReturn(BigDecimal.ZERO);
-        when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
-
+    @DisplayName("Should delegate balance recalculation to AccountBalanceService")
+    void recalculateBalance_delegates() {
         accountService.recalculateBalance(1L);
 
-        verify(accountRepository).save(account);
-        assertEquals(BigDecimal.ZERO, account.getBalance());
+        verify(accountBalanceService).recalculateBalance(1L);
     }
 }

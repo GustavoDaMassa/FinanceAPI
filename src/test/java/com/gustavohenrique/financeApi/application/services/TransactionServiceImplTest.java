@@ -1,6 +1,6 @@
 package com.gustavohenrique.financeApi.application.services;
 
-import com.gustavohenrique.financeApi.application.interfaces.AccountService;
+import com.gustavohenrique.financeApi.application.interfaces.AccountBalanceService;
 import com.gustavohenrique.financeApi.application.interfaces.BalanceCalculatorService;
 import com.gustavohenrique.financeApi.application.interfaces.CategoryService;
 import com.gustavohenrique.financeApi.application.repositories.AccountRepository;
@@ -37,7 +37,7 @@ class TransactionServiceImplTest {
     @Mock private UserRepository userRepository;
     @Mock private BalanceCalculatorService balanceCalculatorService;
     @Mock private CategoryService categoryService;
-    @Mock private AccountService accountService;
+    @Mock private AccountBalanceService accountBalanceService;
 
     @InjectMocks private TransactionServiceImpl transactionService;
 

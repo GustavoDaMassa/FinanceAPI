@@ -1,24 +1,20 @@
 package com.gustavohenrique.financeApi.application.services;
 
+import com.gustavohenrique.financeApi.application.interfaces.AccountBalanceService;
 import com.gustavohenrique.financeApi.application.interfaces.AccountService;
-import com.gustavohenrique.financeApi.application.interfaces.BalanceCalculatorService;
 import com.gustavohenrique.financeApi.application.repositories.AccountRepository;
 import com.gustavohenrique.financeApi.application.repositories.FinancialIntegrationRepository;
-import com.gustavohenrique.financeApi.application.repositories.TransactionRepository;
 import com.gustavohenrique.financeApi.application.repositories.UserRepository;
 import com.gustavohenrique.financeApi.domain.models.Account;
 import com.gustavohenrique.financeApi.domain.models.FinancialIntegration;
-import com.gustavohenrique.financeApi.domain.models.Transaction;
 import com.gustavohenrique.financeApi.domain.models.User;
 import java.util.Optional;
 import com.gustavohenrique.financeApi.exception.AccountNotFoundException;
 import com.gustavohenrique.financeApi.exception.IntegrationNotFoundException;
 import com.gustavohenrique.financeApi.exception.UserIDNotFoundException;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -27,20 +23,17 @@ public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
     private final FinancialIntegrationRepository integrationRepository;
-    private final TransactionRepository transactionRepository;
-    private final BalanceCalculatorService balanceCalculatorService;
+    private final AccountBalanceService accountBalanceService;
 
     @Autowired
     public AccountServiceImpl(AccountRepository accountRepository,
                               UserRepository userRepository,
                               FinancialIntegrationRepository integrationRepository,
-                              TransactionRepository transactionRepository,
-                              BalanceCalculatorService balanceCalculatorService) {
+                              AccountBalanceService accountBalanceService) {
         this.accountRepository = accountRepository;
         this.userRepository = userRepository;
         this.integrationRepository = integrationRepository;
-        this.transactionRepository = transactionRepository;
-        this.balanceCalculatorService = balanceCalculatorService;
+        this.accountBalanceService = accountBalanceService;
     }
 
     @Override
@@ -92,11 +85,6 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void recalculateBalance(Long accountId) {
-        List<Transaction> transactions = transactionRepository.findByAccount_Id(accountId);
-        BigDecimal newBalance = balanceCalculatorService.calculate(transactions);
-        Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new AccountNotFoundException(accountId));
-        account.setBalance(newBalance);
-        accountRepository.save(account);
+        accountBalanceService.recalculateBalance(accountId);
     }
 }

@@ -1,6 +1,6 @@
 package com.gustavohenrique.financeApi.application.services;
 
-import com.gustavohenrique.financeApi.application.interfaces.AccountService;
+import com.gustavohenrique.financeApi.application.interfaces.AccountBalanceService;
 import com.gustavohenrique.financeApi.application.interfaces.BalanceCalculatorService;
 import com.gustavohenrique.financeApi.application.interfaces.CategoryService;
 import com.gustavohenrique.financeApi.application.interfaces.TransactionService;
@@ -38,7 +38,7 @@ public class TransactionServiceImpl implements TransactionService {
     private final UserRepository userRepository;
     private final BalanceCalculatorService balanceCalculatorService;
     private final CategoryService categoryService;
-    private final AccountService accountService;
+    private final AccountBalanceService accountBalanceService;
 
     @Override
     public TransactionQueryResult listByUserId(Long userId) {
@@ -167,7 +167,7 @@ public class TransactionServiceImpl implements TransactionService {
         if(!accountRepository.existsById(transaction.getAccount().getId()))
             throw new AccountNotFoundException(transaction.getAccount().getId());
         transactionRepository.save(transaction);
-        accountService.recalculateBalance(transaction.getAccount().getId());
+        accountBalanceService.recalculateBalance(transaction.getAccount().getId());
         return transaction;
     }
 
@@ -186,7 +186,7 @@ public class TransactionServiceImpl implements TransactionService {
         existing.setCategory(transaction.getCategory());
 
         transactionRepository.save(existing);
-        accountService.recalculateBalance(existing.getAccount().getId());
+        accountBalanceService.recalculateBalance(existing.getAccount().getId());
         return existing;
     }
 
@@ -207,7 +207,7 @@ public class TransactionServiceImpl implements TransactionService {
         Transaction transaction = transactionRepository.findById(id)
                 .orElseThrow(() -> new TransactionNotFoundException(id));
         transactionRepository.delete(transaction);
-        accountService.recalculateBalance(transaction.getAccount().getId());
+        accountBalanceService.recalculateBalance(transaction.getAccount().getId());
         return transaction;
     }
 
