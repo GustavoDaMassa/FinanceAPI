@@ -9,7 +9,6 @@ import java.util.Optional;
 
 public interface AccountService {
 
-
     Account findById(Long id);
 
     List<Account> findByUserId(Long userId);
@@ -17,6 +16,8 @@ public interface AccountService {
     FinancialIntegration findIntegrationById(Long integrationId);
 
     Account create(Account account);
+
+    Account linkAccount(Long integrationId, Account account, User authenticatedUser);
 
     Account update(Long id, Account account);
 

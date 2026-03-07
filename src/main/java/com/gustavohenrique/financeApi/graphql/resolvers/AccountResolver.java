@@ -3,7 +3,6 @@ package com.gustavohenrique.financeApi.graphql.resolvers;
 import com.gustavohenrique.financeApi.application.interfaces.AccountService;
 import com.gustavohenrique.financeApi.application.interfaces.FinancialIntegrationService;
 import com.gustavohenrique.financeApi.domain.models.Account;
-import com.gustavohenrique.financeApi.domain.models.FinancialIntegration;
 import com.gustavohenrique.financeApi.domain.models.User;
 import com.gustavohenrique.financeApi.graphql.dtos.AccountDTO;
 import com.gustavohenrique.financeApi.graphql.inputs.AccountInput;
@@ -57,15 +56,9 @@ public class AccountResolver {
     
     @MutationMapping
     public AccountDTO linkAccount(@Argument LinkAccountInput input, @AuthenticationPrincipal User user) {
-        FinancialIntegration integration = financialIntegrationService.findById(input.getIntegrationId());
-        if (!integration.getUser().getId().equals(user.getId())) {
-            throw new SecurityException("Integration does not belong to the authenticated user.");
-        }
-
         Account newAccount = new Account(null, input.getName(), input.getInstitution(),
-                input.getDescription(), null, input.getPluggyAccountId(), user, integration, null);
-        
-        Account created = accountService.create(newAccount);
+                input.getDescription(), null, input.getPluggyAccountId(), user, null, null);
+        Account created = accountService.linkAccount(input.getIntegrationId(), newAccount, user);
         return accountMapper.toDto(created);
     }
 

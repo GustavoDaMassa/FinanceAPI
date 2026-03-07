@@ -16,12 +16,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -89,31 +91,27 @@ class AccountResolverTest {
         input.setName("Checking");
         input.setDescription("BANK");
 
-        when(financialIntegrationService.findById(1L)).thenReturn(integration);
-        when(accountService.create(any(Account.class))).thenReturn(account);
+        when(accountService.linkAccount(eq(1L), any(Account.class), eq(user))).thenReturn(account);
         when(accountMapper.toDto(account)).thenReturn(accountDTO);
 
         AccountDTO result = accountResolver.linkAccount(input, user);
 
         assertNotNull(result);
         assertEquals("Checking", result.getAccountName());
-        verify(accountService).create(any(Account.class));
+        verify(accountService).linkAccount(eq(1L), any(Account.class), eq(user));
     }
 
     @Test
     @DisplayName("Should throw when linking account from another user's integration")
     void linkAccount_wrongUser() {
-        User otherUser = new User(2L, null, null, null, null, null, null);
-
-        FinancialIntegration otherIntegration = new FinancialIntegration(1L, null, null, null, null, null, otherUser, null);
-
         LinkAccountInput input = new LinkAccountInput();
         input.setIntegrationId(1L);
 
-        when(financialIntegrationService.findById(1L)).thenReturn(otherIntegration);
+        when(accountService.linkAccount(eq(1L), any(Account.class), eq(user)))
+                .thenThrow(new AccessDeniedException("Integration does not belong to the authenticated user."));
 
-        assertThrows(SecurityException.class, () -> accountResolver.linkAccount(input, user));
-        verify(accountService, never()).create(any());
+        assertThrows(AccessDeniedException.class, () -> accountResolver.linkAccount(input, user));
+        verify(accountService).linkAccount(eq(1L), any(Account.class), eq(user));
     }
 
     @Test

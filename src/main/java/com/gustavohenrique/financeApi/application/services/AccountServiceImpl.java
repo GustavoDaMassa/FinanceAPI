@@ -13,6 +13,7 @@ import com.gustavohenrique.financeApi.exception.AccountNotFoundException;
 import com.gustavohenrique.financeApi.exception.IntegrationNotFoundException;
 import com.gustavohenrique.financeApi.exception.UserIDNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -58,6 +59,16 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account create(Account account) {
         return accountRepository.save(account);
+    }
+
+    @Override
+    public Account linkAccount(Long integrationId, Account account, User authenticatedUser) {
+        FinancialIntegration integration = findIntegrationById(integrationId);
+        if (!integration.getUser().getId().equals(authenticatedUser.getId())) {
+            throw new AccessDeniedException("Integration does not belong to the authenticated user.");
+        }
+        account.setIntegration(integration);
+        return create(account);
     }
 
     @Override
