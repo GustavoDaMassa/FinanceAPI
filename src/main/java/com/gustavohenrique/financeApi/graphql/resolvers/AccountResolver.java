@@ -3,6 +3,7 @@ package com.gustavohenrique.financeApi.graphql.resolvers;
 import com.gustavohenrique.financeApi.application.interfaces.AccountService;
 import com.gustavohenrique.financeApi.application.interfaces.FinancialIntegrationService;
 import com.gustavohenrique.financeApi.domain.models.Account;
+import com.gustavohenrique.financeApi.domain.models.FinancialIntegration;
 import com.gustavohenrique.financeApi.domain.models.User;
 import com.gustavohenrique.financeApi.graphql.dtos.AccountDTO;
 import com.gustavohenrique.financeApi.graphql.inputs.AccountInput;

@@ -24,4 +24,10 @@ public interface FinancialIntegrationService {
 
     List<Account> listIntegrationAccounts(Long id);
 
+    FinancialIntegration findByIdForUser(Long integrationId, Long userId);
+
+    FinancialIntegration reconnect(Long integrationId, Long userId);
+
+    boolean syncTransactions(Long integrationId, Long userId);
+
 }

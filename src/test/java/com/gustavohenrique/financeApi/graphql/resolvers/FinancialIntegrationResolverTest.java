@@ -98,7 +98,7 @@ class FinancialIntegrationResolverTest {
     void accountsFromPluggy_success() {
         PluggyAccountDTO pluggyAccount = new PluggyAccountDTO("acc-1", "Checking", "BANK", new BigDecimal("1000"), "BRL");
 
-        when(integrationService.findById(1L)).thenReturn(integration);
+        when(integrationService.findByIdForUser(1L, 1L)).thenReturn(integration);
         when(requestService.fetchAccounts("item-123")).thenReturn(List.of(pluggyAccount));
 
         List<PluggyAccountDTO> result = resolver.accountsFromPluggy(1L, user);
@@ -110,11 +110,8 @@ class FinancialIntegrationResolverTest {
     @Test
     @DisplayName("Should throw when fetching accounts from another user's integration")
     void accountsFromPluggy_wrongUser() {
-        User otherUser = new User(2L, null, null, null, null, null, null);
-
-        FinancialIntegration otherIntegration = new FinancialIntegration(1L, null, null, null, null, null, otherUser, null);
-
-        when(integrationService.findById(1L)).thenReturn(otherIntegration);
+        when(integrationService.findByIdForUser(1L, 1L))
+                .thenThrow(new SecurityException("Integration does not belong to the authenticated user."));
 
         assertThrows(SecurityException.class, () -> resolver.accountsFromPluggy(1L, user));
         verify(requestService, never()).fetchAccounts(any());
