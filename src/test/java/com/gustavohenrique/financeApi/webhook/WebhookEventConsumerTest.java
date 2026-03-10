@@ -3,7 +3,7 @@ package com.gustavohenrique.financeApi.webhook;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gustavohenrique.financeApi.application.interfaces.AccountService;
 import com.gustavohenrique.financeApi.application.interfaces.FinancialIntegrationService;
-import com.gustavohenrique.financeApi.application.interfaces.TransactionService;
+import com.gustavohenrique.financeApi.application.interfaces.TransactionWriter;
 import com.gustavohenrique.financeApi.domain.enums.Role;
 import com.gustavohenrique.financeApi.domain.enums.TransactionType;
 import com.gustavohenrique.financeApi.domain.models.Account;
@@ -43,7 +43,7 @@ class WebhookEventConsumerTest {
     @Mock
     private FinancialIntegrationService financialIntegrationService;
     @Mock
-    private TransactionService transactionService;
+    private TransactionWriter transactionService;
     @Mock
     private AccountService accountService;
     @Mock

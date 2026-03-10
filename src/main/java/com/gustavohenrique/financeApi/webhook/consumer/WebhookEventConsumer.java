@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gustavohenrique.financeApi.application.interfaces.AccountService;
 import com.gustavohenrique.financeApi.application.interfaces.FinancialIntegrationService;
-import com.gustavohenrique.financeApi.application.interfaces.TransactionService;
+import com.gustavohenrique.financeApi.application.interfaces.TransactionWriter;
 import com.gustavohenrique.financeApi.domain.models.FinancialIntegration;
 import com.gustavohenrique.financeApi.domain.models.Transaction;
 import com.gustavohenrique.financeApi.domain.models.User;
@@ -28,7 +28,7 @@ public class WebhookEventConsumer {
     private final ObjectMapper objectMapper;
     private final RequestService pluggyClient;
     private final FinancialIntegrationService financialIntegrationService;
-    private final TransactionService transactionService;
+    private final TransactionWriter transactionService;
     private final AccountService accountService;
     private final PluggyResponseMapper pluggyResponseMapper;
 

@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.util.List;
 
-public interface TransactionService {
+public interface TransactionService extends TransactionWriter {
 
     TransactionQueryResult listByUserId(Long userId);
 
@@ -44,13 +44,9 @@ public interface TransactionService {
 
     Transaction findById(Long id);
 
-    Transaction create(Transaction transaction);
-
     Transaction update(Long id, Transaction transaction);
 
     Transaction categorize(Long id, Long categoryId);
 
     Transaction delete(Long id);
-
-    boolean existsByExternalId(String externalId);
 }

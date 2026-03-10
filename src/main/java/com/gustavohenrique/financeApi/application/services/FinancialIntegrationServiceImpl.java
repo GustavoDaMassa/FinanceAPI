@@ -2,7 +2,7 @@ package com.gustavohenrique.financeApi.application.services;
 
 import com.gustavohenrique.financeApi.application.interfaces.AccountService;
 import com.gustavohenrique.financeApi.application.interfaces.FinancialIntegrationService;
-import com.gustavohenrique.financeApi.application.interfaces.TransactionService;
+import com.gustavohenrique.financeApi.application.interfaces.TransactionWriter;
 import com.gustavohenrique.financeApi.application.repositories.AccountRepository;
 import com.gustavohenrique.financeApi.application.repositories.FinancialIntegrationRepository;
 import com.gustavohenrique.financeApi.application.repositories.UserRepository;
@@ -35,7 +35,7 @@ public class FinancialIntegrationServiceImpl implements FinancialIntegrationServ
     private final AccountService accountService;
     private final RequestService requestService;
     private final PluggyResponseMapper pluggyResponseMapper;
-    private final TransactionService transactionService;
+    private final TransactionWriter transactionService;
 
     @Override
     public FinancialIntegration findById(Long id) {
