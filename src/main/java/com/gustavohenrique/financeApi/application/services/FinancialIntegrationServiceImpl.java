@@ -14,7 +14,7 @@ import com.gustavohenrique.financeApi.domain.models.User;
 import com.gustavohenrique.financeApi.exception.AccountNotFoundException;
 import com.gustavohenrique.financeApi.exception.IntegrationLinkIdNotFoundException;
 import com.gustavohenrique.financeApi.exception.IntegrationNotFoundException;
-import com.gustavohenrique.financeApi.exception.UserIDNotFoundException;
+import com.gustavohenrique.financeApi.exception.UserNotFoundException;
 import com.gustavohenrique.financeApi.webhook.dataTransfer.TransactionResponse;
 import com.gustavohenrique.financeApi.webhook.service.PluggyResponseMapper;
 import com.gustavohenrique.financeApi.webhook.service.RequestService;
@@ -46,14 +46,14 @@ public class FinancialIntegrationServiceImpl implements FinancialIntegrationServ
     @Override
     public List<FinancialIntegration> findByUserId(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserIDNotFoundException(userId));
+                .orElseThrow(() -> new UserNotFoundException(userId));
         return integrationRepository.findByUser(user);
     }
 
     @Override
     public FinancialIntegration create(FinancialIntegration financialIntegration) {
         if(!userRepository.existsById(financialIntegration.getUser().getId()))
-            throw new UserIDNotFoundException(financialIntegration.getUser().getId());
+            throw new UserNotFoundException(financialIntegration.getUser().getId());
 
         financialIntegration.setCreatedAt(LocalDateTime.now());
         financialIntegration.setExpiresAt(LocalDateTime.now().plusMonths(12));

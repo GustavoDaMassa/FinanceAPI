@@ -6,7 +6,7 @@ import com.gustavohenrique.financeApi.application.repositories.UserRepository;
 import com.gustavohenrique.financeApi.domain.models.Category;
 import com.gustavohenrique.financeApi.domain.models.User;
 import com.gustavohenrique.financeApi.exception.CategoryNotFoundException;
-import com.gustavohenrique.financeApi.exception.UserIDNotFoundException;
+import com.gustavohenrique.financeApi.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +28,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<Category> findAllByUserId(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserIDNotFoundException(userId));
+                .orElseThrow(() -> new UserNotFoundException(userId));
         return categoryRepository.findAllByUser(user);
     }
 

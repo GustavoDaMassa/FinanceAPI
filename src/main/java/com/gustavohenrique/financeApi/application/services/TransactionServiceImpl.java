@@ -14,7 +14,7 @@ import com.gustavohenrique.financeApi.domain.models.Category;
 import com.gustavohenrique.financeApi.domain.models.Transaction;
 import com.gustavohenrique.financeApi.exception.AccountNotFoundException;
 import com.gustavohenrique.financeApi.exception.TransactionNotFoundException;
-import com.gustavohenrique.financeApi.exception.UserIDNotFoundException;
+import com.gustavohenrique.financeApi.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -213,7 +213,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     private void requireUserExists(Long userId) {
-        if (!userRepository.existsById(userId)) throw new UserIDNotFoundException(userId);
+        if (!userRepository.existsById(userId)) throw new UserNotFoundException(userId);
     }
 
     private Pageable pageRequest(int page, int size) {

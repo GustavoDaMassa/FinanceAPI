@@ -11,7 +11,7 @@ import com.gustavohenrique.financeApi.domain.models.User;
 import java.util.Optional;
 import com.gustavohenrique.financeApi.exception.AccountNotFoundException;
 import com.gustavohenrique.financeApi.exception.IntegrationNotFoundException;
-import com.gustavohenrique.financeApi.exception.UserIDNotFoundException;
+import com.gustavohenrique.financeApi.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -46,7 +46,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public List<Account> findByUserId(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserIDNotFoundException(userId));
+                .orElseThrow(() -> new UserNotFoundException(userId));
         return accountRepository.findByUser(user);
     }
 

@@ -8,7 +8,7 @@ import com.gustavohenrique.financeApi.domain.models.Account;
 import com.gustavohenrique.financeApi.domain.models.FinancialIntegration;
 import com.gustavohenrique.financeApi.domain.models.User;
 import com.gustavohenrique.financeApi.exception.AccountNotFoundException;
-import com.gustavohenrique.financeApi.exception.UserIDNotFoundException;
+import com.gustavohenrique.financeApi.exception.UserNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -90,7 +90,7 @@ class AccountServiceImplTest {
     void findByUserId_notFound_shouldThrow() {
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(UserIDNotFoundException.class, () -> accountService.findByUserId(1L));
+        assertThrows(UserNotFoundException.class, () -> accountService.findByUserId(1L));
     }
 
     @Test

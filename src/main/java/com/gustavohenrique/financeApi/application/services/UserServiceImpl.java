@@ -5,7 +5,7 @@ import com.gustavohenrique.financeApi.application.repositories.UserRepository;
 import com.gustavohenrique.financeApi.domain.enums.Role;
 import com.gustavohenrique.financeApi.domain.models.User;
 import com.gustavohenrique.financeApi.exception.EmailAlreadyExistException;
-import com.gustavohenrique.financeApi.exception.UserIDNotFoundException;
+import com.gustavohenrique.financeApi.exception.UserNotFoundException;
 import com.gustavohenrique.financeApi.exception.UserNotFoundException;
 import com.gustavohenrique.financeApi.graphql.inputs.UserInput;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(()-> new UserIDNotFoundException(userId));
+        return userRepository.findById(userId).orElseThrow(()-> new UserNotFoundException(userId));
     }
 }
 

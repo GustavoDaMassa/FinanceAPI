@@ -5,7 +5,7 @@ import com.gustavohenrique.financeApi.application.repositories.UserRepository;
 import com.gustavohenrique.financeApi.domain.models.Category;
 import com.gustavohenrique.financeApi.domain.models.User;
 import com.gustavohenrique.financeApi.exception.CategoryNotFoundException;
-import com.gustavohenrique.financeApi.exception.UserIDNotFoundException;
+import com.gustavohenrique.financeApi.exception.UserNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -78,7 +78,7 @@ class CategoryServiceImplTest {
     void findAllByUserId_notFound_shouldThrow() {
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(UserIDNotFoundException.class, () -> categoryService.findAllByUserId(1L));
+        assertThrows(UserNotFoundException.class, () -> categoryService.findAllByUserId(1L));
     }
 
     @Test
