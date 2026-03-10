@@ -168,8 +168,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Transaction update(Long id, Transaction transaction) {
-        Transaction existing = transactionRepository.findById(id)
-                .orElseThrow(() -> new TransactionNotFoundException(id));
+        Transaction existing = findById(id);
 
         existing.setAmount(transaction.getAmount());
         existing.setType(transaction.getType());
@@ -187,8 +186,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Transaction categorize(Long id, Long categoryId) {
-        Transaction transaction = transactionRepository.findById(id)
-                .orElseThrow(() -> new TransactionNotFoundException(id));
+        Transaction transaction = findById(id);
 
         Category category = categoryId != null ? categoryService.findById(categoryId) : null;
 
@@ -199,8 +197,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Transaction delete(Long id) {
-        Transaction transaction = transactionRepository.findById(id)
-                .orElseThrow(() -> new TransactionNotFoundException(id));
+        Transaction transaction = findById(id);
         transactionRepository.delete(transaction);
         accountBalanceService.recalculateBalance(transaction.getAccount().getId());
         return transaction;

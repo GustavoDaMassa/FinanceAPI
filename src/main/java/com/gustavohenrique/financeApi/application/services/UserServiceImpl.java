@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(Long id, UserInput input) {
-        var user = userRepository.findById(id).orElseThrow(() -> new UserIDNotFoundException(id));
+        var user = findById(id);
 
         // Only check email uniqueness if email is being changed
         if (!user.getEmail().equals(input.getEmail()) && userRepository.existsByEmail(input.getEmail())) {
@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User deleteUser(Long id) {
-        var user = userRepository.findById(id).orElseThrow(()-> new UserIDNotFoundException(id));
+        var user = findById(id);
         userRepository.delete(user);
         return user;
     }
