@@ -101,6 +101,29 @@
 
 <blockquote>
 
+<details id="graphqlerrorcreator">
+<summary><strong><a href="src/main/java/com/gustavohenrique/financeApi/exception/GraphQLErrorCreator.java">GraphQLErrorCreator.java</a> [interface]</strong></summary>
+
+<blockquote>
+
+<details><summary>funcao</summary>
+
+Factory Method — contrato para exceções que sabem criar seu próprio GraphQLError; elimina switch por tipo no resolver
+
+</details>
+
+<details><summary>metodos</summary>
+
+- `createError(DataFetchingEnvironment) : GraphQLError`
+
+</details>
+
+</blockquote>
+
+</details>
+
+
+
 <details id="notfoundexception">
 <summary><strong><a href="src/main/java/com/gustavohenrique/financeApi/exception/NotFoundException.java">NotFoundException.java</a> [abstract class]</strong></summary>
 
@@ -110,13 +133,19 @@
 
 <details><summary>funcao</summary>
 
-Base abstrata para todas as exceções de recurso não encontrado (404)
+Base abstrata para todas as exceções de recurso não encontrado (404); implementa createError() com ErrorType.NOT_FOUND
 
 </details>
 
 <details><summary>extends</summary>
 
 - `RuntimeException`
+
+</details>
+
+<details><summary>implements</summary>
+
+- [`GraphQLErrorCreator`](#graphqlerrorcreator)
 
 </details>
 
@@ -135,13 +164,19 @@ Base abstrata para todas as exceções de recurso não encontrado (404)
 
 <details><summary>funcao</summary>
 
-Base abstrata para todas as exceções de requisição inválida (400)
+Base abstrata para todas as exceções de requisição inválida (400); implementa createError() com ErrorType.BAD_REQUEST
 
 </details>
 
 <details><summary>extends</summary>
 
 - `RuntimeException`
+
+</details>
+
+<details><summary>implements</summary>
+
+- [`GraphQLErrorCreator`](#graphqlerrorcreator)
 
 </details>
 
@@ -2653,13 +2688,19 @@ Ponto de entrada GraphQL para integrações Pluggy — CRUD, geração de connec
 
 <details><summary>funcao</summary>
 
-Traduz exceções de domínio (NotFoundException, BadRequestException) para erros GraphQL tipados com extensões — evita stack traces expostos ao cliente
+Traduz exceções para erros GraphQL — delega criação ao Factory Method de cada exceção (GraphQLErrorCreator); ConstraintViolationException tratada diretamente por ser externa à hierarquia
 
 </details>
 
 <details><summary>extends</summary>
 
 - `DataFetcherExceptionResolverAdapter   [Spring GraphQL]`
+
+</details>
+
+<details><summary>dependencias</summary>
+
+- [`GraphQLErrorCreator`](#graphqlerrorcreator)
 
 </details>
 

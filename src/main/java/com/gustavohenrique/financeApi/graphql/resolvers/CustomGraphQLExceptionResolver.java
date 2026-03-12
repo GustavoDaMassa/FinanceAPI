@@ -1,7 +1,6 @@
 package com.gustavohenrique.financeApi.graphql.resolvers;
 
-import com.gustavohenrique.financeApi.exception.BadRequestException;
-import com.gustavohenrique.financeApi.exception.NotFoundException;
+import com.gustavohenrique.financeApi.exception.GraphQLErrorCreator;
 import graphql.GraphQLError;
 import graphql.GraphqlErrorBuilder;
 import graphql.schema.DataFetchingEnvironment;
@@ -19,25 +18,19 @@ public class CustomGraphQLExceptionResolver extends DataFetcherExceptionResolver
 
     @Override
     protected GraphQLError resolveToSingleError(Throwable e, DataFetchingEnvironment env) {
-        return switch (e) {
-            case NotFoundException notFoundException -> GraphqlErrorBuilder.newError(env)
-                    .message(e.getMessage())
-                    .errorType(ErrorType.NOT_FOUND)
-                    .build();
-            case BadRequestException badRequestException -> GraphqlErrorBuilder.newError(env)
+        if (e instanceof ConstraintViolationException) {
+            return GraphqlErrorBuilder.newError(env)
                     .message(e.getMessage())
                     .errorType(ErrorType.BAD_REQUEST)
                     .build();
-            case ConstraintViolationException constraintViolationException -> GraphqlErrorBuilder.newError(env)
-                    .message(e.getMessage())
-                    .errorType(ErrorType.BAD_REQUEST)
-                    .build();
-            default -> GraphqlErrorBuilder.newError(env)
-                    .message("Internal Server Error")
-                    .errorType(ErrorType.INTERNAL_ERROR)
-                    .build();
-        };
-
+        }
+        if (e instanceof GraphQLErrorCreator creator) {
+            return creator.createError(env);
+        }
+        return GraphqlErrorBuilder.newError(env)
+                .message("Internal Server Error")
+                .errorType(ErrorType.INTERNAL_ERROR)
+                .build();
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
