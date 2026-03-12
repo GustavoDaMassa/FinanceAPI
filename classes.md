@@ -522,7 +522,8 @@ Tipo de transação com lógica de cálculo de saldo embutida — cada constante
 
 <details><summary>metodos</summary>
 
-- `apply(BigDecimal amount) : BigDecimal   [abstract por constante]`
+- `apply(BigDecimal amount) : BigDecimal          [abstract por constante]`
+- `fromPluggy(String pluggyType) : TransactionType [static factory — mapeia "CREDIT"/"DEBIT" do Pluggy para constantes do domínio]`
 
 </details>
 
