@@ -14,7 +14,7 @@ public class PluggyResponseMapper {
     public Transaction mapPluggyToTransaction(TransactionResponse response){
      return new Transaction(null,
              new BigDecimal(String.valueOf(response.getAmount())).abs(),
-             mapType(response.getType()),
+             TransactionType.fromPluggy(response.getType()),
              response.getDescription(),
              null,
              null,
@@ -23,12 +23,5 @@ public class PluggyResponseMapper {
              response.getId(),
              null
         );
-}
-    private TransactionType mapType(String pluggyType) {
-        return switch (pluggyType.toUpperCase()) {
-            case "CREDIT" -> TransactionType.INFLOW;
-            case "DEBIT" -> TransactionType.OUTFLOW;
-            default -> throw new IllegalArgumentException("Tipo de transação inválido: " + pluggyType);
-        };
     }
 }

@@ -13,4 +13,12 @@ public enum TransactionType {
     };
 
     public abstract BigDecimal apply(BigDecimal amount);
+
+    public static TransactionType fromPluggy(String pluggyType) {
+        return switch (pluggyType.toUpperCase()) {
+            case "CREDIT" -> INFLOW;
+            case "DEBIT"  -> OUTFLOW;
+            default -> throw new IllegalArgumentException("Tipo de transação inválido: " + pluggyType);
+        };
+    }
 }
