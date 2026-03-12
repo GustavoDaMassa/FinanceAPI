@@ -2,6 +2,7 @@ package com.gustavohenrique.financeApi.domain.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +15,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Account {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +26,7 @@ public class Account {
     @Setter
     @Column(columnDefinition = "TEXT")
     private String description;
-    @Setter private BigDecimal balance = BigDecimal.ZERO;
+    @Setter @Builder.Default private BigDecimal balance = BigDecimal.ZERO;
 
     @Column(unique = true)
     private String pluggyAccountId;

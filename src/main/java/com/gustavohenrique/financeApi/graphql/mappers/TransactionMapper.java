@@ -46,7 +46,7 @@ public class TransactionMapper {
         transaction.setDestination(input.getDestination());
         transaction.setTransactionDate(LocalDate.parse(input.getTransactionDate()));
 
-        Account account = new Account(input.getAccountId(), null, null, null, null, null, null, null, null);
+        Account account = Account.builder().id(input.getAccountId()).build();
         transaction.setAccount(account);
 
         if (input.getCategoryId() != null) {

@@ -57,8 +57,13 @@ public class AccountResolver {
     
     @MutationMapping
     public AccountDTO linkAccount(@Argument LinkAccountInput input, @AuthenticationPrincipal User user) {
-        Account newAccount = new Account(null, input.getName(), input.getInstitution(),
-                input.getDescription(), null, input.getPluggyAccountId(), user, null, null);
+        Account newAccount = Account.builder()
+                .accountName(input.getName())
+                .institution(input.getInstitution())
+                .description(input.getDescription())
+                .pluggyAccountId(input.getPluggyAccountId())
+                .user(user)
+                .build();
         Account created = accountService.linkAccount(input.getIntegrationId(), newAccount, user);
         return accountMapper.toDto(created);
     }

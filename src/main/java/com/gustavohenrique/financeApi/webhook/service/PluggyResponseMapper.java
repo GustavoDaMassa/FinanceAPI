@@ -12,16 +12,12 @@ import java.time.LocalDate;
 public class PluggyResponseMapper {
 
     public Transaction mapPluggyToTransaction(TransactionResponse response){
-     return new Transaction(null,
-             new BigDecimal(String.valueOf(response.getAmount())).abs(),
-             TransactionType.fromPluggy(response.getType()),
-             response.getDescription(),
-             null,
-             null,
-             response.getDate().toLocalDate(),
-             null,
-             response.getId(),
-             null
-        );
+        return Transaction.builder()
+                .amount(new BigDecimal(String.valueOf(response.getAmount())).abs())
+                .type(TransactionType.fromPluggy(response.getType()))
+                .description(response.getDescription())
+                .transactionDate(response.getDate().toLocalDate())
+                .externalId(response.getId())
+                .build();
     }
 }

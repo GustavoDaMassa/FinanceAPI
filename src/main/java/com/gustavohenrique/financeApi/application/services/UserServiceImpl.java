@@ -42,8 +42,11 @@ public class UserServiceImpl implements UserService {
             throw new EmailAlreadyExistException(input.getEmail());
         }
 
-        User user = new User(null, input.getName(), input.getEmail(),
-                passwordEncoder.encode(input.getPassword()), Role.USER, null, null);
+        User user = User.builder()
+                .name(input.getName())
+                .email(input.getEmail())
+                .password(passwordEncoder.encode(input.getPassword()))
+                .build();
 
         return userRepository.save(user);
     }

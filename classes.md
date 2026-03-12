@@ -542,7 +542,7 @@ Tipo de transação com lógica de cálculo de saldo embutida — cada constante
 <blockquote>
 
 <details id="user">
-<summary><strong><a href="src/main/java/com/gustavohenrique/financeApi/domain/models/User.java">User.java</a></strong></summary>
+<summary><strong><a href="src/main/java/com/gustavohenrique/financeApi/domain/models/User.java">User.java</a> [@Builder]</strong></summary>
 
 <blockquote>
 
@@ -597,7 +597,7 @@ Entidade central do domínio — dono de contas e integrações; implementa User
 
 
 <details id="account">
-<summary><strong><a href="src/main/java/com/gustavohenrique/financeApi/domain/models/Account.java">Account.java</a></strong></summary>
+<summary><strong><a href="src/main/java/com/gustavohenrique/financeApi/domain/models/Account.java">Account.java</a> [@Builder]</strong></summary>
 
 <blockquote>
 
@@ -671,7 +671,7 @@ Categoria de classificação de transações — pertence a um usuário específ
 
 
 <details id="transaction">
-<summary><strong><a href="src/main/java/com/gustavohenrique/financeApi/domain/models/Transaction.java">Transaction.java</a></strong></summary>
+<summary><strong><a href="src/main/java/com/gustavohenrique/financeApi/domain/models/Transaction.java">Transaction.java</a> [@Builder]</strong></summary>
 
 <blockquote>
 
