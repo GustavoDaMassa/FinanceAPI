@@ -466,7 +466,6 @@ The API returns standardized responses for errors and exceptions. Below are the 
 | StatusCode | Exception                        | Error example                       |
 |------------|----------------------------------|-------------------------------------|
 | 404        | `UserNotFoundException`          | User not found with Email: " + email|
-| 404        | `UserIDNotFoundException`        | User not found with ID: " + id      |
 | 400        | `EmailAlreadyExistException`     | The " + email + " is unavailable    |
 | 400        | `InvalidTransactionTypeException`| Invalid transaction type: " + type  |
 | 500        | `InternalServerError`            | Internal Server Error               |
@@ -487,7 +486,7 @@ The API returns standardized responses for errors and exceptions. Below are the 
 
 - **Validation and Security**
   - Custom validations and use of Bean Validation
-  - Authentication implementation via X-API-KEY
+  - Authentication and authorization implementation via JWT
 
 - **Error Handling and Responses**
   - Standardized error capture and handling
