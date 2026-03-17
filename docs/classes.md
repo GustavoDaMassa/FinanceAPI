@@ -1567,7 +1567,7 @@ Gerencia integrações Pluggy — CRUD, sincronização manual de transações, 
   - `impl/ JPA`
 - `accountService        : `[`AccountService`](#accountservice)
   - `impl/ AccountServiceImpl.java`
-- `requestService        : `[`RequestService`](#requestservice)
+- `requestService        : `[`PluggyClient`](#pluggyclient)
 - `pluggyResponseMapper  : `[`PluggyResponseMapper`](#pluggyresponsemapper)
 - `transactionService    : TransactionWriter   [ISP — injeta interface estreita, usa só create() e existsByExternalId()]`
   - `impl/ TransactionServiceImpl.java`
@@ -1580,7 +1580,7 @@ Gerencia integrações Pluggy — CRUD, sincronização manual de transações, 
 - `userRepository        : UserRepository`
 - `accountRepository     : AccountRepository`
 - `accountService        : AccountService`
-- `requestService        : RequestService`
+- `requestService        : PluggyClient`
 - `pluggyResponseMapper  : PluggyResponseMapper`
 - `transactionService    : TransactionWriter`
 
@@ -2643,7 +2643,7 @@ Ponto de entrada GraphQL para integrações Pluggy — CRUD, geração de connec
 
 - `integrationService : `[`FinancialIntegrationService`](#financialintegrationservice)
   - `impl/ FinancialIntegrationServiceImpl.java`
-- `requestService     : `[`RequestService`](#requestservice)
+- `requestService     : `[`PluggyClient`](#pluggyclient)
 - `mapper             : `[`FinancialIntegrationMapper`](#financialintegrationmapper)
 - `accountMapper      : `[`AccountMapper`](#accountmapper)
 
@@ -2652,7 +2652,7 @@ Ponto de entrada GraphQL para integrações Pluggy — CRUD, geração de connec
 <details><summary>atributos</summary>
 
 - `integrationService : FinancialIntegrationService`
-- `requestService     : RequestService`
+- `requestService     : PluggyClient`
 - `mapper             : FinancialIntegrationMapper`
 - `accountMapper      : AccountMapper`
 
@@ -3129,7 +3129,7 @@ Consome mensagens do Kafka, busca as transações novas na API do Pluggy e persi
 <details><summary>dependencias</summary>
 
 - `objectMapper               : ObjectMapper`
-- `pluggyClient               : `[`RequestService`](#requestservice)
+- `pluggyClient               : `[`PluggyClient`](#pluggyclient)
 - `financialIntegrationService: `[`FinancialIntegrationService`](#financialintegrationservice)
   - `impl/ FinancialIntegrationServiceImpl.java`
 - `transactionService         : TransactionWriter   [ISP — usa só create() e existsByExternalId()]`
@@ -3143,7 +3143,7 @@ Consome mensagens do Kafka, busca as transações novas na API do Pluggy e persi
 <details><summary>atributos</summary>
 
 - `objectMapper                : ObjectMapper`
-- `pluggyClient                : RequestService`
+- `pluggyClient                : PluggyClient`
 - `financialIntegrationService : FinancialIntegrationService`
 - `transactionService          : TransactionWriter`
 - `accountService              : AccountService`
@@ -3515,8 +3515,35 @@ Registra os IDs de webhook retornados pelo Pluggy no usuário e na conta para co
 
 
 
+<details id="pluggyclient">
+<summary><strong><a href="src/main/java/com/gustavohenrique/financeApi/webhook/service/PluggyClient.java">PluggyClient.java</a> [interface]</strong></summary>
+
+<blockquote>
+
+<details><summary>funcao</summary>
+
+Adapter — contrato para integração com a API Pluggy, isolando os consumidores do mecanismo HTTP concreto
+
+</details>
+
+<details><summary>metodos</summary>
+
+- `fetchTransaction(String linkTransactions)              : ListTransactionsResponse`
+- `fetchTransactionsByAccount(String pluggyAccountId)     : List<TransactionResponse>`
+- `fetchAccounts(String itemId)                           : List<PluggyAccountDTO>`
+- `createConnectToken()                                   : String`
+- `createConnectToken(String itemId)                      : String`
+
+</details>
+
+</blockquote>
+
+</details>
+
+
+
 <details id="requestservice">
-<summary><strong><a href="src/main/java/com/gustavohenrique/financeApi/webhook/service/RequestService.java">RequestService.java</a></strong></summary>
+<summary><strong><a href="src/main/java/com/gustavohenrique/financeApi/webhook/service/RequestService.java">RequestService.java</a> [implements <a href="#pluggyclient">PluggyClient</a>]</strong></summary>
 
 <blockquote>
 
