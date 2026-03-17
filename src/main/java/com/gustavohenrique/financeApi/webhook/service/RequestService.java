@@ -15,7 +15,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.List;
 
 @Component
-public class RequestService {
+public class RequestService implements PluggyClient {
 
     private final WebClient webClient;
     private final CredentialService credentialService;

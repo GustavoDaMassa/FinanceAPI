@@ -9,6 +9,8 @@ import com.gustavohenrique.financeApi.domain.models.FinancialIntegration;
 import com.gustavohenrique.financeApi.domain.models.User;
 import com.gustavohenrique.financeApi.exception.IntegrationNotFoundException;
 import com.gustavohenrique.financeApi.exception.UserNotFoundException;
+import com.gustavohenrique.financeApi.webhook.service.PluggyClient;
+import com.gustavohenrique.financeApi.webhook.service.PluggyResponseMapper;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -39,6 +41,12 @@ class FinancialIntegrationServiceImplTest {
 
     @Mock
     private AccountRepository accountRepository;
+
+    @Mock
+    private PluggyClient pluggyClient;
+
+    @Mock
+    private PluggyResponseMapper pluggyResponseMapper;
 
     private FinancialIntegration integration;
     private User user;

@@ -17,7 +17,7 @@ import com.gustavohenrique.financeApi.exception.IntegrationNotFoundException;
 import com.gustavohenrique.financeApi.exception.UserNotFoundException;
 import com.gustavohenrique.financeApi.webhook.dataTransfer.TransactionResponse;
 import com.gustavohenrique.financeApi.webhook.service.PluggyResponseMapper;
-import com.gustavohenrique.financeApi.webhook.service.RequestService;
+import com.gustavohenrique.financeApi.webhook.service.PluggyClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,7 @@ public class FinancialIntegrationServiceImpl implements FinancialIntegrationServ
     private final UserRepository userRepository;
     private final AccountRepository accountRepository;
     private final AccountService accountService;
-    private final RequestService requestService;
+    private final PluggyClient requestService;
     private final PluggyResponseMapper pluggyResponseMapper;
     private final TransactionWriter transactionService;
 

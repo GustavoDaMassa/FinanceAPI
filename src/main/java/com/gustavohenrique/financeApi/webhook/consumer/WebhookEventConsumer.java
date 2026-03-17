@@ -13,7 +13,7 @@ import com.gustavohenrique.financeApi.webhook.dataTransfer.KafkaMessage;
 import com.gustavohenrique.financeApi.webhook.dataTransfer.ListTransactionsResponse;
 import com.gustavohenrique.financeApi.webhook.dataTransfer.TransactionResponse;
 import com.gustavohenrique.financeApi.webhook.service.PluggyResponseMapper;
-import com.gustavohenrique.financeApi.webhook.service.RequestService;
+import com.gustavohenrique.financeApi.webhook.service.PluggyClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 public class WebhookEventConsumer {
 
     private final ObjectMapper objectMapper;
-    private final RequestService pluggyClient;
+    private final PluggyClient pluggyClient;
     private final FinancialIntegrationService financialIntegrationService;
     private final TransactionWriter transactionService;
     private final AccountService accountService;
