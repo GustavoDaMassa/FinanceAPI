@@ -5,16 +5,16 @@
 
 <blockquote>
 
-- [Dockerfile](Dockerfile) — imagem Docker da aplicação Spring Boot
-- [docker-compose.yaml](docker-compose.yaml) — ambiente de desenvolvimento local (app + PostgreSQL + Kafka + Zookeeper)
-- [docker-compose.prod.yml](docker-compose.prod.yml) — ambiente de produção no home server
-- [pom.xml](pom.xml) — dependências e build Maven
-- [mvnw](mvnw) / [mvnw.cmd](mvnw.cmd) — Maven Wrapper
-- [.env.example](.env.example) — template de variáveis de ambiente
-- [README.md](README.md) / [README_EN.md](README_EN.md) — documentação do projeto (PT/EN)
-- [HELP.md](HELP.md) — guia de referência Spring Boot
-- [GRAPHQL_VERSIONING_STRATEGY.md](GRAPHQL_VERSIONING_STRATEGY.md) — estratégia de versionamento GraphQL
-- [.gitignore](.gitignore) / [.gitattributes](.gitattributes) — configurações Git
+- [Dockerfile](../Dockerfile) — imagem Docker da aplicação Spring Boot
+- [docker-compose.yaml](../docker-compose.yaml) — ambiente de desenvolvimento local (app + PostgreSQL + Kafka + Zookeeper)
+- [docker-compose.prod.yml](../docker-compose.prod.yml) — ambiente de produção no home server
+- [pom.xml](../pom.xml) — dependências e build Maven
+- [mvnw](../mvnw) / [mvnw.cmd](../mvnw.cmd) — Maven Wrapper
+- [.env.example](../.env.example) — template de variáveis de ambiente
+- [README.md](../README.md) / [README_EN.md](../README_EN.md) — documentação do projeto (PT/EN)
+- [HELP.md](../HELP.md) — guia de referência Spring Boot
+- [GRAPHQL_VERSIONING_STRATEGY.md](../GRAPHQL_VERSIONING_STRATEGY.md) — estratégia de versionamento GraphQL
+- [.gitignore](../.gitignore) / [.gitattributes](../.gitattributes) — configurações Git
 
 </blockquote>
 
@@ -32,7 +32,7 @@
 
 <blockquote>
 
-- [ci.yml](.github/workflows/ci.yml) — pipeline CI/CD: build, testes e publicação da imagem no Docker Hub
+- [ci.yml](../.github/workflows/ci.yml) — pipeline CI/CD: build, testes e publicação da imagem no Docker Hub
 
 </blockquote>
 
@@ -48,7 +48,7 @@
 
 <blockquote>
 
-- [ARCHITECTURE.md](docs/ARCHITECTURE.md) — documentação de arquitetura do sistema
+- [ARCHITECTURE.md](ARCHITECTURE.md) — documentação de arquitetura do sistema
 
 </blockquote>
 
@@ -60,8 +60,8 @@
 
 <blockquote>
 
-- [logo.png](Imagens/logo.png) — logo do projeto
-- [img_1.png](Imagens/img_1.png) … [img_9.png](Imagens/img_9.png) — screenshots de endpoints e fluxos
+- [logo.png](../Imagens/logo.png) — logo do projeto
+- [img_1.png](../Imagens/img_1.png) … [img_9.png](../Imagens/img_9.png) — screenshots de endpoints e fluxos
 
 </blockquote>
 
@@ -73,8 +73,8 @@
 
 <blockquote>
 
-- [default.conf](nginx/default.conf) — configuração de desenvolvimento local
-- [nginx.prod.conf](nginx/nginx.prod.conf) — configuração de produção (HTTP simples, SSL terminado pelo Cloudflare)
+- [default.conf](../nginx/default.conf) — configuração de desenvolvimento local
+- [nginx.prod.conf](../nginx/nginx.prod.conf) — configuração de produção (HTTP simples, SSL terminado pelo Cloudflare)
 
 </blockquote>
 
@@ -89,7 +89,7 @@
 
 <blockquote>
 
-- [FinanceApiApplication.java](src/main/java/com/gustavohenrique/financeApi/FinanceApiApplication.java) — entry point Spring Boot
+- [FinanceApiApplication.java](../src/main/java/com/gustavohenrique/financeApi/FinanceApiApplication.java) — entry point Spring Boot
 
 </blockquote>
 
@@ -1691,7 +1691,7 @@ Agrega página de transações com o saldo total calculado — versão paginada 
 
 <blockquote>
 
-- [modelMapperConfig.java](src/main/java/com/gustavohenrique/financeApi/config/modelMapperConfig.java) — configura o bean ModelMapper para mapeamento automático entre entidades e DTOs
+- [modelMapperConfig.java](../src/main/java/com/gustavohenrique/financeApi/config/modelMapperConfig.java) — configura o bean ModelMapper para mapeamento automático entre entidades e DTOs
 
 </blockquote>
 
@@ -3687,25 +3687,25 @@ Converte TransactionResponse (formato Pluggy) para Transaction (domínio da apli
 
 <blockquote>
 
-- [application.properties](src/main/resources/application.properties) — configuração principal (datasource, Kafka, GraphQL, JWT, Flyway, Actuator)
-- [application-prod.properties](src/main/resources/application-prod.properties) — overrides de produção (lê secrets de variáveis de ambiente)
-- [logback-spring.xml](src/main/resources/logback-spring.xml) — configuração de logs estruturados JSON
+- [application.properties](../src/main/resources/application.properties) — configuração principal (datasource, Kafka, GraphQL, JWT, Flyway, Actuator)
+- [application-prod.properties](../src/main/resources/application-prod.properties) — overrides de produção (lê secrets de variáveis de ambiente)
+- [logback-spring.xml](../src/main/resources/logback-spring.xml) — configuração de logs estruturados JSON
 
 <details id="dir-main-resources-db">
 <summary><strong>db/migration/</strong></summary>
 
 <blockquote>
 
-- [V1__create_initial_schema.sql](src/main/resources/db/migration/V1__create_initial_schema.sql) — schema inicial: tabelas users, accounts, transactions, financial_integrations
-- [V2__add_transaction_payload_column.sql](src/main/resources/db/migration/V2__add_transaction_payload_column.sql) — adiciona coluna payload em transactions
-- [V3__rename_column_account_name.sql](src/main/resources/db/migration/V3__rename_column_account_name.sql) — renomeia coluna em accounts
-- [V4__new_entity_Category.sql](src/main/resources/db/migration/V4__new_entity_Category.sql) — cria tabela categories
-- [V5__add_role_column_to_users.sql](src/main/resources/db/migration/V5__add_role_column_to_users.sql) — adiciona coluna role em users
-- [V6__add_pluggy_account_id_to_accounts.sql](src/main/resources/db/migration/V6__add_pluggy_account_id_to_accounts.sql) — adiciona pluggy_account_id em accounts
-- [V7__remove_subcategories.sql](src/main/resources/db/migration/V7__remove_subcategories.sql) — remove tabela de subcategorias
-- [V8__add_external_id_to_transactions.sql](src/main/resources/db/migration/V8__add_external_id_to_transactions.sql) — adiciona external_id em transactions
-- [V9__rename_account_type_to_description.sql](src/main/resources/db/migration/V9__rename_account_type_to_description.sql) — renomeia coluna account_type
-- [V10__alter_account_description_to_text.sql](src/main/resources/db/migration/V10__alter_account_description_to_text.sql) — altera tipo de description para TEXT
+- [V1__create_initial_schema.sql](../src/main/resources/db/migration/V1__create_initial_schema.sql) — schema inicial: tabelas users, accounts, transactions, financial_integrations
+- [V2__add_transaction_payload_column.sql](../src/main/resources/db/migration/V2__add_transaction_payload_column.sql) — adiciona coluna payload em transactions
+- [V3__rename_column_account_name.sql](../src/main/resources/db/migration/V3__rename_column_account_name.sql) — renomeia coluna em accounts
+- [V4__new_entity_Category.sql](../src/main/resources/db/migration/V4__new_entity_Category.sql) — cria tabela categories
+- [V5__add_role_column_to_users.sql](../src/main/resources/db/migration/V5__add_role_column_to_users.sql) — adiciona coluna role em users
+- [V6__add_pluggy_account_id_to_accounts.sql](../src/main/resources/db/migration/V6__add_pluggy_account_id_to_accounts.sql) — adiciona pluggy_account_id em accounts
+- [V7__remove_subcategories.sql](../src/main/resources/db/migration/V7__remove_subcategories.sql) — remove tabela de subcategorias
+- [V8__add_external_id_to_transactions.sql](../src/main/resources/db/migration/V8__add_external_id_to_transactions.sql) — adiciona external_id em transactions
+- [V9__rename_account_type_to_description.sql](../src/main/resources/db/migration/V9__rename_account_type_to_description.sql) — renomeia coluna account_type
+- [V10__alter_account_description_to_text.sql](../src/main/resources/db/migration/V10__alter_account_description_to_text.sql) — altera tipo de description para TEXT
 
 </blockquote>
 
@@ -3716,11 +3716,11 @@ Converte TransactionResponse (formato Pluggy) para Transaction (domínio da apli
 
 <blockquote>
 
-- [User.graphqls](src/main/resources/graphql/User.graphqls) — schema GraphQL de User (queries, mutations, tipos)
-- [Account.graphqls](src/main/resources/graphql/Account.graphqls) — schema GraphQL de Account
-- [Transaction.graphqls](src/main/resources/graphql/Transaction.graphqls) — schema GraphQL de Transaction
-- [Category.graphqls](src/main/resources/graphql/Category.graphqls) — schema GraphQL de Category
-- [FinancialIntegration.graphqls](src/main/resources/graphql/FinancialIntegration.graphqls) — schema GraphQL de FinancialIntegration
+- [User.graphqls](../src/main/resources/graphql/User.graphqls) — schema GraphQL de User (queries, mutations, tipos)
+- [Account.graphqls](../src/main/resources/graphql/Account.graphqls) — schema GraphQL de Account
+- [Transaction.graphqls](../src/main/resources/graphql/Transaction.graphqls) — schema GraphQL de Transaction
+- [Category.graphqls](../src/main/resources/graphql/Category.graphqls) — schema GraphQL de Category
+- [FinancialIntegration.graphqls](../src/main/resources/graphql/FinancialIntegration.graphqls) — schema GraphQL de FinancialIntegration
 
 </blockquote>
 
@@ -3739,12 +3739,12 @@ Converte TransactionResponse (formato Pluggy) para Transaction (domínio da apli
 
 <blockquote>
 
-- [AccountServiceImplTest.java](src/test/java/com/gustavohenrique/financeApi/application/services/AccountServiceImplTest.java)
-- [BalanceCalculatorServiceImplTest.java](src/test/java/com/gustavohenrique/financeApi/application/services/BalanceCalculatorServiceImplTest.java)
-- [CategoryServiceImplTest.java](src/test/java/com/gustavohenrique/financeApi/application/services/CategoryServiceImplTest.java)
-- [FinancialIntegrationServiceImplTest.java](src/test/java/com/gustavohenrique/financeApi/application/services/FinancialIntegrationServiceImplTest.java)
-- [TransactionServiceImplTest.java](src/test/java/com/gustavohenrique/financeApi/application/services/TransactionServiceImplTest.java)
-- [UserServiceImplTest.java](src/test/java/com/gustavohenrique/financeApi/application/services/UserServiceImplTest.java)
+- [AccountServiceImplTest.java](../src/test/java/com/gustavohenrique/financeApi/application/services/AccountServiceImplTest.java)
+- [BalanceCalculatorServiceImplTest.java](../src/test/java/com/gustavohenrique/financeApi/application/services/BalanceCalculatorServiceImplTest.java)
+- [CategoryServiceImplTest.java](../src/test/java/com/gustavohenrique/financeApi/application/services/CategoryServiceImplTest.java)
+- [FinancialIntegrationServiceImplTest.java](../src/test/java/com/gustavohenrique/financeApi/application/services/FinancialIntegrationServiceImplTest.java)
+- [TransactionServiceImplTest.java](../src/test/java/com/gustavohenrique/financeApi/application/services/TransactionServiceImplTest.java)
+- [UserServiceImplTest.java](../src/test/java/com/gustavohenrique/financeApi/application/services/UserServiceImplTest.java)
 
 </blockquote>
 
@@ -3756,9 +3756,9 @@ Converte TransactionResponse (formato Pluggy) para Transaction (domínio da apli
 
 <blockquote>
 
-- [AccountMapperTest.java](src/test/java/com/gustavohenrique/financeApi/graphql/mappers/AccountMapperTest.java)
-- [CategoryMapperTest.java](src/test/java/com/gustavohenrique/financeApi/graphql/mappers/CategoryMapperTest.java)
-- [TransactionMapperTest.java](src/test/java/com/gustavohenrique/financeApi/graphql/mappers/TransactionMapperTest.java)
+- [AccountMapperTest.java](../src/test/java/com/gustavohenrique/financeApi/graphql/mappers/AccountMapperTest.java)
+- [CategoryMapperTest.java](../src/test/java/com/gustavohenrique/financeApi/graphql/mappers/CategoryMapperTest.java)
+- [TransactionMapperTest.java](../src/test/java/com/gustavohenrique/financeApi/graphql/mappers/TransactionMapperTest.java)
 
 </blockquote>
 
@@ -3770,9 +3770,9 @@ Converte TransactionResponse (formato Pluggy) para Transaction (domínio da apli
 
 <blockquote>
 
-- [AccountResolverTest.java](src/test/java/com/gustavohenrique/financeApi/graphql/resolvers/AccountResolverTest.java)
-- [CustomGraphQLExceptionResolverTest.java](src/test/java/com/gustavohenrique/financeApi/graphql/resolvers/CustomGraphQLExceptionResolverTest.java)
-- [FinancialIntegrationResolverTest.java](src/test/java/com/gustavohenrique/financeApi/graphql/resolvers/FinancialIntegrationResolverTest.java)
+- [AccountResolverTest.java](../src/test/java/com/gustavohenrique/financeApi/graphql/resolvers/AccountResolverTest.java)
+- [CustomGraphQLExceptionResolverTest.java](../src/test/java/com/gustavohenrique/financeApi/graphql/resolvers/CustomGraphQLExceptionResolverTest.java)
+- [FinancialIntegrationResolverTest.java](../src/test/java/com/gustavohenrique/financeApi/graphql/resolvers/FinancialIntegrationResolverTest.java)
 
 </blockquote>
 
@@ -3784,10 +3784,10 @@ Converte TransactionResponse (formato Pluggy) para Transaction (domínio da apli
 
 <blockquote>
 
-- [AuthenticationServiceTest.java](src/test/java/com/gustavohenrique/financeApi/security/AuthenticationServiceTest.java)
-- [JwtAuthenticationFilterTest.java](src/test/java/com/gustavohenrique/financeApi/security/JwtAuthenticationFilterTest.java)
-- [JwtServiceTest.java](src/test/java/com/gustavohenrique/financeApi/security/JwtServiceTest.java)
-- [UserDetailsServiceImplTest.java](src/test/java/com/gustavohenrique/financeApi/security/UserDetailsServiceImplTest.java)
+- [AuthenticationServiceTest.java](../src/test/java/com/gustavohenrique/financeApi/security/AuthenticationServiceTest.java)
+- [JwtAuthenticationFilterTest.java](../src/test/java/com/gustavohenrique/financeApi/security/JwtAuthenticationFilterTest.java)
+- [JwtServiceTest.java](../src/test/java/com/gustavohenrique/financeApi/security/JwtServiceTest.java)
+- [UserDetailsServiceImplTest.java](../src/test/java/com/gustavohenrique/financeApi/security/UserDetailsServiceImplTest.java)
 
 </blockquote>
 
@@ -3799,13 +3799,13 @@ Converte TransactionResponse (formato Pluggy) para Transaction (domínio da apli
 
 <blockquote>
 
-- [CredentialServiceTest.java](src/test/java/com/gustavohenrique/financeApi/webhook/CredentialServiceTest.java)
-- [PluggyResponseMapperTest.java](src/test/java/com/gustavohenrique/financeApi/webhook/PluggyResponseMapperTest.java)
-- [PluggyWebhookControllerTest.java](src/test/java/com/gustavohenrique/financeApi/webhook/PluggyWebhookControllerTest.java)
-- [RequestServiceTest.java](src/test/java/com/gustavohenrique/financeApi/webhook/RequestServiceTest.java)
-- [SetUpWebhookImplTest.java](src/test/java/com/gustavohenrique/financeApi/webhook/SetUpWebhookImplTest.java)
-- [WebhookEventConsumerTest.java](src/test/java/com/gustavohenrique/financeApi/webhook/WebhookEventConsumerTest.java)
-- [WebhookEventProducerTest.java](src/test/java/com/gustavohenrique/financeApi/webhook/WebhookEventProducerTest.java)
+- [CredentialServiceTest.java](../src/test/java/com/gustavohenrique/financeApi/webhook/CredentialServiceTest.java)
+- [PluggyResponseMapperTest.java](../src/test/java/com/gustavohenrique/financeApi/webhook/PluggyResponseMapperTest.java)
+- [PluggyWebhookControllerTest.java](../src/test/java/com/gustavohenrique/financeApi/webhook/PluggyWebhookControllerTest.java)
+- [RequestServiceTest.java](../src/test/java/com/gustavohenrique/financeApi/webhook/RequestServiceTest.java)
+- [SetUpWebhookImplTest.java](../src/test/java/com/gustavohenrique/financeApi/webhook/SetUpWebhookImplTest.java)
+- [WebhookEventConsumerTest.java](../src/test/java/com/gustavohenrique/financeApi/webhook/WebhookEventConsumerTest.java)
+- [WebhookEventProducerTest.java](../src/test/java/com/gustavohenrique/financeApi/webhook/WebhookEventProducerTest.java)
 
 </blockquote>
 
@@ -3817,7 +3817,7 @@ Converte TransactionResponse (formato Pluggy) para Transaction (domínio da apli
 
 <blockquote>
 
-- [application-test.properties](src/test/resources/application-test.properties) — configuração de teste: H2 in-memory, Flyway habilitado, JWT mockado
+- [application-test.properties](../src/test/resources/application-test.properties) — configuração de teste: H2 in-memory, Flyway habilitado, JWT mockado
 
 </blockquote>
 
