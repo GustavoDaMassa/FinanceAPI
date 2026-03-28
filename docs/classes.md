@@ -433,6 +433,33 @@ Lança 400 quando o tipo de transação informado não é válido (não é INFLO
 
 </details>
 
+<details id="unsupportedfileformatexception">
+<summary><strong><a href="src/main/java/com/gustavohenrique/financeApi/exception/UnsupportedFileFormatException.java">UnsupportedFileFormatException.java</a></strong></summary>
+
+<blockquote>
+
+<details><summary>funcao</summary>
+
+Lança 400 quando o arquivo enviado para importação não tem formato suportado por nenhum `TransactionFileParser` registrado
+
+</details>
+
+<details><summary>extends</summary>
+
+- [`BadRequestException.java`](#badrequestexception)
+
+</details>
+
+<details><summary>metodos</summary>
+
+- `UnsupportedFileFormatException(String filename)`
+
+</details>
+
+</blockquote>
+
+</details>
+
 </blockquote>
 
 </details>
@@ -524,6 +551,7 @@ Tipo de transação com lógica de cálculo de saldo embutida — cada constante
 
 - `apply(BigDecimal amount) : BigDecimal          [abstract por constante]`
 - `fromPluggy(String pluggyType) : TransactionType [static factory — mapeia "CREDIT"/"DEBIT" do Pluggy para constantes do domínio]`
+- `fromOFX(String ofxType, BigDecimal amount) : TransactionType [static factory — mapeia tipos OFX (DEBIT/CREDIT/ATM/etc.) para constantes do domínio; usa sinal do amount como fallback]`
 
 </details>
 
@@ -3682,6 +3710,265 @@ Converte TransactionResponse (formato Pluggy) para Transaction (domínio da apli
 </details>
 
 
+<details id="dir-importer">
+<summary><strong>importer/</strong></summary>
+
+<blockquote>
+
+Módulo de importação de extratos financeiros em diferentes formatos. A arquitetura é baseada na interface `TransactionFileParser` — adicionar suporte a um novo formato exige apenas uma nova implementação dessa interface, sem alterar nenhum código existente.
+
+<details id="dir-importer-controller">
+<summary><strong>controller/</strong></summary>
+
+<blockquote>
+
+<details id="transactionimportcontroller">
+<summary><strong><a href="src/main/java/com/gustavohenrique/financeApi/importer/controller/TransactionImportController.java">TransactionImportController.java</a></strong></summary>
+
+<blockquote>
+
+<details><summary>funcao</summary>
+
+Endpoint REST `POST /financeapi/import` — recebe arquivo via `multipart/form-data` junto com `accountId` e delega ao `TransactionImportService`
+
+</details>
+
+<details><summary>dependencias</summary>
+
+- [`TransactionImportService`](#transactionimportservice)
+
+</details>
+
+<details><summary>metodos</summary>
+
+- `importTransactions(MultipartFile, Long accountId, User) : ResponseEntity<ImportResultDTO>`
+
+</details>
+
+</blockquote>
+
+</details>
+
+</blockquote>
+
+</details>
+
+
+<details id="dir-importer-dto">
+<summary><strong>dto/</strong></summary>
+
+<blockquote>
+
+<details id="parsedtransaction">
+<summary><strong><a href="src/main/java/com/gustavohenrique/financeApi/importer/dto/ParsedTransaction.java">ParsedTransaction.java</a> [@Builder]</strong></summary>
+
+<blockquote>
+
+<details><summary>funcao</summary>
+
+DTO neutro que representa uma transação extraída de qualquer formato de arquivo — desacopla os parsers do modelo de domínio. Equivalente ao `TransactionResponse` do módulo webhook, porém agnóstico ao formato de origem
+
+</details>
+
+<details><summary>campos</summary>
+
+- `externalId : String` — identificador único da transação no arquivo (ex: FITID do OFX)
+- `amount : BigDecimal` — valor absoluto
+- `type : TransactionType` — já resolvido pelo parser
+- `description : String`
+- `date : LocalDate`
+
+</details>
+
+</blockquote>
+
+</details>
+
+
+<details id="importresultdto">
+<summary><strong><a href="src/main/java/com/gustavohenrique/financeApi/importer/dto/ImportResultDTO.java">ImportResultDTO.java</a> [@Builder]</strong></summary>
+
+<blockquote>
+
+<details><summary>funcao</summary>
+
+Resposta do endpoint de importação com contagem de transações processadas e lista das efetivamente salvas
+
+</details>
+
+<details><summary>campos</summary>
+
+- `total : int` — total de transações no arquivo
+- `imported : int` — transações salvas (novas)
+- `skipped : int` — transações ignoradas por duplicidade (`externalId` já existente)
+- `transactions : List<TransactionDTO>` — transações importadas nesta chamada
+
+</details>
+
+</blockquote>
+
+</details>
+
+</blockquote>
+
+</details>
+
+
+<details id="dir-importer-mapper">
+<summary><strong>mapper/</strong></summary>
+
+<blockquote>
+
+<details id="parsedtransactionmapper">
+<summary><strong><a href="src/main/java/com/gustavohenrique/financeApi/importer/mapper/ParsedTransactionMapper.java">ParsedTransactionMapper.java</a></strong></summary>
+
+<blockquote>
+
+<details><summary>funcao</summary>
+
+Converte `ParsedTransaction` (dado bruto do arquivo) em `Transaction` (modelo de domínio), associando a conta fornecida pelo contexto da requisição
+
+</details>
+
+<details><summary>metodos</summary>
+
+- `toTransaction(ParsedTransaction, Account) : Transaction`
+
+</details>
+
+</blockquote>
+
+</details>
+
+</blockquote>
+
+</details>
+
+
+<details id="dir-importer-parser">
+<summary><strong>parser/</strong></summary>
+
+<blockquote>
+
+<details id="transactionfileparser">
+<summary><strong><a href="src/main/java/com/gustavohenrique/financeApi/importer/parser/TransactionFileParser.java">TransactionFileParser.java</a> [interface]</strong></summary>
+
+<blockquote>
+
+<details><summary>funcao</summary>
+
+Contrato de extensão para parsers de arquivo — o `TransactionImportServiceImpl` injeta `List<TransactionFileParser>` e seleciona automaticamente o parser adequado via `supports()`. Cada novo formato exige apenas uma nova implementação desta interface
+
+</details>
+
+<details><summary>metodos</summary>
+
+- `supports(String filename, String contentType) : boolean`
+- `parse(MultipartFile) : List<ParsedTransaction>`
+
+</details>
+
+</blockquote>
+
+</details>
+
+
+<details id="ofxfileparser">
+<summary><strong><a href="src/main/java/com/gustavohenrique/financeApi/importer/parser/OFXFileParser.java">OFXFileParser.java</a> [implements <a href="#transactionfileparser">TransactionFileParser</a>]</strong></summary>
+
+<blockquote>
+
+<details><summary>funcao</summary>
+
+Parser de arquivos OFX exportados por bancos brasileiros. Suporta OFX 1.x (SGML) e OFX 2.x (XML). Detecta automaticamente o encoding (ISO-8859-1 / UTF-8 via cabeçalho do arquivo) e a versão do formato. Para OFX 2.x usa DOM com proteção contra XXE
+
+</details>
+
+<details><summary>metodos</summary>
+
+- `supports(String filename, String contentType) : boolean   [retorna true para extensão .ofx]`
+- `parse(MultipartFile) : List<ParsedTransaction>`
+- `parseSGML(String content) : List<ParsedTransaction>       [OFX 1.x via regex]`
+- `parseXML(String content) : List<ParsedTransaction>        [OFX 2.x via DOM]`
+
+</details>
+
+</blockquote>
+
+</details>
+
+</blockquote>
+
+</details>
+
+
+<details id="dir-importer-service">
+<summary><strong>service/</strong></summary>
+
+<blockquote>
+
+<details id="transactionimportservice">
+<summary><strong><a href="src/main/java/com/gustavohenrique/financeApi/importer/service/TransactionImportService.java">TransactionImportService.java</a> [interface]</strong></summary>
+
+<blockquote>
+
+<details><summary>funcao</summary>
+
+Contrato do serviço de importação de arquivos de transações
+
+</details>
+
+<details><summary>metodos</summary>
+
+- `importFile(MultipartFile, Long accountId, User) : ImportResultDTO`
+
+</details>
+
+</blockquote>
+
+</details>
+
+
+<details id="transactionimportserviceimpl">
+<summary><strong><a href="src/main/java/com/gustavohenrique/financeApi/importer/service/TransactionImportServiceImpl.java">TransactionImportServiceImpl.java</a> [implements <a href="#transactionimportservice">TransactionImportService</a>]</strong></summary>
+
+<blockquote>
+
+<details><summary>funcao</summary>
+
+Orquestra o fluxo de importação: valida que a conta pertence ao usuário autenticado, seleciona o parser adequado via `supports()`, delega o parse, aplica deduplicação por `externalId` e persiste via `TransactionService`
+
+</details>
+
+<details><summary>dependencias</summary>
+
+- [`List<TransactionFileParser>`](#transactionfileparser) — injetada pelo Spring; seleção automática por `supports()`
+- [`TransactionService`](#transactionservice)
+- [`AccountRepository`](#accountrepository)
+- [`ParsedTransactionMapper`](#parsedtransactionmapper)
+- [`TransactionMapper`](#transactionmapper)
+
+</details>
+
+<details><summary>metodos</summary>
+
+- `importFile(MultipartFile, Long accountId, User) : ImportResultDTO`
+
+</details>
+
+</blockquote>
+
+</details>
+
+</blockquote>
+
+</details>
+
+</blockquote>
+
+</details>
+
+
 <details id="dir-main-resources">
 <summary><strong>resources/</strong></summary>
 
@@ -3806,6 +4093,21 @@ Converte TransactionResponse (formato Pluggy) para Transaction (domínio da apli
 - [SetUpWebhookImplTest.java](../src/test/java/com/gustavohenrique/financeApi/webhook/SetUpWebhookImplTest.java)
 - [WebhookEventConsumerTest.java](../src/test/java/com/gustavohenrique/financeApi/webhook/WebhookEventConsumerTest.java)
 - [WebhookEventProducerTest.java](../src/test/java/com/gustavohenrique/financeApi/webhook/WebhookEventProducerTest.java)
+
+</blockquote>
+
+</details>
+
+
+<details id="dir-test-importer">
+<summary><strong>importer/</strong></summary>
+
+<blockquote>
+
+- [OFXFileParserTest.java](../src/test/java/com/gustavohenrique/financeApi/importer/parser/OFXFileParserTest.java) — 13 testes: `supports()`, parse SGML, parse XML, campos opcionais, resolução de tipo por sinal, deduplicação, parsing de data com timezone
+- [ParsedTransactionMapperTest.java](../src/test/java/com/gustavohenrique/financeApi/importer/mapper/ParsedTransactionMapperTest.java) — 3 testes: mapeamento de campos, associação de conta, descrição nula
+- [TransactionImportServiceImplTest.java](../src/test/java/com/gustavohenrique/financeApi/importer/service/TransactionImportServiceImplTest.java) — 6 testes: conta não encontrada, acesso negado, formato não suportado, importação sem duplicatas, com duplicatas, contagem mista
+- [TransactionImportControllerTest.java](../src/test/java/com/gustavohenrique/financeApi/importer/controller/TransactionImportControllerTest.java) — 3 testes: resposta 200, delegação ao service, propagação de IOException
 
 </blockquote>
 
