@@ -21,4 +21,12 @@ public enum TransactionType {
             default -> throw new IllegalArgumentException("Tipo de transação inválido: " + pluggyType);
         };
     }
+
+    public static TransactionType fromOFX(String ofxType, BigDecimal amount) {
+        return switch (ofxType.toUpperCase()) {
+            case "CREDIT", "INT", "DIV", "DEP", "DIRECTDEP" -> INFLOW;
+            case "DEBIT", "ATM", "POS", "FEE", "SRVCHG", "CHECK", "PAYMENT", "DIRECTDEBIT" -> OUTFLOW;
+            default -> amount.compareTo(BigDecimal.ZERO) >= 0 ? INFLOW : OUTFLOW;
+        };
+    }
 }
