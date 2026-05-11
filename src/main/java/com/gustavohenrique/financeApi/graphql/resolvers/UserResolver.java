@@ -3,6 +3,8 @@ package com.gustavohenrique.financeApi.graphql.resolvers;
 import com.gustavohenrique.financeApi.application.interfaces.UserService;
 import com.gustavohenrique.financeApi.domain.models.User;
 import com.gustavohenrique.financeApi.graphql.dtos.UserDTO;
+import com.gustavohenrique.financeApi.graphql.inputs.ChangeEmailInput;
+import com.gustavohenrique.financeApi.graphql.inputs.ChangePasswordInput;
 import com.gustavohenrique.financeApi.graphql.inputs.UserInput;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -57,5 +59,26 @@ public class UserResolver {
     public UserDTO deleteUser(@Argument Long id) {
         User deletedUser = userService.deleteUser(id);
         return modelMapper.map(deletedUser, UserDTO.class);
+    }
+
+    @MutationMapping
+    @PreAuthorize("isAuthenticated()")
+    public UserDTO changeEmail(@Argument Long id, @Argument ChangeEmailInput input) {
+        User user = userService.changeEmail(id, input);
+        return modelMapper.map(user, UserDTO.class);
+    }
+
+    @MutationMapping
+    @PreAuthorize("isAuthenticated()")
+    public UserDTO changePassword(@Argument Long id, @Argument ChangePasswordInput input) {
+        User user = userService.changePassword(id, input);
+        return modelMapper.map(user, UserDTO.class);
+    }
+
+    @MutationMapping
+    @PreAuthorize("isAuthenticated()")
+    public UserDTO deleteMyAccount(@Argument Long id, @Argument String currentPassword) {
+        User user = userService.deleteMyAccount(id, currentPassword);
+        return modelMapper.map(user, UserDTO.class);
     }
 }

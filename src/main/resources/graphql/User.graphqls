@@ -10,10 +10,23 @@ input UserInput {
     password: String!
 }
 
+input ChangeEmailInput {
+    currentPassword: String!
+    newEmail: String!
+}
+
+input ChangePasswordInput {
+    currentPassword: String!
+    newPassword: String!
+}
+
 type Mutation {
     createUser(input: UserInput!): UserDTO
     updateUser(id: ID!, input: UserInput!): UserDTO
     deleteUser(id: ID!): UserDTO
+    changeEmail(id: ID!, input: ChangeEmailInput!): UserDTO
+    changePassword(id: ID!, input: ChangePasswordInput!): UserDTO
+    deleteMyAccount(id: ID!, currentPassword: String!): UserDTO
 }
 
 type Query {

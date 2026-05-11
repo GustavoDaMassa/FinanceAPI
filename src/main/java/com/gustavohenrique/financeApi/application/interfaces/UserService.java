@@ -1,6 +1,8 @@
 package com.gustavohenrique.financeApi.application.interfaces;
 
 import com.gustavohenrique.financeApi.domain.models.User;
+import com.gustavohenrique.financeApi.graphql.inputs.ChangeEmailInput;
+import com.gustavohenrique.financeApi.graphql.inputs.ChangePasswordInput;
 import com.gustavohenrique.financeApi.graphql.inputs.UserInput;
 import jakarta.validation.constraints.NotNull;
 
@@ -19,4 +21,10 @@ public interface UserService {
     User deleteUser(Long id);
 
     User findById(@NotNull Long userId);
+
+    User changeEmail(Long id, ChangeEmailInput input);
+
+    User changePassword(Long id, ChangePasswordInput input);
+
+    User deleteMyAccount(Long id, String currentPassword);
 }
